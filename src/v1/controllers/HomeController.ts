@@ -1,4 +1,5 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
+import {prisma} from "../lib/prisma";
 
 class HomeController {
   async index(request: FastifyRequest, reply: FastifyReply) {

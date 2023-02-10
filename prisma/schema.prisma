@@ -52,16 +52,15 @@ model Phone {
 }
 
 model Address {
-  id           String  @id @default(uuid())
-  postal_code  String
-  street       String?
-  number       String?
-  neighborhood String?
-  id_city String
+  id          String  @id @default(uuid())
+  postal_code String
+  number      String
+  complement  String?
+  id_city     String
 
-  city   City   @relation(fields: [id_city], references: [id])
-  User   User[]
-  
+  city City   @relation(fields: [id_city], references: [id])
+  User User[]
+
   @@map("tbl_address")
 }
 
