@@ -15,9 +15,71 @@ datasource db {
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+  id         String   @id @default(uuid())
+  email      String
+  name       String
+  password   String
+  cpf        String
+  birthdate  DateTime
+  rg         String?
+  id_gender  String
+  id_phone   String
+  id_address String
 
+  gender  Gender  @relation(fields: [id_gender], references: [id])
+  phone   Phone   @relation(fields: [id_phone], references: [id])
+  address Address @relation(fields: [id_address], references: [id])
+
+  @@unique([email])
   @@map("tbl_user")
+}
+
+model Gender {
+  id           String @id @default(uuid())
+  name         String
+  abbreviation String
+  User         User[]
+
+  @@map("tbl_gender")
+}
+
+model Phone {
+  id     String  @id @default(uuid())
+  number String?
+  User   User[]
+
+  @@map("tbl_phone")
+}
+
+model Address {
+  id           String  @id @default(uuid())
+  postal_code  String
+  street       String?
+  number       String?
+  neighborhood String?
+  id_city String
+
+  city   City   @relation(fields: [id_city], references: [id])
+  User   User[]
+  
+  @@map("tbl_address")
+}
+
+model City {
+  id       String @id @default(uuid())
+  name     String
+  id_state String
+
+  state   State     @relation(fields: [id_state], references: [id])
+  Address Address[]
+
+  @@map("tbl_city")
+}
+
+model State {
+  id   String @id @default(uuid())
+  name String
+  City City[]
+
+  @@map("tbl_state")
 }
