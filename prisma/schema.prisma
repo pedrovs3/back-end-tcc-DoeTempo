@@ -63,22 +63,3 @@ model Address {
 
   @@map("tbl_address")
 }
-
-// model City {
-//   id       String @id @default(uuid())
-//   name     String
-//   id_state String
-//
-//   state   State     @relation(fields: [id_state], references: [id])
-//   Address Address[]
-//
-//   @@map("tbl_city")
-// }
-//
-// model State {
-//   id   String @id @default(uuid())
-//   name String
-//   City City[]
-//
-//   @@map("tbl_state")
-// }

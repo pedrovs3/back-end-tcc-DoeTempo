@@ -22,16 +22,6 @@ async function main() {
       password: 'teste123',
       address: {
         create: {
-          city: {
-            connectOrCreate:
-                {
-                  where: {
-                    id: 'teste',
-                  },
-                  create: { name: 'Osasco', state: { create: { name: 'São Paulo' } } },
-                },
-
-          },
           number: '146',
           postal_code: '04683-160',
         },
@@ -53,10 +43,6 @@ async function main() {
       password: 'teste123',
       address: {
         create: {
-          city: {
-            create:
-                { name: 'Osasco', state: { create: { name: 'São Paulo' } } },
-          },
           number: '333',
           postal_code: '47952-160',
         },
@@ -78,10 +64,6 @@ async function main() {
       password: 'teste123',
       address: {
         create: {
-          city: {
-            create:
-                { name: 'Osasco', state: { create: { name: 'São Paulo' } } },
-          },
           number: '754',
           postal_code: '94638-190',
         },
