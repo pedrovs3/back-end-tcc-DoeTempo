@@ -23,12 +23,11 @@ model User {
   birthdate  DateTime
   rg         String?
   id_gender  String
-  id_phone   String
   id_address String
 
   gender  Gender  @relation(fields: [id_gender], references: [id])
-  phone   Phone   @relation(fields: [id_phone], references: [id])
   address Address @relation(fields: [id_address], references: [id])
+  Phone   Phone[]
 
   @@unique([email])
   @@map("tbl_user")
@@ -44,9 +43,11 @@ model Gender {
 }
 
 model Phone {
-  id     String  @id @default(uuid())
-  number String?
-  User   User[]
+  id      String  @id @default(uuid())
+  number  String?
+  id_user String
+
+  user User @relation(fields: [id_user], references: [id])
 
   @@map("tbl_phone")
 }
