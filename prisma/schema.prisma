@@ -58,29 +58,27 @@ model Address {
   postal_code String
   number      String
   complement  String?
-  id_city     String
 
-  city City   @relation(fields: [id_city], references: [id], onDelete: Cascade)
   User User[]
 
   @@map("tbl_address")
 }
 
-model City {
-  id       String @id @default(uuid())
-  name     String
-  id_state String
-
-  state   State     @relation(fields: [id_state], references: [id])
-  Address Address[]
-
-  @@map("tbl_city")
-}
-
-model State {
-  id   String @id @default(uuid())
-  name String
-  City City[]
-
-  @@map("tbl_state")
-}
+// model City {
+//   id       String @id @default(uuid())
+//   name     String
+//   id_state String
+//
+//   state   State     @relation(fields: [id_state], references: [id])
+//   Address Address[]
+//
+//   @@map("tbl_city")
+// }
+//
+// model State {
+//   id   String @id @default(uuid())
+//   name String
+//   City City[]
+//
+//   @@map("tbl_state")
+// }
