@@ -39,6 +39,7 @@ model Gender {
   abbreviation String
   User         User[]
 
+  @@unique([abbreviation, name])
   @@map("tbl_gender")
 }
 
@@ -47,7 +48,7 @@ model Phone {
   number  String?
   id_user String
 
-  user User @relation(fields: [id_user], references: [id])
+  user User @relation(fields: [id_user], references: [id], onDelete: Cascade)
 
   @@map("tbl_phone")
 }
@@ -59,7 +60,7 @@ model Address {
   complement  String?
   id_city     String
 
-  city City   @relation(fields: [id_city], references: [id])
+  city City   @relation(fields: [id_city], references: [id], onDelete: Cascade)
   User User[]
 
   @@map("tbl_address")

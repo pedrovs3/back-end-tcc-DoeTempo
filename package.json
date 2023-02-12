@@ -10,7 +10,7 @@
     "build:functions": "netlify-lambda build functions --config ./webpack.config.netlify.js"
   },
   "prisma": {
-    "seed": "ts-node prisma/seed.ts"
+    "seed": "tsx prisma/seed.ts"
   },
   "keywords": [],
   "author": "Pedro Vieira",
