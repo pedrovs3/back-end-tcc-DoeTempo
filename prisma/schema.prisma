@@ -15,19 +15,18 @@ datasource db {
 }
 
 model User {
-  id         String   @id @default(uuid())
-  email      String
-  name       String
-  password   String
-  cpf        String
-  birthdate  DateTime
-  rg         String?
-  id_gender  String
-  id_address String
+  id        String   @id @default(uuid())
+  email     String
+  name      String
+  password  String
+  cpf       String
+  birthdate DateTime
+  rg        String?
+  id_gender String
 
-  gender  Gender  @relation(fields: [id_gender], references: [id])
-  address Address @relation(fields: [id_address], references: [id])
-  Phone   Phone[]
+  gender  Gender    @relation(fields: [id_gender], references: [id])
+  phone   Phone[]
+  address Address[]
 
   @@unique([email])
   @@map("tbl_user")
@@ -59,7 +58,8 @@ model Address {
   number      String
   complement  String?
 
-  User User[]
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
 
   @@map("tbl_address")
 }

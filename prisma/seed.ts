@@ -23,7 +23,7 @@ async function main() {
       address: {
         create: {
           number: '146',
-          postal_code: '04683-160',
+          postal_code: '06150130',
         },
       },
       gender: {
@@ -43,8 +43,8 @@ async function main() {
       password: 'teste123',
       address: {
         create: {
-          number: '333',
-          postal_code: '47952-160',
+          number: '146',
+          postal_code: '06150130',
         },
       },
       gender: {
@@ -81,7 +81,7 @@ async function main() {
       email: 'Teste@hotmail.com',
     },
     data: {
-      Phone: {
+      phone: {
         createMany: {
           data: [
             { number: '11988220443' },
@@ -107,7 +107,7 @@ async function main() {
           abbreviation: true,
         },
       },
-      Phone: {
+      phone: {
         select: {
           number: true,
         },
@@ -116,8 +116,10 @@ async function main() {
   });
 
   const users = await prisma.user.findMany();
+  await prisma.user.deleteMany({ where: { email: 'enzodp@gmail.com' } });
+  const addresses = await prisma.address.findMany();
 
-  console.log({ user, users });
+  console.log({ user, users, addresses });
 }
 main()
   .then(async () => {
