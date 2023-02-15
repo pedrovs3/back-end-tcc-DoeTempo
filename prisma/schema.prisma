@@ -35,7 +35,7 @@ model User {
 model Gender {
   id           String @id @default(uuid())
   name         String
-  abbreviation String
+  abbreviation String @unique
   User         User[]
 
   @@unique([abbreviation, name])

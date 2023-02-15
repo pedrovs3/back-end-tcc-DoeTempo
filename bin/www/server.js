@@ -1,11 +1,11 @@
 import fastify from '../v1/Fastify';
 
 const run = async () => {
-    try {
-        await fastify.listen({port: 3333});
-    } catch (e) {
-        process.exit(1);
-    }
+  try {
+    await fastify.listen({ port: 3333 });
+  } catch (e) {
+    process.exit(1);
+  }
 };
 
 run();

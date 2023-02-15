@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "npm run build && tsx watch bin/www/server.js",
+    "prod": "nodemon bin/www/server.js",
     "build": "tsc",
     "build:functions": "netlify-lambda build functions --config ./webpack.config.netlify.js"
   },
@@ -20,21 +21,26 @@
     "@fastify/helmet": "^10.1.0",
     "@fastify/swagger": "^8.3.0",
     "@prisma/client": "^4.10.1",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.0.3",
     "dotenv-safe": "^8.2.0",
     "fastify": "^4.11.0",
     "webpack-node-externals": "^3.0.0",
     "zod": "^3.20.2"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.2",
     "@types/node": "^18.11.18",
     "@typescript-eslint/eslint-plugin": "^5.42.0",
     "@typescript-eslint/parser": "^5.42.0",
     "eslint": "^8.26.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-plugin-import": "^2.26.0",
+    "nodemon": "^2.0.20",
     "prettier": "^2.8.2",
     "prisma": "^4.10.1",
     "prisma-erd-generator": "^1.2.5",
+    "sucrase": "^3.29.0",
     "tsx": "^3.12.2",
     "typescript": "^4.9.4"
   }

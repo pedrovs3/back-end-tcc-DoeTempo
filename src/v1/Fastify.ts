@@ -1,7 +1,7 @@
 import Fastify, { FastifyInstance } from 'fastify';
 import cors from '@fastify/cors';
 import helmet from '@fastify/helmet';
-import { appRoutes } from './routes';
+import { appRoutes, userRoutes } from './routes';
 
 class App {
   declare fastify: FastifyInstance;
@@ -31,6 +31,7 @@ class App {
   private routes() {
     // Register routes of API
     this.fastify.register(appRoutes);
+    this.fastify.register(userRoutes);
   }
 }
 
