@@ -1,17 +1,17 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
-import bcryptjs from 'bcryptjs';
 import 'dotenv/config';
 import userModel from '../models/UserModel';
 import createUserBody from '../schemas/userBodyZodSchema';
 import fastify from '../Fastify';
 import { prisma } from '../lib/prisma';
+import hashPassword from '../utils/bcryptjs/hashPassword';
 
 class UsersController {
   async store(request: FastifyRequest, reply: FastifyReply) {
     // @ts-ignore
     try {
       const userSchema = createUserBody.parse(request.body);
-      const newPassword = await bcryptjs.hash(userSchema.password, 8);
+      const newPassword = hashPassword(userSchema.password);
 
       const user = await userModel.createUser(<userSchemaTypes>userSchema, newPassword);
 
