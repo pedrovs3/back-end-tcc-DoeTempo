@@ -2,8 +2,9 @@ import { FastifyInstance } from 'fastify';
 import usersController from '../../controllers/UsersController';
 
 export async function userRoutes(fastify: FastifyInstance) {
-  fastify.get('/test', (request, reply) => {
-    reply.send('testee');
+  fastify.get('/test', { onRequest: fastify.authenticate }, (request, reply) => {
+    reply.send('test');
   });
-  fastify.post('/users', usersController.store);
+  fastify.post('/', usersController.store);
+  fastify.post('/signup', usersController.signup);
 }

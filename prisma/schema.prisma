@@ -15,14 +15,15 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String
-  name      String
-  password  String
-  cpf       String
-  birthdate DateTime
-  rg        String?
-  id_gender String
+  id            String   @id @default(uuid())
+  email         String
+  name          String
+  password      String
+  cpf           String
+  birthdate     DateTime
+  rg            String?
+  id_gender     String
+  profile_photo String?
 
   gender  Gender    @relation(fields: [id_gender], references: [id])
   phone   Phone[]
