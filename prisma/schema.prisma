@@ -25,9 +25,9 @@ model User {
   id_gender     String
   profile_photo String?
 
-  gender  Gender    @relation(fields: [id_gender], references: [id])
-  phone   Phone[]
-  address Address[]
+  gender      Gender        @relation(fields: [id_gender], references: [id])
+  phone       Phone[]
+  userAddress UserAddress[]
 
   @@unique([email])
   @@map("tbl_user")
@@ -59,8 +59,16 @@ model Address {
   number      String
   complement  String?
 
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String
+  userAddress UserAddress[]
 
   @@map("tbl_address")
+}
+
+model UserAddress {
+  id         String @id @default(uuid())
+  id_user    String
+  id_address String
+
+  user    User    @relation(fields: [id_user], references: [id], onDelete: Cascade)
+  address Address @relation(fields: [id_address], references: [id], onDelete: Cascade)
 }

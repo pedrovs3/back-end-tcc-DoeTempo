@@ -8,7 +8,11 @@
     "dev": "npm run build && tsx watch bin/www/server.js",
     "prod": "nodemon bin/www/server.js",
     "build": "tsc",
+    "format:p": "prisma format",
     "build:functions": "netlify-lambda build functions --config ./webpack.config.netlify.js"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   },
   "keywords": [],
   "author": "Pedro Vieira",
