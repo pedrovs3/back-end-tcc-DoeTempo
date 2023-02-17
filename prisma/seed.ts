@@ -5,6 +5,7 @@ const date = new Date(Date.now());
 async function main() {
   await prisma.user.deleteMany();
   await prisma.gender.deleteMany();
+  await prisma.address.deleteMany();
 
   await prisma.gender.createMany({
     data: [
@@ -20,10 +21,14 @@ async function main() {
       cpf: '48937257501',
       email: 'Teste@hotmail.com',
       password: 'teste123',
-      address: {
+      userAddress: {
         create: {
-          number: '146',
-          postal_code: '06150130',
+          address: {
+            create: {
+              number: '146',
+              postal_code: '06150-130',
+            },
+          },
         },
       },
       gender: {
@@ -41,10 +46,14 @@ async function main() {
       cpf: '27489175414',
       email: 'enzodp@gmail.com',
       password: 'teste123',
-      address: {
+      userAddress: {
         create: {
-          number: '146',
-          postal_code: '06150130',
+          address: {
+            create: {
+              number: '146',
+              postal_code: '06150-130',
+            },
+          },
         },
       },
       gender: {
@@ -62,10 +71,14 @@ async function main() {
       cpf: '48950273495',
       email: 'drpixelss@gmail.com',
       password: 'teste123',
-      address: {
+      userAddress: {
         create: {
-          number: '754',
-          postal_code: '94638-190',
+          address: {
+            create: {
+              number: '146',
+              postal_code: '06150-130',
+            },
+          },
         },
       },
       gender: {
@@ -99,7 +112,16 @@ async function main() {
     select: {
       name: true,
       email: true,
-      address: true,
+      userAddress: {
+        select: {
+          address: {
+            select: {
+              number: true,
+              postal_code: true,
+            },
+          },
+        },
+      },
       cpf: true,
       id: true,
       gender: {
@@ -116,11 +138,36 @@ async function main() {
   });
 
   const users = await prisma.user.findMany();
-  await prisma.user.deleteMany({ where: { email: 'enzodp@gmail.com' } });
+  const userToDelete = await prisma.user.findUnique({
+    where: {
+      email: 'enzodp@gmail.com',
+    },
+    include: {
+      userAddress: {
+        include: {
+          address: true,
+        },
+      },
+    },
+  });
+
+  console.log({ userAddress: userToDelete?.userAddress });
+  await prisma.address.delete({
+    where: {
+      id: userToDelete?.userAddress[0].id_address,
+    },
+  });
+
+  await prisma.user.delete({
+    where: {
+      email: 'enzodp@gmail.com',
+    },
+  });
   const addresses = await prisma.address.findMany();
 
   console.log({ user, users, addresses });
 }
+
 main()
   .then(async () => {
     await prisma.$disconnect();
