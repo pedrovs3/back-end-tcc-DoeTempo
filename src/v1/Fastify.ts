@@ -3,6 +3,7 @@ import cors from '@fastify/cors';
 import helmet from '@fastify/helmet';
 import fastifyJwt from '@fastify/jwt';
 import * as dotenv from 'dotenv';
+import fastifySwagger from '@fastify/swagger';
 import { appRoutes, userRoutes } from './routes';
 
 dotenv.config();
@@ -40,8 +41,13 @@ class App {
     await this.fastify.register(helmet, { global: true });
     // @ts-ignore
     await this.fastify.register(fastifyJwt, {
-      secret: 'TESTE',
+      secret: process.env.SECRET_JWT,
     });
+
+    await this.fastify.register(fastifySwagger);
+
+    await this.fastify.ready();
+    await this.fastify.swagger();
   }
 
   private routes() {
