@@ -21,6 +21,7 @@ async function main() {
       cpf: '48937257501',
       email: 'Teste@hotmail.com',
       password: 'teste123',
+      // @ts-ignore
       userAddress: {
         create: {
           address: {
@@ -46,6 +47,7 @@ async function main() {
       cpf: '27489175414',
       email: 'enzodp@gmail.com',
       password: 'teste123',
+      // @ts-ignore
       userAddress: {
         create: {
           address: {
@@ -71,6 +73,7 @@ async function main() {
       cpf: '48950273495',
       email: 'drpixelss@gmail.com',
       password: 'teste123',
+      // @ts-ignore
       userAddress: {
         create: {
           address: {
@@ -112,6 +115,7 @@ async function main() {
     select: {
       name: true,
       email: true,
+      // @ts-ignore
       userAddress: {
         select: {
           address: {
@@ -143,6 +147,7 @@ async function main() {
       email: 'enzodp@gmail.com',
     },
     include: {
+      // @ts-ignore
       userAddress: {
         include: {
           address: true,
@@ -151,9 +156,9 @@ async function main() {
     },
   });
 
-  console.log({ userAddress: userToDelete?.userAddress });
   await prisma.address.delete({
     where: {
+      // @ts-ignore
       id: userToDelete?.userAddress[0].id_address,
     },
   });

@@ -71,4 +71,6 @@ model UserAddress {
 
   user    User    @relation(fields: [id_user], references: [id], onDelete: Cascade)
   address Address @relation(fields: [id_address], references: [id], onDelete: Cascade)
+
+  @@map("tbl_user_address")
 }
