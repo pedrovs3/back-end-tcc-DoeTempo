@@ -1,7 +1,11 @@
-import Fastify, { FastifyInstance } from 'fastify';
+import Fastify, { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import cors from '@fastify/cors';
 import helmet from '@fastify/helmet';
+import fastifyJwt from '@fastify/jwt';
+import * as dotenv from 'dotenv';
 import { appRoutes, userRoutes } from './routes';
+
+dotenv.config();
 
 class App {
   declare fastify: FastifyInstance;
@@ -17,6 +21,14 @@ class App {
 
     // Setting the api routes.
     this.routes();
+
+    this.fastify.decorate('authenticate', async (request: FastifyRequest, reply: FastifyReply) => {
+      try {
+        await request.jwtVerify();
+      } catch (err) {
+        reply.send(err);
+      }
+    });
   }
 
   private async middlewares() {
@@ -26,12 +38,16 @@ class App {
     });
 
     await this.fastify.register(helmet, { global: true });
+    // @ts-ignore
+    await this.fastify.register(fastifyJwt, {
+      secret: 'TESTE',
+    });
   }
 
   private routes() {
     // Register routes of API
     this.fastify.register(appRoutes);
-    this.fastify.register(userRoutes);
+    this.fastify.register(userRoutes, { prefix: '/user' });
   }
 }
 
