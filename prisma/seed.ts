@@ -14,6 +14,7 @@ async function main() {
     ],
   });
 
+  // @ts-ignore
   const user1 = await prisma.user.create({
     data: {
       name: 'Pedro Vieira',
@@ -28,6 +29,15 @@ async function main() {
             create: {
               number: '146',
               postal_code: '06150-130',
+            },
+          },
+        },
+      },
+      tbl_user_phone: {
+        create: {
+          tbl_phone: {
+            create: {
+              number: '123141234132',
             },
           },
         },
@@ -92,22 +102,6 @@ async function main() {
     },
   });
 
-  const insertPhoneNumbers = await prisma.user.update({
-    where: {
-      email: 'Teste@hotmail.com',
-    },
-    data: {
-      phone: {
-        createMany: {
-          data: [
-            { number: '11988220443' },
-            { number: '11988220443' },
-          ],
-        },
-      },
-    },
-  });
-
   const user = await prisma.user.findUnique({
     where: {
       email: 'Teste@hotmail.com',
@@ -133,9 +127,13 @@ async function main() {
           abbreviation: true,
         },
       },
-      phone: {
+      tbl_user_phone: {
         select: {
-          number: true,
+          tbl_phone: {
+            select: {
+              number: true,
+            },
+          },
         },
       },
     },
