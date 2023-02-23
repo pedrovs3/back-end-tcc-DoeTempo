@@ -18,12 +18,6 @@ class HomeController {
               abbreviation: true,
             },
           },
-          address: {
-            select: {
-              postal_code: true,
-              number: true,
-            },
-          },
         },
       });
 
@@ -33,10 +27,6 @@ class HomeController {
       reply.status(500).send({ error });
     }
     reply.send({ message: 'Hello!' });
-  }
-
-  async store() {
-
   }
 }
 

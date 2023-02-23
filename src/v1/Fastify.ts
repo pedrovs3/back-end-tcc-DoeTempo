@@ -40,7 +40,7 @@ class App {
     await this.fastify.register(helmet, { global: true });
     // @ts-ignore
     await this.fastify.register(fastifyJwt, {
-      secret: 'TESTE',
+      secret: process.env.SECRET_JWT,
     });
   }
 

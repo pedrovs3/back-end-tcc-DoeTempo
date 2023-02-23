@@ -11,14 +11,12 @@ class UsersController {
     // @ts-ignore
     try {
       const userSchema = createUserBody.parse(request.body);
-      const newPassword = hashPassword(userSchema.password);
+      const newPassword = await hashPassword(userSchema.password);
 
       const user = await userModel.createUser(<userSchemaTypes>userSchema, newPassword);
 
       reply.send({ userSchema, user });
     } catch (error) {
-      console.log(error);
-
       reply.status(400).send({ error: 'Não foi possivel criar o usuário', errorDB: { error } });
     }
   }
@@ -45,6 +43,18 @@ class UsersController {
       }
     } catch (error) {
       reply.status(400).send({ error });
+    }
+  }
+
+  async delete(request: FastifyRequest, reply :FastifyReply) {
+    try {
+      // @ts-ignore
+      const { email } = request.body;
+      const user = await userModel.deleteUser(email);
+
+      reply.send(user);
+    } catch (e) {
+      reply.send(e);
     }
   }
 }
