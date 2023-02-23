@@ -23,8 +23,7 @@ class UserModel {
         },
         gender: {
           connect: {
-            // Temporary
-            id: userSchema.gender === 'F' ? '096df662-be26-4037-9bbf-8d54be5b0eeb' : 'teste',
+            id: userSchema.gender,
           },
         },
         email: userSchema.email,

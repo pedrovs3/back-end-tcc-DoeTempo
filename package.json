@@ -1,5 +1,5 @@
 {
-  "name": "fastify-api",
+  "name": "doe_tempo_api",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,7 +8,10 @@
     "dev": "npm run build && tsx watch bin/www/server.js",
     "prod": "nodemon bin/www/server.js",
     "build": "tsc",
-    "build:functions": "netlify-lambda build functions --config ./webpack.config.netlify.js"
+    "format:p": "prisma format"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   },
   "keywords": [],
   "author": "Pedro Vieira",
@@ -17,7 +20,6 @@
     "@fastify/cors": "^8.2.0",
     "@fastify/helmet": "^10.1.0",
     "@fastify/jwt": "^6.5.0",
-    "@fastify/swagger": "^8.3.0",
     "@prisma/client": "^4.10.1",
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.0.3",
