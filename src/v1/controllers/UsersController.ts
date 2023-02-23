@@ -45,6 +45,18 @@ class UsersController {
       reply.status(400).send({ error });
     }
   }
+
+  async delete(request: FastifyRequest, reply :FastifyReply) {
+    try {
+      // @ts-ignore
+      const { email } = request.body;
+      const user = await userModel.deleteUser(email);
+
+      reply.send(user);
+    } catch (e) {
+      reply.send(e);
+    }
+  }
 }
 
 export default new UsersController();
