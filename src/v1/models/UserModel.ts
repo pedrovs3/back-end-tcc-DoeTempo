@@ -3,19 +3,19 @@ import { prisma } from '../lib/prisma';
 class UserModel {
   async createUser(userSchema: userSchemaTypes, newPassword: string) {
     try {
-      const user = await prisma.user.create({
+      await prisma.user.create({
         data: {
           cpf: userSchema.cpf,
           rg: userSchema.rg,
           tbl_user_phone: {
             create: {
               tbl_phone: {
-                create: userSchema.phone
-                  ? userSchema?.phone.map((number: { number: string }) => number) : '',
+                create: {
+                  number: null,
+                },
               },
             },
           },
-          // @ts-ignore
           userAddress: {
             create: {
               address: {
@@ -38,7 +38,7 @@ class UserModel {
         },
       });
 
-      return user;
+      return 'usuário criado com exito';
     } catch (e) {
       return e;
     }
