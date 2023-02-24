@@ -7,12 +7,12 @@ class UserModel {
         data: {
           cpf: userSchema.cpf,
           rg: userSchema.rg,
-          phone: {
-            createMany: {
-              data:
-                userSchema.phone
-                  ? userSchema.phone.map((number) => number)
-                  : { number: null },
+          tbl_user_phone: {
+            create: {
+              tbl_phone: {
+                create: userSchema.phone
+                  ? userSchema?.phone.map((number: { number: string }) => number) : '',
+              },
             },
           },
           // @ts-ignore
@@ -28,8 +28,7 @@ class UserModel {
           },
           gender: {
             connect: {
-              // Temporary
-              id: userSchema.gender === 'F' ? '096df662-be26-4037-9bbf-8d54be5b0eeb' : 'teste',
+              id: userSchema.gender,
             },
           },
           email: userSchema.email,
@@ -45,11 +44,12 @@ class UserModel {
     }
   }
 
-  async deleteUser(email: string) {
+  // @ts-ignore
+  async deleteUser({ id } : string) {
     try {
       const user = await prisma.user.findUnique({
         where: {
-          email,
+          id,
         },
         include: {
           // @ts-ignore
@@ -57,13 +57,21 @@ class UserModel {
         },
       });
 
-      return user;
+      const idAddress = user!.userAddress[0].id_address;
 
-      // const addressToDelete = await prisma.address.delete({
-      //   where: {
-      //     id:
-      //   }
-      // })
+      await prisma.user.delete({
+        where: {
+          id,
+        },
+      });
+
+      await prisma.address.delete({
+        where: {
+          id: idAddress,
+        },
+      });
+
+      return user;
     } catch (e) {
       return e;
     }

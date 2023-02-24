@@ -12,7 +12,18 @@ class HomeController {
           id: true,
           name: true,
           password: true,
-          phone: true,
+          tbl_user_phone: {
+            select: {
+              tbl_phone: {
+                select: {
+                  number: true,
+                },
+              },
+              tbl_user: false,
+              id_user: false,
+              id_phone: false,
+            },
+          },
           gender: {
             select: {
               abbreviation: true,
@@ -21,10 +32,12 @@ class HomeController {
         },
       });
 
-      reply.status(200).send({ users });
+      reply.status(200)
+        .send({ users });
     } catch (error) {
       console.log(error);
-      reply.status(500).send({ error });
+      reply.status(500)
+        .send({ error });
     }
     reply.send({ message: 'Hello!' });
   }
