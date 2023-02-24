@@ -9,7 +9,6 @@ import checkPassword from '../utils/bcryptjs/checkPassword';
 
 class UsersController {
   async store(request: FastifyRequest, reply: FastifyReply) {
-    // @ts-ignore
     try {
       const userSchema = createUserBody.parse(request.body);
       const newPassword = await hashPassword(userSchema.password);
