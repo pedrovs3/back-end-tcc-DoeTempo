@@ -18,7 +18,7 @@ model User {
   password                  String                 @db.VarChar(90)
   cpf                       String                 @unique(map: "cpf_UNIQUE") @db.VarChar(17)
   id_gender                 String                 @db.Char(36)
-  birthdate                 DateTime
+  birthdate                 DateTime               @db.Date
   rg                        String?                @db.VarChar(30)
   tbl_campaign_participants CampaignParticipants[]
   tbl_following             Following[]
