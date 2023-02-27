@@ -3,7 +3,7 @@ import cors from '@fastify/cors';
 import helmet from '@fastify/helmet';
 import fastifyJwt from '@fastify/jwt';
 import * as dotenv from 'dotenv';
-import { appRoutes, userRoutes } from './routes';
+import { appRoutes, genderRoutes, userRoutes } from './routes';
 
 dotenv.config();
 
@@ -17,7 +17,8 @@ class App {
     });
 
     // Setting global middlewares in this method.
-    this.middlewares().then();
+    this.middlewares()
+      .then();
 
     // Setting the api routes.
     this.routes();
@@ -48,6 +49,7 @@ class App {
     // Register routes of API
     this.fastify.register(appRoutes);
     this.fastify.register(userRoutes, { prefix: '/user' });
+    this.fastify.register(genderRoutes, { prefix: '/gender' });
   }
 }
 
