@@ -1,16 +1,36 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import 'dotenv/config';
+import { log } from 'util';
 import userModel from '../models/UserModel';
-import createUserBody from '../schemas/userBodyZodSchema';
-import fastify from '../Fastify';
 import { prisma } from '../lib/prisma';
+import createUserBody from '../schemas/userBodyZodSchema';
 import hashPassword from '../utils/bcryptjs/hashPassword';
 import checkPassword from '../utils/bcryptjs/checkPassword';
+import fastify from '../Fastify';
 
 class UsersController {
   async store(request: FastifyRequest, reply: FastifyReply) {
     try {
-      const userSchema = createUserBody.parse(request.body);
+      const {
+        // @ts-ignore
+        name, email, password, cpf, birthdate, address, gender,
+      } = await request.body;
+
+      console.log(address);
+
+      const dataToCreate = {
+        name: name.value,
+        email: email.value,
+        password: password.value,
+        cpf: cpf.value,
+        birthdate: birthdate.value,
+        address: address.value,
+        gender: gender.value,
+      };
+
+      console.log(dataToCreate);
+
+      const userSchema = createUserBody.parse(dataToCreate);
       const newPassword = await hashPassword(userSchema.password);
 
       const user = await userModel.createUser(<userSchemaTypes>userSchema, newPassword);
@@ -20,11 +40,10 @@ class UsersController {
         user,
       });
     } catch (error) {
-      reply.status(400)
-        .send({
-          error: 'Não foi possivel criar o usuário',
-          errorDB: { error },
-        });
+      reply.status(400).send({
+        error: 'Não foi possivel criar o usuário',
+        errorDB: { error },
+      });
     }
   }
 
