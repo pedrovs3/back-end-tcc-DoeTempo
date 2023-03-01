@@ -3,6 +3,7 @@ import cors from '@fastify/cors';
 import helmet from '@fastify/helmet';
 import fastifyJwt from '@fastify/jwt';
 import * as dotenv from 'dotenv';
+import fastifyMultipart from '@fastify/multipart';
 import { appRoutes, genderRoutes, userRoutes } from './routes';
 
 dotenv.config();
@@ -33,11 +34,11 @@ class App {
   }
 
   private async middlewares() {
+    await this.fastify.register(fastifyMultipart, { attachFieldsToBody: true });
     // Middleware of CORS
     await this.fastify.register(cors, {
       origin: true,
     });
-
     await this.fastify.register(helmet, { global: true });
     // @ts-ignore
     await this.fastify.register(fastifyJwt, {

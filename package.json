@@ -20,6 +20,7 @@
     "@fastify/cors": "^8.2.0",
     "@fastify/helmet": "^10.1.0",
     "@fastify/jwt": "^6.5.0",
+    "@fastify/multipart": "^7.4.1",
     "@prisma/client": "^4.10.1",
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.0.3",
