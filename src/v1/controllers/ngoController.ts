@@ -1,6 +1,4 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
-import { isUndefined } from 'util';
-import { z } from 'zod';
 import { prisma } from '../lib/prisma';
 import { createNgoBody } from '../schemas/ngoBodyZodSchema';
 import hashPassword from '../utils/bcryptjs/hashPassword';
