@@ -212,7 +212,7 @@ model NgoCauses {
 model NgoPhone {
   id        String @id @unique(map: "id_UNIQUE") @default(uuid())
   id_ngo    String @db.Char(36)
-  id_phone  String @db.Char(36)
+  id_phone  String
   tbl_ngo   NGO    @relation(fields: [id_ngo], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tbl_ngo_phone_tbl_ngo1")
   tbl_phone Phone  @relation(fields: [id_phone], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tbl_ngo_phone_tbl_phone1")
 
