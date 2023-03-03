@@ -4,7 +4,9 @@ import helmet from '@fastify/helmet';
 import fastifyJwt from '@fastify/jwt';
 import * as dotenv from 'dotenv';
 import fastifyMultipart from '@fastify/multipart';
-import { appRoutes, genderRoutes, userRoutes } from './routes';
+import {
+  appRoutes, genderRoutes, ngoRoutes, userRoutes,
+} from './routes';
 
 dotenv.config();
 
@@ -51,6 +53,7 @@ class App {
     this.fastify.register(appRoutes);
     this.fastify.register(userRoutes, { prefix: '/user' });
     this.fastify.register(genderRoutes, { prefix: '/gender' });
+    this.fastify.register(ngoRoutes, { prefix: '/ngo' });
   }
 }
 

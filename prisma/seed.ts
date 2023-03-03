@@ -139,6 +139,27 @@ async function main() {
     },
   });
 
+  const ngo = await prisma.nGO.create({
+    data: {
+      name: 'Teste ngo',
+      email: 'test@test.com',
+      password: '4u10491',
+      cnpj: '4029402104',
+      tbl_ngo_address: {
+        create: {
+          tbl_address: {
+            create: {
+              number: '146',
+              postal_code: '498124081',
+            },
+          },
+        },
+      },
+    },
+  });
+
+  console.log(ngo);
+
   const users = await prisma.user.findMany();
   const userToDelete = await prisma.user.findUnique({
     where: {
