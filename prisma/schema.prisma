@@ -173,6 +173,7 @@ model NGO {
   foundation_date DateTime?    @db.Date
   description     String?      @db.Text
   email           String       @db.VarChar(256)
+  password        String
   tbl_campaign    Campaign[]
   tbl_following   Following[]
   tbl_ngo_address NgoAddress[]
@@ -180,6 +181,8 @@ model NGO {
   tbl_ngo_phone   NgoPhone[]
 
   @@map("tbl_ngo")
+  @@unique([email])
+  @@index([id])
 }
 
 model NgoAddress {

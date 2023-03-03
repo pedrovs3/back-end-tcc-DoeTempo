@@ -1,6 +1,5 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import 'dotenv/config';
-import { log } from 'util';
 import userModel from '../models/UserModel';
 import { prisma } from '../lib/prisma';
 import createUserBody from '../schemas/userBodyZodSchema';
@@ -11,26 +10,7 @@ import fastify from '../Fastify';
 class UsersController {
   async store(request: FastifyRequest, reply: FastifyReply) {
     try {
-      const {
-        // @ts-ignore
-        name, email, password, cpf, birthdate, address, gender,
-      } = await request.body;
-
-      console.log(address);
-
-      const dataToCreate = {
-        name: name.value,
-        email: email.value,
-        password: password.value,
-        cpf: cpf.value,
-        birthdate: birthdate.value,
-        address: address.value,
-        gender: gender.value,
-      };
-
-      console.log(dataToCreate);
-
-      const userSchema = createUserBody.parse(dataToCreate);
+      const userSchema = createUserBody.parse(request.body);
       const newPassword = await hashPassword(userSchema.password);
 
       const user = await userModel.createUser(<userSchemaTypes>userSchema, newPassword);
