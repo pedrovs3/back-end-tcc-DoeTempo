@@ -1,4 +1,4 @@
-interface userSchemaTypes {
+type userSchemaTypes = {
     name: string,
     email: string,
     password: string,

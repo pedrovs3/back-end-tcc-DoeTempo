@@ -1,5 +1,4 @@
 import { prisma } from '../lib/prisma';
-import { ngoSchemaTypes } from '../@types/ngoSchema';
 
 class NgoModel {
   async createNgo(ngoSchema: ngoSchemaTypes, newPassword: string) {

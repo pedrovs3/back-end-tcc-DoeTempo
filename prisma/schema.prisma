@@ -12,20 +12,22 @@ datasource db {
 }
 
 model User {
-  id                        String                 @id @unique(map: "id_UNIQUE") @default(uuid())
-  name                      String                 @db.VarChar(100)
-  email                     String                 @unique(map: "email_UNIQUE") @db.VarChar(256)
-  password                  String                 @db.VarChar(90)
-  cpf                       String                 @unique(map: "cpf_UNIQUE") @db.VarChar(17)
-  id_gender                 String                 @db.Char(36)
-  birthdate                 DateTime               @db.Date
-  rg                        String?                @db.VarChar(30)
+  id        String   @id @unique(map: "id_UNIQUE") @default(uuid())
+  name      String   @db.VarChar(100)
+  email     String   @unique(map: "email_UNIQUE") @db.VarChar(256)
+  password  String   @db.VarChar(90)
+  cpf       String   @unique(map: "cpf_UNIQUE") @db.VarChar(17)
+  id_gender String   @db.Char(36)
+  birthdate DateTime @db.Date
+  rg        String?  @db.VarChar(30)
+
   tbl_campaign_participants CampaignParticipants[]
   tbl_following             Following[]
   gender                    Gender                 @relation(fields: [id_gender], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tbl_user_tbl_gender")
   userAddress               UserAddress[]
   tbl_user_phone            UserPhone[]
 
+  @@unique([id])
   @@index([id_gender], map: "fk_tbl_user_tbl_gender_idx")
   @@map("tbl_user")
 }
@@ -36,6 +38,7 @@ model Gender {
   abbreviation String @unique(map: "abbreviation_UNIQUE") @db.Char(1)
   User         User[]
 
+  @@unique([id])
   @@map("tbl_gender")
 }
 
@@ -45,6 +48,7 @@ model Phone {
   tbl_ngo_phone  NgoPhone[]
   tbl_user_phone UserPhone[]
 
+  @@unique([id])
   @@map("tbl_phone")
 }
 
@@ -57,6 +61,7 @@ model Address {
   tbl_ngo_address      NgoAddress[]
   userAddress          UserAddress[]
 
+  @@unique([id])
   @@map("tbl_address")
 }
 
@@ -67,6 +72,7 @@ model UserAddress {
   address    Address @relation(fields: [id_address], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_tbl_user_address_tbl_address1")
   user       User    @relation(fields: [id_user], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_tbl_user_address_tbl_user1")
 
+  @@unique([id])
   @@index([id_address], map: "fk_tbl_user_address_tbl_address1_idx")
   @@index([id_user], map: "fk_tbl_user_address_tbl_user1_idx")
   @@map("tbl_user_address")
@@ -94,6 +100,7 @@ model Campaign {
   tbl_campaign_participants CampaignParticipants[]
   tbl_campaign_photos       CampaignPhotos[]
 
+  @@unique([id])
   @@index([id_ngo], map: "fk_tbl_campaign_tbl_ngo1_idx")
   @@map("tbl_campaign")
 }
@@ -105,6 +112,7 @@ model CampaignAddress {
   tbl_address  Address  @relation(fields: [id_address], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_tbl_campaign_address_tbl_address1")
   tbl_campaign Campaign @relation(fields: [id_campaign], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_Campaign_address_tbl_campaign1")
 
+  @@unique([id])
   @@index([id_address], map: "fk_tbl_campaign_address_tbl_address1_idx")
   @@index([id_campaign], map: "fk_tbl_campaign_address_tbl_campaign1_idx")
   @@map("tbl_campaign_address")
@@ -117,6 +125,7 @@ model CampaignCauses {
   tbl_campaign Campaign @relation(fields: [id_campaign], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tbl_campaign_causes_tbl_campaign1")
   tbl_causes   Causes   @relation(fields: [id_cause], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tbl_campaign_causes_tbl_causes1")
 
+  @@unique([id])
   @@index([id_campaign], map: "fk_tbl_campaign_causes_tbl_campaign1_idx")
   @@index([id_cause], map: "fk_tbl_campaign_causes_tbl_causes1_idx")
   @@map("tbl_campaign_causes")
@@ -129,6 +138,7 @@ model CampaignParticipants {
   tbl_campaign Campaign @relation(fields: [id_campaign], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tbl_campaign_participants_tbl_campaign1")
   tbl_user     User     @relation(fields: [id_user], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_tbl_campaign_participants_tbl_user1")
 
+  @@unique([id])
   @@index([id_campaign], map: "fk_tbl_campaign_participants_tbl_campaign1_idx")
   @@index([id_user], map: "fk_tbl_campaign_participants_tbl_user1_idx")
   @@map("tbl_campaign_participants")
@@ -140,6 +150,7 @@ model CampaignPhotos {
   id_campaign  String   @db.Char(36)
   tbl_campaign Campaign @relation(fields: [id_campaign], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tbl_campaign_photos_tbl_campaign1")
 
+  @@unique([id])
   @@index([id_campaign], map: "fk_tbl_campaign_photos_tbl_campaign1_idx")
   @@map("tbl_campaign_photos")
 }
@@ -151,6 +162,7 @@ model Causes {
   tbl_campaign_causes CampaignCauses[]
   tbl_ngo_causes      NgoCauses[]
 
+  @@unique([id])
   @@map("tbl_causes")
 }
 
@@ -161,6 +173,7 @@ model Following {
   tbl_ngo  NGO    @relation(fields: [id_ngo], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tbl_following_tbl_ngo1")
   tbl_user User   @relation(fields: [id_user], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_tbl_following_tbl_user1")
 
+  @@unique([id])
   @@index([id_ngo], map: "fk_tbl_following_tbl_ngo1_idx")
   @@index([id_user], map: "fk_tbl_following_tbl_user1_idx")
   @@map("tbl_following")
@@ -180,9 +193,9 @@ model NGO {
   tbl_ngo_causes  NgoCauses[]
   tbl_ngo_phone   NgoPhone[]
 
-  @@map("tbl_ngo")
-  @@unique([email])
+  @@unique([email, id])
   @@index([id])
+  @@map("tbl_ngo")
 }
 
 model NgoAddress {
@@ -192,6 +205,7 @@ model NgoAddress {
   tbl_address Address @relation(fields: [id_address], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_tbl_ngo_address_tbl_address1")
   tbl_ngo     NGO     @relation(fields: [id_ngo], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tbl_ngo_address_tbl_ngo1")
 
+  @@unique([id])
   @@index([id_address], map: "fk_tbl_ngo_address_tbl_address1_idx")
   @@index([id_ngo], map: "fk_tbl_ngo_address_tbl_ngo1_idx")
   @@map("tbl_ngo_address")
@@ -204,6 +218,7 @@ model NgoCauses {
   tbl_causes Causes @relation(fields: [id_causes], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tbl_ngo_causes_tbl_causes1")
   tbl_ngo    NGO    @relation(fields: [id_ngo], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tbl_ngo_causes_tbl_ngo1")
 
+  @@unique([id])
   @@index([id_causes], map: "fk_tbl_ngo_causes_tbl_causes1_idx")
   @@index([id_ngo], map: "fk_tbl_ngo_causes_tbl_ngo1_idx")
   @@map("tbl_ngo_causes")
@@ -216,6 +231,7 @@ model NgoPhone {
   tbl_ngo   NGO    @relation(fields: [id_ngo], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tbl_ngo_phone_tbl_ngo1")
   tbl_phone Phone  @relation(fields: [id_phone], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tbl_ngo_phone_tbl_phone1")
 
+  @@unique([id])
   @@index([id_ngo], map: "fk_tbl_ngo_phone_tbl_ngo1_idx")
   @@index([id_phone], map: "fk_tbl_ngo_phone_tbl_phone1_idx")
   @@map("tbl_ngo_phone")
@@ -228,6 +244,7 @@ model UserPhone {
   tbl_phone Phone  @relation(fields: [id_phone], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tbl_user_phone_tbl_phone1")
   tbl_user  User   @relation(fields: [id_user], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_tbl_user_phone_tbl_user1")
 
+  @@unique([id])
   @@index([id_phone], map: "fk_tbl_user_phone_tbl_phone1_idx")
   @@index([id_user], map: "fk_tbl_user_phone_tbl_user1_idx")
   @@map("tbl_user_phone")
