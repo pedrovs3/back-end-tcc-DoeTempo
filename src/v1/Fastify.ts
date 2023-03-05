@@ -5,7 +5,12 @@ import fastifyJwt from '@fastify/jwt';
 import * as dotenv from 'dotenv';
 import fastifyMultipart from '@fastify/multipart';
 import {
-  appRoutes, genderRoutes, ngoRoutes, userRoutes,
+  appRoutes,
+  causesRoutes,
+  genderRoutes,
+  ngoRoutes,
+  tokenRoutes,
+  userRoutes,
 } from './routes';
 
 dotenv.config();
@@ -54,6 +59,8 @@ class App {
     this.fastify.register(userRoutes, { prefix: '/user' });
     this.fastify.register(genderRoutes, { prefix: '/gender' });
     this.fastify.register(ngoRoutes, { prefix: '/ngo' });
+    this.fastify.register(tokenRoutes, { prefix: '/token' });
+    this.fastify.register(causesRoutes, { prefix: '/causes' });
   }
 }
 

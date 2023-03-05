@@ -1,6 +1,4 @@
-import { string } from 'zod';
-
-interface ngoSchemaTypes{
+type ngoSchemaTypes = {
   name: string,
   email: string,
   password: string,

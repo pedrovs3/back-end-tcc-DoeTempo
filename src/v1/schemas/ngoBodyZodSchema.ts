@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const createNgoBody = z.object({
+const createNgoBody = z.object({
   name: z.string(),
   email: z.string().email(),
   password: z.string(),
@@ -15,3 +15,5 @@ export const createNgoBody = z.object({
     number: z.string(),
   }).array().optional(),
 });
+
+export default createNgoBody;

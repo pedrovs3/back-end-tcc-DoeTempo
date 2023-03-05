@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { prisma } from '../lib/prisma';
-import { createNgoBody } from '../schemas/ngoBodyZodSchema';
+import createNgoBody from '../schemas/ngoBodyZodSchema';
 import hashPassword from '../utils/bcryptjs/hashPassword';
 
 class NgoController {

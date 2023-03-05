@@ -6,6 +6,5 @@ export async function userRoutes(fastify: FastifyInstance) {
     reply.send('test');
   });
   fastify.post('/', usersController.store);
-  fastify.post('/signup', usersController.signup);
   fastify.delete('/:id', usersController.delete);
 }
