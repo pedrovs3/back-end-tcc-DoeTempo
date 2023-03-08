@@ -7,8 +7,11 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "npm run build && tsx watch bin/www/server.js",
     "prod": "nodemon bin/www/server.js",
-    "build": "tsc",
+    "build": "tsup src",
     "format:p": "prisma format"
+  },
+  "engines": {
+    "node": "18"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -26,6 +29,7 @@
     "dotenv-safe": "^8.2.0",
     "fastify": "^4.11.0",
     "fastify-plugin": "^4.5.0",
+    "tsup": "^6.6.3",
     "webpack-node-externals": "^3.0.0",
     "zod": "^3.20.2"
   },

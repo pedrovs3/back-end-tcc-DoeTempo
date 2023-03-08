@@ -13,7 +13,7 @@ class TokenController {
         .send({ error: ['Credenciais inválidas.'] });
     }
 
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = await prisma.user.findUnique({ where: { email } }) || await prisma.nGO.findUnique({ where: { email_id: email } });
 
     if (!user) {
       reply.status(401)

@@ -1,4 +1,4 @@
-import fastify from '../v1/Fastify';
+import fastify from '../../dist/Fastify';
 
 const run = async () => {
   try {
