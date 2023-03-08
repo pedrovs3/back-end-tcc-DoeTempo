@@ -2,7 +2,7 @@ import fastify from '../../dist/Fastify';
 
 const run = async () => {
   try {
-    await fastify.listen({ port: 3333 });
+    await fastify.listen({ port: process.env.PORT ? Number(process.env.PORT) : 3333 });
   } catch (e) {
     process.exit(1);
   }
