@@ -12,15 +12,17 @@ class UsersController {
 
       const user = await userModel.createUser(<userSchemaTypes>userSchema, newPassword);
 
-      reply.send({
-        userSchema,
-        user,
-      });
+      reply.status(201)
+        .send({
+          message: 'Created user with success!',
+          payload: user,
+        });
     } catch (error) {
-      reply.status(400).send({
-        error: 'Não foi possivel criar o usuário',
-        errorDB: { error },
-      });
+      reply.status(400)
+        .send({
+          error: 'Não foi possivel criar o usuário',
+          errorDB: { error },
+        });
     }
   }
 
