@@ -9,13 +9,15 @@ class TokenController {
     const { email, password } = request.body;
 
     if (!email || !password) {
-      reply.status(400).send({ error: ['Credenciais inválidas.'] });
+      reply.status(400)
+        .send({ error: ['Credenciais inválidas.'] });
     }
 
     const user = await prisma.user.findUnique({ where: { email } });
 
     if (!user) {
-      reply.status(401).send({ errors: ['Usuário não encontrado.'] });
+      reply.status(401)
+        .send({ errors: ['Usuário não encontrado.'] });
       return;
     }
 
@@ -36,14 +38,15 @@ class TokenController {
       },
     );
 
-    reply.status(200).send({
-      token,
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-      },
-    });
+    reply.status(201)
+      .send({
+        token,
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+        },
+      });
   }
 }
 

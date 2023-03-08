@@ -12,7 +12,10 @@ class CausesModel {
 
       return { message: 'created with success' };
     } catch (e) {
-      return e;
+      return {
+        error: 500,
+        e,
+      };
     }
   }
 }

@@ -6,11 +6,16 @@ class CausesController {
   async store(request: FastifyRequest, reply: FastifyReply) {
     try {
       const causeSchema = createCauseSchema.parse(request.body);
-      await causesModel.createCause(causeSchema);
+      const causeCreated = await causesModel.createCause(causeSchema);
 
-      reply.status(200).send({ message: 'Created with success!' });
+      reply.status(201)
+        .send({
+          message: 'Created with success!',
+          payload: causeCreated,
+        });
     } catch (e) {
-      reply.status(400).send({ errors: ['Não foi possivel concluir a operação', e] });
+      reply.status(400)
+        .send({ errors: ['Não foi possivel concluir a operação', e] });
     }
   }
 }

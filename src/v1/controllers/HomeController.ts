@@ -4,6 +4,7 @@ import { prisma } from '../lib/prisma';
 class HomeController {
   async index(request: FastifyRequest, reply: FastifyReply) {
     try {
+      // Only for development
       const users = await prisma.user.findMany({
         select: {
           cpf: true,
@@ -35,7 +36,6 @@ class HomeController {
       reply.status(200)
         .send({ users });
     } catch (error) {
-      console.log(error);
       reply.status(500)
         .send({ error });
     }

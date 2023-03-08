@@ -3,7 +3,7 @@ import { prisma } from '../lib/prisma';
 class UserModel {
   async createUser(userSchema: userSchemaTypes, newPassword: string) {
     try {
-      await prisma.user.create({
+      const user = await prisma.user.create({
         data: {
           cpf: userSchema.cpf,
           rg: userSchema.rg,
@@ -38,7 +38,7 @@ class UserModel {
         },
       });
 
-      return 'usuário criado com exito';
+      return user;
     } catch (e) {
       return e;
     }

@@ -11,7 +11,8 @@ class NgoController {
       console.log(ngos);
       reply.send({ ngos });
     } catch (e) {
-      reply.status(400).send(e);
+      reply.status(400)
+        .send(e);
     }
   }
 
@@ -42,9 +43,14 @@ class NgoController {
       });
 
       console.log(ngoCreate);
-      reply.send('Created');
+      reply.status(201)
+        .send({
+          message: 'Created with success',
+          payload: ngoCreate,
+        });
     } catch (e) {
-      reply.status(400).send(e);
+      reply.status(400)
+        .send(e);
     }
   }
 }
