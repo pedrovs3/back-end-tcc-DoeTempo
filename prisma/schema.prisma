@@ -68,7 +68,7 @@ model Address {
 model UserAddress {
   id         String  @id @unique(map: "id_UNIQUE") @default(uuid())
   id_address String  @db.Char(36)
-  id_user    String  @db.Char(36)
+  id_user    String  @db.Char(36) @unique
   address    Address @relation(fields: [id_address], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_tbl_user_address_tbl_address1")
   user       User    @relation(fields: [id_user], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_tbl_user_address_tbl_user1")
 

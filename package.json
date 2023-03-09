@@ -7,7 +7,6 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "npm run build && tsx watch bin/www/server.js",
     "prod": "nodemon bin/www/server.js",
-    "build": "tsup src",
     "format:p": "prisma format"
   },
   "engines": {

@@ -31,13 +31,7 @@ class App {
     // Setting the api routes.
     this.routes();
 
-    this.fastify.decorate('authenticate', async (request: FastifyRequest, reply: FastifyReply) => {
-      try {
-        await request.jwtVerify();
-      } catch (err) {
-        reply.send(err);
-      }
-    });
+    this.decorate();
   }
 
   private async middlewares() {
@@ -60,6 +54,16 @@ class App {
     this.fastify.register(ngoRoutes, { prefix: '/ngo' });
     this.fastify.register(tokenRoutes, { prefix: '/token' });
     this.fastify.register(causesRoutes, { prefix: '/causes' });
+  }
+
+  private decorate() {
+    this.fastify.decorate('authenticate', async (request: FastifyRequest, reply: FastifyReply) => {
+      try {
+        await request.jwtVerify();
+      } catch (err) {
+        reply.send(err);
+      }
+    });
   }
 }
 
