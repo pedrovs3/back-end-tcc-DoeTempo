@@ -5,10 +5,10 @@ import fastifyJwt from '@fastify/jwt';
 import * as dotenv from 'dotenv';
 
 import {
-  appRoutes,
   causesRoutes,
   genderRoutes,
   ngoRoutes,
+  testRoutes,
   tokenRoutes,
   userRoutes,
 } from './routes';
@@ -48,7 +48,7 @@ class App {
 
   private routes() {
     // Register routes of API
-    this.fastify.register(appRoutes);
+    this.fastify.register(testRoutes, { prefix: '/test' });
     this.fastify.register(userRoutes, { prefix: '/user' });
     this.fastify.register(genderRoutes, { prefix: '/gender' });
     this.fastify.register(ngoRoutes, { prefix: '/ngo' });
