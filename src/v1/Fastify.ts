@@ -48,7 +48,7 @@ class App {
     this.fastify.register(ngoRoutes, { prefix: '/ngo' });
     this.fastify.register(tokenRoutes, { prefix: '/token' });
     this.fastify.register(causesRoutes, { prefix: '/causes' });
-    // this.fastify.register(defaultRoutes, { prefix: '/abacaxi' });
+    // this.fastify.register(defaultRoutes, { prefix: '/test' });
   }
 
   private decorate() {

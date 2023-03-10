@@ -83,14 +83,23 @@ class UsersController {
           birthdate: bodyToUpdate.birthdate,
           email: bodyToUpdate.email,
           rg: bodyToUpdate.rg || undefined,
-          // userAddress: {
-          //   update: {
-          //     where: {
-          //       // Migrate dev for unique id_user
-          //       // id_user: bodyToUpdate.id,
-          //     },
-          //   },
-          // },
+          userAddress: {
+            update: {
+              where: {
+                // Migrate dev for unique id_user
+                id_user: bodyToUpdate.id,
+              },
+              data: {
+                address: {
+                  update: {
+                    number: bodyToUpdate.address.number,
+                    postal_code: bodyToUpdate.address.postal_code,
+                    complement: bodyToUpdate.address.complement,
+                  },
+                },
+              },
+            },
+          },
         },
       });
 
