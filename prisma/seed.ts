@@ -148,7 +148,7 @@ async function main() {
   // const ngo = await prisma.nGO.create({
   //   data: {
   //     name: 'Teste ngo',
-  //     email: 'test@test.com',
+  //     email: 'testes@testes.com',
   //     password: '4u10491',
   //     cnpj: '4029402104',
   //     tbl_ngo_address: {

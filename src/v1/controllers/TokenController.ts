@@ -6,14 +6,21 @@ import fastify from '../Fastify';
 class TokenController {
   async store(request: FastifyRequest, reply: FastifyReply) {
     // @ts-ignore
-    const { email, password } = request.body;
+    const {
+      email,
+      password,
+    }: { email: string, password: string } = request.body;
 
     if (!email || !password) {
       reply.status(400)
         .send({ error: ['Credenciais inválidas.'] });
     }
 
-    const user = await prisma.user.findUnique({ where: { email } }) || await prisma.nGO.findUnique({ where: { email_id: email } });
+    const user = await prisma.user.findUnique({ where: { email } }) || await prisma.nGO.findFirst({
+      where: {
+        email,
+      },
+    });
 
     if (!user) {
       reply.status(401)

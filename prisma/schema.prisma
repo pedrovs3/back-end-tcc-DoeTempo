@@ -185,7 +185,7 @@ model NGO {
   cnpj            String       @db.VarChar(17)
   foundation_date DateTime?    @db.Date
   description     String?      @db.Text
-  email           String       @db.VarChar(256) @unique(map: "email_UNIQUE")
+  email           String       @unique(map: "email_UNIQUE") @db.VarChar(256)
   password        String
   tbl_campaign    Campaign[]
   tbl_following   Following[]
