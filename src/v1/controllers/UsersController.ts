@@ -70,12 +70,15 @@ class UsersController {
 
   async update(request: FastifyRequest, reply: FastifyReply) {
     try {
+      // @ts-ignore
+      const { id }: string = request.params;
+
       const bodyToUpdate = updateUserBody.parse(request.body);
       const newPassword = await hashPassword(bodyToUpdate.password);
 
       const updateUser = await prisma.user.update({
         where: {
-          id: bodyToUpdate.id,
+          id,
         },
         data: {
           password: newPassword,
@@ -87,7 +90,7 @@ class UsersController {
             update: {
               where: {
                 // Migrate dev for unique id_user
-                id_user: bodyToUpdate.id,
+                id_user: id,
               },
               data: {
                 address: {

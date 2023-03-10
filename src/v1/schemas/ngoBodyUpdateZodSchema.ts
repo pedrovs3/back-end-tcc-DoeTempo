@@ -1,12 +1,14 @@
 import { z } from 'zod';
 
-const createUserBody = z.object({
+const createNgoBodyToUpdate = z.object({
   name: z.string(),
   email: z.string()
     .email(),
   password: z.string(),
-  cpf: z.string(),
-  birthdate: z.coerce.date(),
+  cnpj: z.string()
+    .min(10)
+    .max(15),
+  foundation_date: z.coerce.date(),
   address: z.object({
     postal_code: z.string(),
     number: z.string(),
@@ -14,15 +16,12 @@ const createUserBody = z.object({
       .optional()
       .nullable(),
   }),
-  gender: z.string(),
+  description: z.string(),
   phone: z.object({
     number: z.string(),
   })
     .array()
     .optional(),
-  rg: z.string()
-    .optional()
-    .nullable(),
 });
 
-export default createUserBody;
+export default createNgoBodyToUpdate;
