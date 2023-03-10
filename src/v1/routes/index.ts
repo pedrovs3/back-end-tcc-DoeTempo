@@ -3,7 +3,7 @@ import { genderRoutes } from './gender/genderRoutes';
 import { ngoRoutes } from './ngo/ngoRoutes';
 import { tokenRoutes } from './token/tokenRoutes';
 import { causesRoutes } from './cause/causesRoutes';
-import { defaultRoutes } from './testes/defaultRoutes';
+import { testsRoutes } from './test/testsRoutes';
 
 // Declaration of an api route
 
@@ -13,5 +13,5 @@ export {
   ngoRoutes,
   tokenRoutes,
   causesRoutes,
-  defaultRoutes,
+  testsRoutes,
 };

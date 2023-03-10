@@ -5,7 +5,12 @@ import fastifyJwt from '@fastify/jwt';
 import * as dotenv from 'dotenv';
 
 import {
-  causesRoutes, genderRoutes, ngoRoutes, tokenRoutes, userRoutes,
+  causesRoutes,
+  genderRoutes,
+  ngoRoutes,
+  testsRoutes,
+  tokenRoutes,
+  userRoutes,
 } from './routes';
 
 dotenv.config();
@@ -48,7 +53,7 @@ class App {
     this.fastify.register(ngoRoutes, { prefix: '/ngo' });
     this.fastify.register(tokenRoutes, { prefix: '/token' });
     this.fastify.register(causesRoutes, { prefix: '/causes' });
-    // this.fastify.register(defaultRoutes, { prefix: '/test' });
+    this.fastify.register(testsRoutes, { prefix: '/test' });
   }
 
   private decorate() {
