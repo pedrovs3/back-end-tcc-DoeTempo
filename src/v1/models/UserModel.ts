@@ -28,7 +28,7 @@ class UserModel {
           },
           gender: {
             connect: {
-              id: userSchema.gender,
+              id: userSchema.id_gender,
             },
           },
           email: userSchema.email,
@@ -57,7 +57,8 @@ class UserModel {
         },
       });
 
-      const idAddress = user!.userAddress[0].id_address;
+      // @ts-ignore
+      const idAddress = user?.userAddress[0].id_address;
 
       await prisma.user.delete({
         where: {
