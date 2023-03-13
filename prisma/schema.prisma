@@ -76,10 +76,12 @@ model Campaign {
   id                        String                 @id @unique(map: "id_UNIQUE") @default(uuid())
   title                     String                 @unique(map: "title_UNIQUE") @db.VarChar(100)
   description               String?                @db.Text
-  begin_date                DateTime               @db.Date
-  end_date                  DateTime               @db.Date
+  begin_date                DateTime
+  end_date                  DateTime
   home_office               Boolean                @default(false)
   id_ngo                    String                 @db.Char(36)
+  how_to_contribute         String?                @db.Text
+  prerequisites             String?                @db.Text
   tbl_ngo                   NGO                    @relation(fields: [id_ngo], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tbl_campaign_tbl_ngo1")
   tbl_campaign_address      CampaignAddress?
   tbl_campaign_causes       CampaignCauses[]

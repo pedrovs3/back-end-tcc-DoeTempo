@@ -5,6 +5,7 @@ import fastifyJwt from '@fastify/jwt';
 import * as dotenv from 'dotenv';
 
 import {
+  campaignRoutes,
   causesRoutes,
   genderRoutes,
   ngoRoutes,
@@ -54,6 +55,7 @@ class App {
     this.fastify.register(tokenRoutes, { prefix: '/token' });
     this.fastify.register(causesRoutes, { prefix: '/causes' });
     this.fastify.register(testsRoutes, { prefix: '/test' });
+    this.fastify.register(campaignRoutes, { prefix: '/campaign' });
   }
 
   private decorate() {
