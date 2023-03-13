@@ -1,6 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { prisma } from '../lib/prisma';
 import createCampaignBody from '../schemas/createCampaignBody';
+import createCampaignBodyToUpdate from '../schemas/createCampaignBodyToUpdate';
 
 class CampaignController {
   async index(request: FastifyRequest, reply: FastifyReply) {
@@ -79,6 +80,58 @@ class CampaignController {
 
       reply.status(200)
         .send({ campaign });
+    } catch (e) {
+      console.log(e);
+      reply.status(400)
+        .send({ errors: e });
+    }
+  }
+
+  async update(request: FastifyRequest, reply: FastifyReply) {
+    try {
+      // @ts-ignore
+      const { id }: string = request.params;
+      const bodyToUpdate = createCampaignBodyToUpdate.parse(request.body);
+
+      const updatedCampaign = await prisma.campaign.update({
+        where: {
+          id,
+        },
+        data: {
+          title: bodyToUpdate.title,
+          description: bodyToUpdate.description,
+          begin_date: bodyToUpdate.begin_date,
+          end_date: bodyToUpdate.end_date,
+          home_office: bodyToUpdate.home_office,
+          tbl_campaign_address: {
+            update: {
+              tbl_address: {
+                update: {
+                  postal_code: bodyToUpdate.address.postal_code,
+                  number: bodyToUpdate.address.number,
+                  complement: bodyToUpdate.address.complement,
+                },
+              },
+            },
+          },
+          how_to_contribute: bodyToUpdate.how_to_contribute,
+          prerequisites: bodyToUpdate.prerequisites,
+          // tbl_campaign_causes: {
+          //   // @ts-ignore
+          //   connectOrCreate: {
+          //     where: {
+          //       id,
+          //     },
+          //     data: {
+          //       id: bodyToUpdate.causes.map(({ id }) => id),
+          //     },
+          //   },
+          // },
+        },
+      });
+
+      reply.status(200)
+        .send({ updatedCampaign });
     } catch (e) {
       console.log(e);
       reply.status(400)

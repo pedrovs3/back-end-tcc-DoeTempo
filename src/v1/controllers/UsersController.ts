@@ -88,17 +88,11 @@ class UsersController {
           rg: bodyToUpdate.rg || undefined,
           userAddress: {
             update: {
-              where: {
-                // Migrate dev for unique id_user
-                id_user: id,
-              },
-              data: {
-                address: {
-                  update: {
-                    number: bodyToUpdate.address.number,
-                    postal_code: bodyToUpdate.address.postal_code,
-                    complement: bodyToUpdate.address.complement,
-                  },
+              address: {
+                update: {
+                  number: bodyToUpdate.address.number,
+                  postal_code: bodyToUpdate.address.postal_code,
+                  complement: bodyToUpdate.address.complement,
                 },
               },
             },
@@ -109,6 +103,7 @@ class UsersController {
       reply.status(200)
         .send({ user: updateUser });
     } catch (e) {
+      console.log(e);
       reply.status(400)
         .send({ error: ['Nao foi possivel atualizar o registro de usuário!'] });
     }
