@@ -174,6 +174,25 @@ class CampaignController {
         .send({ error: e });
     }
   }
+
+  async delete(request: FastifyRequest, reply: FastifyReply) {
+    try {
+      // @ts-ignore
+      const { id }: string = request.params;
+      const deleted = await prisma.campaign.delete({
+        where: {
+          id,
+        },
+      });
+
+      reply.status(200)
+        .send({ deleted });
+    } catch (e) {
+      console.log(e);
+      reply.status(200)
+        .send({ errors: e });
+    }
+  }
 }
 
 export default new CampaignController();
