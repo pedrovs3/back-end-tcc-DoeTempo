@@ -71,16 +71,11 @@ class NgoController {
           description: ngoSchema.description,
           tbl_ngo_address: {
             update: {
-              where: {
-                id_ngo: id,
-              },
-              data: {
-                tbl_address: {
-                  update: {
-                    number: ngoSchema.address.number,
-                    postal_code: ngoSchema.address.postal_code,
-                    complement: ngoSchema.address.complement,
-                  },
+              tbl_address: {
+                update: {
+                  number: ngoSchema.address.number,
+                  complement: ngoSchema.address.complement || undefined,
+                  postal_code: ngoSchema.address.postal_code,
                 },
               },
             },
@@ -92,6 +87,7 @@ class NgoController {
       reply.status(200)
         .send({ ngoUpdate });
     } catch (e) {
+      console.log(e);
       reply.status(400)
         .send({ errors: ['Não foi possivel atualizar o cadastro da ONG', e] });
     }

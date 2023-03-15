@@ -52,7 +52,7 @@ class App {
     this.fastify.register(userRoutes, { prefix: '/user' });
     this.fastify.register(genderRoutes, { prefix: '/gender' });
     this.fastify.register(ngoRoutes, { prefix: '/ngo' });
-    this.fastify.register(tokenRoutes, { prefix: '/token' });
+    this.fastify.register(tokenRoutes, { prefix: '/auth' });
     this.fastify.register(causesRoutes, { prefix: '/causes' });
     this.fastify.register(testsRoutes, { prefix: '/test' });
     this.fastify.register(campaignRoutes, { prefix: '/campaign' });
@@ -68,5 +68,23 @@ class App {
     });
   }
 }
+
+const { fastify } = new App();
+
+const port = process.env.PORT || 3000;
+
+const run = async () => {
+  try {
+    // @ts-ignore
+    await fastify.listen({
+      port,
+      host: '0.0.0.0',
+    });
+  } catch (e) {
+    process.exit(1);
+  }
+};
+
+run();
 
 export default new App().fastify;

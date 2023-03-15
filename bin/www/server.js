@@ -1,9 +1,11 @@
 import fastify from '../../dist/Fastify';
 
+const port = process.env.PORT || 3333;
+
 const run = async () => {
   try {
     await fastify.listen({
-      port: process.env.PORT ? Number(process.env.PORT) : 3333,
+      port,
       host: '0.0.0.0',
     });
   } catch (e) {
