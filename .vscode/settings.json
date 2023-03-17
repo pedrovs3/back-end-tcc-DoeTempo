@@ -1,0 +1,8 @@
+{
+  "appService.zipIgnorePattern": [
+    "node_modules{,/**}",
+    ".vscode{,/**}"
+  ],
+  "appService.defaultWebAppToDeploy": "/subscriptions/c11357aa-52f3-4b5e-9dea-48bd47e69df4/resourceGroups/tcc-doe-tempo/providers/Microsoft.Web/sites/api-doe-tempo",
+  "appService.deploySubpath": "."
+}

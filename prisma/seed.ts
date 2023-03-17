@@ -17,6 +17,17 @@ async function main() {
   //       name: 'Masculino',
   //       abbreviation: 'M',
   //     },
+  //     {
+  //       name: 'Prefiro não informar',
+  //       abbreviation: ' ',
+  //     },
+  //   ],
+  // });
+  //
+  // await prisma.type.createMany({
+  //   data: [
+  //     { name: 'USER' },
+  //     { name: 'ONG' },
   //   ],
   // });
 
@@ -39,6 +50,11 @@ async function main() {
           },
         },
       },
+      tbl_type: {
+        connect: {
+          id: '250e2a30-1b73-4c0e-8e61-b61efd24e183',
+        },
+      },
       tbl_user_phone: {
         create: {
           tbl_phone: {
@@ -50,7 +66,7 @@ async function main() {
       },
       gender: {
         connect: {
-          id: 'a3bd225a-9baf-439a-ae73-56eae0521a39',
+          id: '31e52f7c-861c-4f24-8ff9-96dad2267884',
         },
       },
     },
@@ -63,6 +79,11 @@ async function main() {
       cpf: '27489175414',
       email: 'enzodp@gmail.com',
       password: 'teste123',
+      tbl_type: {
+        connect: {
+          id: '250e2a30-1b73-4c0e-8e61-b61efd24e183',
+        },
+      },
       // @ts-ignore
       userAddress: {
         create: {
@@ -76,7 +97,7 @@ async function main() {
       },
       gender: {
         connect: {
-          id: 'a3bd225a-9baf-439a-ae73-56eae0521a39',
+          id: '31e52f7c-861c-4f24-8ff9-96dad2267884',
         },
       },
     },
@@ -89,6 +110,11 @@ async function main() {
       cpf: '48950273495',
       email: 'drpixelss@gmail.com',
       password: 'teste123',
+      tbl_type: {
+        connect: {
+          id: '250e2a30-1b73-4c0e-8e61-b61efd24e183',
+        },
+      },
       // @ts-ignore
       userAddress: {
         create: {
@@ -102,7 +128,7 @@ async function main() {
       },
       gender: {
         connect: {
-          id: 'a3bd225a-9baf-439a-ae73-56eae0521a39',
+          id: '31e52f7c-861c-4f24-8ff9-96dad2267884',
         },
       },
     },
@@ -115,6 +141,11 @@ async function main() {
     select: {
       name: true,
       email: true,
+      tbl_type: {
+        select: {
+          name: true,
+        },
+      },
       // @ts-ignore
       userAddress: {
         select: {
@@ -151,6 +182,11 @@ async function main() {
       email: 'test@test.com',
       password: '4u10491',
       cnpj: '4029402104',
+      tbl_type: {
+        connect: {
+          id: 'b2a70be9-175c-4b09-8339-b8d76748e6cf',
+        },
+      },
       tbl_ngo_address: {
         create: {
           tbl_address: {
