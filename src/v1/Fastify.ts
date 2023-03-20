@@ -58,7 +58,7 @@ class App {
     this.fastify.register(userRoutes, { prefix: '/user' });
     this.fastify.register(genderRoutes, { prefix: '/gender' });
     this.fastify.register(ngoRoutes, { prefix: '/ngo' });
-    this.fastify.register(tokenRoutes, { prefix: '/token' });
+    this.fastify.register(tokenRoutes, { prefix: '/auth' });
     this.fastify.register(causesRoutes, { prefix: '/causes' });
   }
 }

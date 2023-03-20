@@ -13,7 +13,34 @@ class TokenController {
         .send({ error: ['Credenciais inválidas.'] });
     }
 
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = await prisma.user.findUnique({ where: { email }, select: {
+        id: true,
+        name: true,
+        tbl_type: {
+          select: {
+            name: true,
+          },
+        },
+        password: true,
+        email: true,
+      } }) || await prisma.nGO.findFirst({
+      where: {
+        email,
+      },
+      select: {
+        id: true,
+        name: true,
+        tbl_type: {
+          select: {
+            name: true,
+          },
+        },
+        password: true,
+        email: true,
+      },
+    });
+
+    console.log(user);
 
     if (!user) {
       reply.status(400)
@@ -32,6 +59,7 @@ class TokenController {
       {
         id,
         email,
+
       },
       {
         expiresIn: process.env.TOKEN_EXPIRATION,
@@ -45,6 +73,7 @@ class TokenController {
           id: user.id,
           name: user.name,
           email: user.email,
+          type: user.tbl_type.name,
         },
       });
   }
