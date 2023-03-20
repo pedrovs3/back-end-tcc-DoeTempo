@@ -6,7 +6,24 @@ import hashPassword from '../utils/bcryptjs/hashPassword';
 class NgoController {
   async index(request: FastifyRequest, reply: FastifyReply) {
     try {
-      const ngos = await prisma.nGO.findMany();
+      const ngos = await prisma.nGO.findMany({
+        include: {
+          tbl_ngo_address: {
+            select: {
+              tbl_address: true,
+            },
+          },
+          tbl_ngo_causes: {
+            select: {
+              tbl_causes: {
+                select: {
+                  title: true,
+                },
+              },
+            },
+          },
+        },
+      });
 
       console.log(ngos);
       reply.send({ ngos });
@@ -27,6 +44,11 @@ class NgoController {
           email: ngoSchema.email,
           name: ngoSchema.name,
           foundation_date: ngoSchema.foundation_date,
+          tbl_type: {
+            connect: {
+              id: 'b2a70be9-175c-4b09-8339-b8d76748e6cf',
+            },
+          },
           tbl_ngo_address: {
             create: {
               tbl_address: {

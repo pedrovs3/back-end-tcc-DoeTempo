@@ -8,6 +8,11 @@ class NgoModel {
         email: ngoSchema.email,
         name: ngoSchema.name,
         foundation_date: ngoSchema.foundation_date,
+        tbl_type: {
+          connect: {
+            id: 'b2a70be9-175c-4b09-8339-b8d76748e6cf',
+          },
+        },
         tbl_ngo_address: {
           create: {
             tbl_address: {

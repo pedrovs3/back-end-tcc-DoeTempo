@@ -9,14 +9,14 @@ class TokenController {
     const { email, password } = request.body;
 
     if (!email || !password) {
-      reply.status(400)
+      reply.status(401)
         .send({ error: ['Credenciais inválidas.'] });
     }
 
     const user = await prisma.user.findUnique({ where: { email } });
 
     if (!user) {
-      reply.status(401)
+      reply.status(400)
         .send({ errors: ['Usuário não encontrado.'] });
       return;
     }

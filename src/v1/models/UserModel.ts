@@ -16,6 +16,11 @@ class UserModel {
               },
             },
           },
+          tbl_type: {
+            connect: {
+              id: '250e2a30-1b73-4c0e-8e61-b61efd24e183',
+            },
+          },
           userAddress: {
             create: {
               address: {
