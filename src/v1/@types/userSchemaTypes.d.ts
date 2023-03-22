@@ -9,7 +9,7 @@ type userSchemaTypes = {
 		number: string,
 		complement?: string
 	},
-	id_gender: string,
+	gender: string,
 	phone?: [{ number: string }]
 	rg?: string,
 }

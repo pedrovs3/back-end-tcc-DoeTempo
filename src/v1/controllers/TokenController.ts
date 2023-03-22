@@ -6,24 +6,47 @@ import fastify from '../Fastify';
 class TokenController {
   async store(request: FastifyRequest, reply: FastifyReply) {
     // @ts-ignore
-    const {
-      email,
-      password,
-    }: { email: string, password: string } = request.body;
+    const { email, password } = request.body;
 
     if (!email || !password) {
-      reply.status(400)
+      reply.status(401)
         .send({ error: ['Credenciais inválidas.'] });
     }
 
-    const user = await prisma.user.findUnique({ where: { email } }) || await prisma.nGO.findFirst({
+    const user = await prisma.user.findUnique({
+      where: { email },
+      select: {
+        id: true,
+        name: true,
+        tbl_type: {
+          select: {
+            name: true,
+          },
+        },
+        password: true,
+        email: true,
+      },
+    }) || await prisma.nGO.findFirst({
       where: {
         email,
       },
+      select: {
+        id: true,
+        name: true,
+        tbl_type: {
+          select: {
+            name: true,
+          },
+        },
+        password: true,
+        email: true,
+      },
     });
 
+    console.log(user);
+
     if (!user) {
-      reply.status(401)
+      reply.status(400)
         .send({ errors: ['Usuário não encontrado.'] });
       return;
     }
@@ -39,6 +62,7 @@ class TokenController {
       {
         id,
         email,
+
       },
       {
         expiresIn: process.env.TOKEN_EXPIRATION,
@@ -52,6 +76,7 @@ class TokenController {
           id: user.id,
           name: user.name,
           email: user.email,
+          type: user.tbl_type.name,
         },
       });
   }

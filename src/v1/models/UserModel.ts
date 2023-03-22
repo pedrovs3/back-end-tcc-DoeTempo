@@ -28,7 +28,12 @@ class UserModel {
           },
           gender: {
             connect: {
-              id: userSchema.id_gender,
+              id: userSchema.gender,
+            },
+          },
+          tbl_type: {
+            connect: {
+              name: 'USER',
             },
           },
           email: userSchema.email,

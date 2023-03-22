@@ -20,13 +20,16 @@ model User {
   id_gender                 String                 @db.Char(36)
   birthdate                 DateTime               @db.Date
   rg                        String?                @db.VarChar(30)
+  id_type                   String
   tbl_campaign_participants CampaignParticipants[]
   tbl_following             Following[]
   gender                    Gender                 @relation(fields: [id_gender], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tbl_user_tbl_gender")
+  tbl_type                  Type                   @relation(fields: [id_type], references: [id])
   userAddress               UserAddress?
   tbl_user_phone            UserPhone[]
 
   @@index([id_gender], map: "fk_tbl_user_tbl_gender_idx")
+  @@index([id_type], map: "tbl_user_id_type_fkey")
   @@map("tbl_user")
 }
 
@@ -76,12 +79,12 @@ model Campaign {
   id                        String                 @id @unique(map: "id_UNIQUE") @default(uuid())
   title                     String                 @unique(map: "title_UNIQUE") @db.VarChar(100)
   description               String?                @db.Text
-  begin_date                DateTime
-  end_date                  DateTime
+  begin_date                DateTime               @db.Date
+  end_date                  DateTime               @db.Date
   home_office               Boolean                @default(false)
+  how_to_contribute         String                 @db.Text
+  prerequisites             String                 @db.Text
   id_ngo                    String                 @db.Char(36)
-  how_to_contribute         String?                @db.Text
-  prerequisites             String?                @db.Text
   tbl_ngo                   NGO                    @relation(fields: [id_ngo], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tbl_campaign_tbl_ngo1")
   tbl_campaign_address      CampaignAddress?
   tbl_campaign_causes       CampaignCauses[]
@@ -161,19 +164,24 @@ model Following {
 }
 
 model NGO {
-  id              String      @id @unique @default(uuid())
+  id              String      @id @default(uuid())
   name            String      @db.VarChar(100)
   cnpj            String      @db.VarChar(17)
   foundation_date DateTime?   @db.Date
   description     String?     @db.Text
-  email           String      @unique(map: "email_UNIQUE") @db.VarChar(256)
+  email           String      @db.VarChar(256)
   password        String
+  id_type         String
   tbl_campaign    Campaign[]
   tbl_following   Following[]
+  tbl_type        Type        @relation(fields: [id_type], references: [id])
   tbl_ngo_address NgoAddress?
   tbl_ngo_causes  NgoCauses[]
   tbl_ngo_phone   NgoPhone[]
 
+  @@unique([email, id])
+  @@index([id])
+  @@index([id_type], map: "tbl_ngo_id_type_fkey")
   @@map("tbl_ngo")
 }
 
@@ -182,7 +190,7 @@ model NgoAddress {
   id_ngo      String  @unique @db.Char(36)
   id_address  String  @db.Char(36)
   tbl_address Address @relation(fields: [id_address], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_tbl_ngo_address_tbl_address1")
-  tbl_ngo     NGO     @relation(fields: [id_ngo], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_tbl_ngo_address_tbl_ngo1")
+  tbl_ngo     NGO     @relation(fields: [id_ngo], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tbl_ngo_address_tbl_ngo1")
 
   @@index([id_address], map: "fk_tbl_ngo_address_tbl_address1_idx")
   @@index([id_ngo], map: "fk_tbl_ngo_address_tbl_ngo1_idx")
@@ -223,4 +231,13 @@ model UserPhone {
   @@index([id_phone], map: "fk_tbl_user_phone_tbl_phone1_idx")
   @@index([id_user], map: "fk_tbl_user_phone_tbl_user1_idx")
   @@map("tbl_user_phone")
+}
+
+model Type {
+  id   String @id @default(uuid())
+  name String @unique @db.VarChar(10)
+  Ngo  NGO[]
+  User User[]
+
+  @@map("tbl_type")
 }

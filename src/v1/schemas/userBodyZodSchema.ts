@@ -14,7 +14,7 @@ const createUserBody = z.object({
       .optional()
       .nullable(),
   }),
-  id_gender: z.string(),
+  gender: z.string(),
   phone: z.object({
     number: z.string(),
   })

@@ -34,6 +34,7 @@ class CampaignController {
         .send({ campaigns });
       return campaigns;
     } catch (e) {
+      console.log(e);
       reply.status(400)
         .send({ error: e });
     }

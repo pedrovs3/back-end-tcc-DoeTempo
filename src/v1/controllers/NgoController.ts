@@ -28,6 +28,11 @@ class NgoController {
           email: ngoSchema.email,
           name: ngoSchema.name,
           foundation_date: ngoSchema.foundation_date,
+          tbl_type: {
+            connect: {
+              name: 'ONG',
+            },
+          },
           tbl_ngo_address: {
             create: {
               tbl_address: {
@@ -87,9 +92,81 @@ class NgoController {
       reply.status(200)
         .send({ ngoUpdate });
     } catch (e) {
-      console.log(e);
       reply.status(400)
         .send({ errors: ['Não foi possivel atualizar o cadastro da ONG', e] });
+    }
+  }
+
+  async show(request: FastifyRequest, reply: FastifyReply) {
+    try {
+      // @ts-ignore
+      const { id } = request.params;
+
+      const ngo = await prisma.nGO.findUnique({
+        where: {
+          id,
+        },
+        select: {
+          id: true,
+          tbl_ngo_address: {
+            select: {
+              tbl_address: {
+                select: {
+                  id: true,
+                  complement: true,
+                  postal_code: true,
+                  number: true,
+                },
+              },
+            },
+          },
+          tbl_ngo_causes: {
+            select: {
+              tbl_causes: {
+                select: {
+                  title: true,
+                  id: true,
+                },
+              },
+            },
+          },
+          email: true,
+          name: true,
+          password: true,
+          foundation_date: true,
+          tbl_type: {
+            select: {
+              name: true,
+            },
+          },
+          cnpj: true,
+          tbl_campaign: {
+            select: {
+              title: true,
+              id: true,
+            },
+          },
+          description: true,
+          tbl_following: {
+            select: {
+              id: true,
+            },
+          },
+          tbl_ngo_phone: {
+            select: {
+              tbl_phone: {
+                select: {
+                  number: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      reply.status(200).send(ngo);
+    } catch (e) {
+      reply.status(500).send({ errors: [e] });
     }
   }
 }
