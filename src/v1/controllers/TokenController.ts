@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { prisma } from '../lib/prisma';
 import checkPassword from '../utils/bcryptjs/checkPassword';
-import fastify from '../Fastify';
+import fastify from '../index';
 
 class TokenController {
   async store(request: FastifyRequest, reply: FastifyReply) {
@@ -72,7 +72,7 @@ class TokenController {
     reply.status(201)
       .send({
         token,
-        user: {
+        data: {
           id: user.id,
           name: user.name,
           email: user.email,

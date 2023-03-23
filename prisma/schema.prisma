@@ -116,6 +116,7 @@ model CampaignCauses {
 
   @@index([id_campaign], map: "fk_tbl_campaign_causes_tbl_campaign1_idx")
   @@index([id_cause], map: "fk_tbl_campaign_causes_tbl_causes1_idx")
+  @@unique([id_cause, id_campaign])
   @@map("tbl_campaign_causes")
 }
 
@@ -166,10 +167,10 @@ model Following {
 model NGO {
   id              String      @id @default(uuid())
   name            String      @db.VarChar(100)
-  cnpj            String      @db.VarChar(17)
+  cnpj            String      @db.VarChar(17) @unique
   foundation_date DateTime?   @db.Date
   description     String?     @db.Text
-  email           String      @db.VarChar(256)
+  email           String      @db.VarChar(256) @unique
   password        String
   id_type         String
   tbl_campaign    Campaign[]
@@ -179,7 +180,6 @@ model NGO {
   tbl_ngo_causes  NgoCauses[]
   tbl_ngo_phone   NgoPhone[]
 
-  @@unique([email, id])
   @@index([id])
   @@index([id_type], map: "tbl_ngo_id_type_fkey")
   @@map("tbl_ngo")

@@ -16,6 +16,10 @@ const createCampaignBody = z.object({
       .optional()
       .nullable(),
   }),
+  photoURL: z.string().url(),
+  causes: z.object({
+    id: z.string(),
+  }).array(),
 });
 
 export default createCampaignBody;

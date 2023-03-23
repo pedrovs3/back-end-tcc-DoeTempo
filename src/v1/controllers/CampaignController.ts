@@ -56,6 +56,14 @@ class CampaignController {
           home_office: true,
           begin_date: true,
           end_date: true,
+          tbl_ngo: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              cnpj: true,
+            },
+          },
           tbl_campaign_photos: {
             select: {
               photo_url: true,
@@ -63,7 +71,13 @@ class CampaignController {
           },
           tbl_campaign_causes: {
             select: {
-              tbl_causes: true,
+              tbl_causes: {
+                select: {
+                  id: true,
+                  title: true,
+                  description: true,
+                },
+              },
             },
           },
           tbl_campaign_participants: {
@@ -115,19 +129,22 @@ class CampaignController {
               },
             },
           },
+          tbl_campaign_causes: {
+            deleteMany: { id_cause: bodyToUpdate.causes[0].id || undefined },
+            createMany: {
+              data: bodyToUpdate.causes.map(({ id }) => ({ id_cause: id })),
+            },
+          },
+          // TODO
+          // tbl_campaign_photos: {
+          //   update: {
+          //     where: {
+          //       id: bodyToUpdate.photoURL?.map()
+          //     }
+          //   }
+          // }
           how_to_contribute: bodyToUpdate.how_to_contribute,
           prerequisites: bodyToUpdate.prerequisites,
-          // tbl_campaign_causes: {
-          //   // @ts-ignore
-          //   connectOrCreate: {
-          //     where: {
-          //       id,
-          //     },
-          //     data: {
-          //       id: bodyToUpdate.causes.map(({ id }) => id),
-          //     },
-          //   },
-          // },
         },
       });
 
@@ -162,6 +179,16 @@ class CampaignController {
                   complement: campaignBody.address.complement || undefined,
                 },
               },
+            },
+          },
+          tbl_campaign_photos: {
+            create: {
+              photo_url: campaignBody.photoURL,
+            },
+          },
+          tbl_campaign_causes: {
+            createMany: {
+              data: campaignBody.causes.map(({ id }) => ({ id_cause: id })),
             },
           },
           id_ngo: campaignBody.id_ngo,

@@ -16,6 +16,7 @@ const createCampaignBodyToUpdate = z.object({
       .optional()
       .nullable(),
   }),
+  photoURL: z.array(z.string().url()).nullable().optional(),
   causes: z.array(z.object({
     id: z.string(),
   })),

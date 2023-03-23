@@ -69,14 +69,14 @@ class App {
   }
 }
 
-const { fastify } = new App();
+const { fastify: index } = new App();
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3333;
 
 const run = async () => {
   try {
     // @ts-ignore
-    await fastify.listen({
+    await index.listen({
       port,
       host: '0.0.0.0',
     });

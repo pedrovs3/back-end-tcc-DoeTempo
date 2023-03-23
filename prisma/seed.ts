@@ -7,18 +7,22 @@ async function main() {
   // // await prisma.gender.deleteMany();
   // await prisma.address.deleteMany();
 
-  // await prisma.gender.createMany({
-  //   data: [
-  //     {
-  //       name: 'Feminino',
-  //       abbreviation: 'F',
-  //     },
-  //     {
-  //       name: 'Masculino',
-  //       abbreviation: 'M',
-  //     },
-  //   ],
-  // });
+  await prisma.gender.createMany({
+    data: [
+      {
+        name: 'Feminino',
+        abbreviation: 'F',
+      },
+      {
+        name: 'Masculino',
+        abbreviation: 'M',
+      },
+      {
+        name: 'Prefiro não informar',
+        abbreviation: ' ',
+      },
+    ],
+  });
 
   await prisma.type.createMany({
     data: [
