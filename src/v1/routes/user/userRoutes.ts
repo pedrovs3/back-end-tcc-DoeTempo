@@ -3,6 +3,7 @@ import usersController from '../../controllers/UsersController';
 
 export async function userRoutes(fastify: FastifyInstance) {
   fastify.post('/', { onRequest: fastify.verifyBody }, usersController.store);
+  fastify.post('/campaign/', usersController.loginInCampaign);
   fastify.get('/:id', { onRequest: fastify.authenticate }, usersController.show);
   fastify.put('/:id', { onRequest: fastify.authenticate }, usersController.update);
   fastify.delete('/:id', { onRequest: fastify.authenticate }, usersController.delete);

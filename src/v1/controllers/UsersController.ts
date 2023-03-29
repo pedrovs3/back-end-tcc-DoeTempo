@@ -1,5 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import 'dotenv/config';
+import * as repl from 'repl';
 import userModel from '../models/UserModel';
 import hashPassword from '../utils/bcryptjs/hashPassword';
 import createUserBody from '../schemas/userBodyZodSchema';
@@ -86,6 +87,7 @@ class UsersController {
           birthdate: bodyToUpdate.birthdate,
           email: bodyToUpdate.email,
           rg: bodyToUpdate.rg || undefined,
+          photoURL: bodyToUpdate.photoURL || undefined,
           userAddress: {
             update: {
               address: {
@@ -103,9 +105,34 @@ class UsersController {
       reply.status(200)
         .send({ user: updateUser });
     } catch (e) {
-      console.log(e);
       reply.status(400)
         .send({ error: ['Nao foi possivel atualizar o registro de usuário!'] });
+    }
+  }
+
+  async loginInCampaign(request: FastifyRequest, reply: FastifyReply) {
+    try {
+      // @ts-ignore
+      const { query }: {idUser: string, idCampaign: string} = request;
+
+      const subscribedUser = await prisma.campaignParticipants.create({
+        data: {
+          tbl_user: {
+            connect: {
+              id: query.idUser,
+            },
+          },
+          tbl_campaign: {
+            connect: {
+              id: query.idCampaign,
+            },
+          },
+        },
+      });
+
+      reply.send({ message: 'Parabens! Agora você está inscrito na campanha.', data: subscribedUser });
+    } catch (e) {
+      reply.send(e);
     }
   }
 }

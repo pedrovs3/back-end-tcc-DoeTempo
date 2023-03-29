@@ -9,5 +9,6 @@ type ngoSchemaTypes = {
     number: string,
     complement?: string
   },
-  phone?: [{ number: string }]
+  phone?: [{ number: string }],
+  photoURL: string
 }

@@ -7,10 +7,11 @@ class HomeController {
       // Only for development
       const users = await prisma.user.findMany({
         select: {
+          id: true,
           cpf: true,
           birthdate: true,
           email: true,
-          id: true,
+          photoURL: true,
           name: true,
           password: true,
           tbl_user_phone: {

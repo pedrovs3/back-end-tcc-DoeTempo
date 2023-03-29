@@ -22,6 +22,7 @@ const createNgoBodyToUpdate = z.object({
   })
     .array()
     .optional(),
+  photoURL: z.string().optional().nullable(),
 });
 
 export default createNgoBodyToUpdate;

@@ -40,6 +40,7 @@ class UserModel {
           password: newPassword,
           name: userSchema.name,
           birthdate: userSchema.birthdate,
+          photoURL: userSchema.photoURL,
         },
       });
 
@@ -57,13 +58,23 @@ class UserModel {
           id,
         },
         include: {
-          // @ts-ignore
-          userAddress: true,
+          userAddress: {
+            select: {
+              address: {
+                select: {
+                  id: true,
+                },
+              },
+            },
+          },
         },
       });
 
+      console.log(user);
+
       // @ts-ignore
-      const idAddress = user?.userAddress[0].id_address;
+      const idAddress = user?.userAddress.address.id;
+      console.log(idAddress);
 
       await prisma.user.delete({
         where: {
@@ -79,6 +90,7 @@ class UserModel {
 
       return user;
     } catch (e) {
+      console.log(e);
       return e;
     }
   }

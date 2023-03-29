@@ -45,6 +45,7 @@ class NgoController {
             },
           },
           password: newPassword,
+          photoURL: ngoSchema.photoURL || undefined,
         },
       });
 
@@ -86,6 +87,7 @@ class NgoController {
             },
           },
           password: newPassword,
+          photoURL: ngoSchema.photoURL || undefined,
         },
       });
 

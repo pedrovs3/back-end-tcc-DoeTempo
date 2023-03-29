@@ -14,6 +14,7 @@ const createNgoBody = z.object({
   phone: z.object({
     number: z.string(),
   }).array().optional(),
+  photoURL: z.string().optional().nullable(),
 });
 
 export default createNgoBody;

@@ -20,6 +20,12 @@ class NgoModel {
           },
         },
         password: newPassword,
+        photoURL: ngoSchema.photoURL,
+        tbl_type: {
+          connect: {
+            name: 'ONG',
+          },
+        },
       },
     });
   }
