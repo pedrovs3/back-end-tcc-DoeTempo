@@ -17,7 +17,15 @@ class CampaignController {
           home_office: true,
           prerequisites: true,
           how_to_contribute: true,
-          tbl_ngo: true,
+          tbl_ngo: {
+            select: {
+              id: true,
+              name: true,
+              description: true,
+              email: true,
+              cnpj: true,
+            },
+          },
           tbl_campaign_address: {
             select: {
               tbl_address: true,
@@ -32,7 +40,6 @@ class CampaignController {
 
       reply.status(200)
         .send({ campaigns });
-      return campaigns;
     } catch (e) {
       console.log(e);
       reply.status(400)
@@ -64,6 +71,7 @@ class CampaignController {
               cnpj: true,
               description: true,
               photoURL: true,
+              password: false,
             },
           },
           tbl_campaign_photos: {

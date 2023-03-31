@@ -23,5 +23,6 @@ module.exports = {
     camelcase: 'off',
     '@typescript-eslint/ban-ts-comment': 'off',
     'class-methods-use-this': 'off',
+    'consistent-return': 'off',
   },
 };
