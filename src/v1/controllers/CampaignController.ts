@@ -62,6 +62,8 @@ class CampaignController {
               name: true,
               email: true,
               cnpj: true,
+              description: true,
+              photoURL: true,
             },
           },
           tbl_campaign_photos: {
