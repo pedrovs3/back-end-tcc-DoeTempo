@@ -52,7 +52,7 @@ class CampaignController {
       // @ts-ignore
       const { id }: string = request.params;
 
-      const campaign = await prisma.campaign.findUnique({
+      const campaigns = await prisma.campaign.findUnique({
         where: { id },
         select: {
           id: true,
@@ -104,7 +104,7 @@ class CampaignController {
       });
 
       reply.status(200)
-        .send({ campaign });
+        .send({ campaigns });
     } catch (e) {
       console.log(e);
       reply.status(400)

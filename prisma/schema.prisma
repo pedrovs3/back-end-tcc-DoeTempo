@@ -20,10 +20,12 @@ model User {
   id_gender                 String                 @db.Char(36)
   birthdate                 DateTime               @db.Date
   rg                        String?                @db.VarChar(30)
-  photoURL                  String                 @default("https://firebasestorage.googleapis.com/v0/b/doe-tempo-50ccb.appspot.com/o/images%2Fdefault-user-icon-13.jpg?alt=media&token=83439f87-8b14-44fc-a4f1-d20106d9ab70")
   id_type                   String
+  photoURL                  String                 @default("https://firebasestorage.googleapis.com/v0/b/doe-tempo-50ccb.appspot.com/o/images%2Fdefault-user-icon-13.jpg?alt=media&token=83439f87-8b14-44fc-a4f1-d20106d9ab70")
   tbl_campaign_participants CampaignParticipants[]
+  CommentUser               CommentUser[]
   tbl_following             Following[]
+  PostUser                  PostUser[]
   gender                    Gender                 @relation(fields: [id_gender], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tbl_user_tbl_gender")
   tbl_type                  Type                   @relation(fields: [id_type], references: [id])
   userAddress               UserAddress?
@@ -83,9 +85,9 @@ model Campaign {
   begin_date                DateTime               @db.Date
   end_date                  DateTime               @db.Date
   home_office               Boolean                @default(false)
+  id_ngo                    String                 @db.Char(36)
   how_to_contribute         String                 @db.Text
   prerequisites             String                 @db.Text
-  id_ngo                    String                 @db.Char(36)
   tbl_ngo                   NGO                    @relation(fields: [id_ngo], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_tbl_campaign_tbl_ngo1")
   tbl_campaign_address      CampaignAddress?
   tbl_campaign_causes       CampaignCauses[]
@@ -128,6 +130,7 @@ model CampaignParticipants {
   tbl_campaign Campaign @relation(fields: [id_campaign], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_tbl_campaign_participants_tbl_campaign1")
   tbl_user     User     @relation(fields: [id_user], references: [id], onDelete: SetDefault, onUpdate: NoAction, map: "fk_tbl_campaign_participants_tbl_user1")
 
+  @@unique([id_campaign, id_user])
   @@index([id_campaign], map: "fk_tbl_campaign_participants_tbl_campaign1_idx")
   @@index([id_user], map: "fk_tbl_campaign_participants_tbl_user1_idx")
   @@map("tbl_campaign_participants")
@@ -166,21 +169,23 @@ model Following {
 }
 
 model NGO {
-  id              String      @id @default(uuid())
-  name            String      @db.VarChar(100)
-  cnpj            String      @unique @db.VarChar(17)
-  foundation_date DateTime?   @db.Date
-  description     String?     @db.Text
-  email           String      @unique @db.VarChar(256)
-  photoURL        String      @default("https://firebasestorage.googleapis.com/v0/b/doe-tempo-50ccb.appspot.com/o/images%2Fdefault-user-icon-13.jpg?alt=media&token=83439f87-8b14-44fc-a4f1-d20106d9ab70")
+  id              String       @id @default(uuid())
+  name            String       @db.VarChar(100)
+  cnpj            String       @unique @db.VarChar(17)
+  foundation_date DateTime?    @db.Date
+  description     String?      @db.Text
+  email           String       @unique @db.VarChar(256)
   password        String
   id_type         String
+  photoURL        String       @default("https://firebasestorage.googleapis.com/v0/b/doe-tempo-50ccb.appspot.com/o/images%2Fdefault-user-icon-13.jpg?alt=media&token=83439f87-8b14-44fc-a4f1-d20106d9ab70")
   tbl_campaign    Campaign[]
+  CommentNgo      CommentNgo[]
   tbl_following   Following[]
-  tbl_type        Type        @relation(fields: [id_type], references: [id])
+  tbl_type        Type         @relation(fields: [id_type], references: [id])
   tbl_ngo_address NgoAddress?
   tbl_ngo_causes  NgoCauses[]
   tbl_ngo_phone   NgoPhone[]
+  PostNgo         PostNgo[]
 
   @@index([id])
   @@index([id_type], map: "tbl_ngo_id_type_fkey")
@@ -242,4 +247,88 @@ model Type {
   User User[]
 
   @@map("tbl_type")
+}
+
+model Post {
+  id         String      @id @unique @default(dbgenerated("(uuid())"))
+  content    String?     @db.Text
+  created_at DateTime    @default(now())
+  Comment    Comment[]
+  PostNgo    PostNgo[]
+  PostPhoto  PostPhoto[]
+  PostUser   PostUser[]
+
+  @@map("tbl_post")
+}
+
+model PostPhoto {
+  id        String @id @unique @default(uuid())
+  id_post   String
+  photo_url String @db.VarChar(256)
+  post      Post   @relation(fields: [id_post], references: [id])
+
+  @@index([id_post], map: "tbl_post_photo_id_post_fkey")
+  @@map("tbl_post_photo")
+}
+
+model PostNgo {
+  id      String @id @unique @default(uuid())
+  id_post String
+  id_ngo  String
+  ngo     NGO    @relation(fields: [id_ngo], references: [id])
+  post    Post   @relation(fields: [id_post], references: [id])
+
+  @@index([id_ngo], map: "tbl_post_ngo_id_ngo_fkey")
+  @@index([id_post], map: "tbl_post_ngo_id_post_fkey")
+  @@map("tbl_post_ngo")
+}
+
+model PostUser {
+  id      String @id @unique @default(uuid())
+  id_post String
+  id_user String
+  post    Post   @relation(fields: [id_post], references: [id])
+  user    User   @relation(fields: [id_user], references: [id])
+
+  @@index([id_post], map: "tbl_post_user_id_post_fkey")
+  @@index([id_user], map: "tbl_post_user_id_user_fkey")
+  @@map("tbl_post_user")
+}
+
+model Comment {
+  id          String        @id @unique @default(uuid())
+  content     String        @db.Text
+  likes       Int
+  created_at  DateTime      @default(now())
+  id_post     String
+  post        Post          @relation(fields: [id_post], references: [id], onDelete: Cascade)
+  CommentNgo  CommentNgo[]
+  CommentUser CommentUser[]
+
+  @@index([id_post], map: "tbl_comment_id_post_fkey")
+  @@map("tbl_comment")
+}
+
+model CommentUser {
+  id         String  @id @unique @default(uuid())
+  id_comment String
+  id_user    String
+  comment    Comment @relation(fields: [id_comment], references: [id], onDelete: Cascade, map: "fk_tbl_comment_tbl_user")
+  user       User    @relation(fields: [id_user], references: [id], onDelete: Cascade)
+
+  @@index([id_comment], map: "fk_tbl_comment_tbl_user")
+  @@index([id_user], map: "tbl_comment_user_id_user_fkey")
+  @@map("tbl_comment_user")
+}
+
+model CommentNgo {
+  id         String  @id @unique @default(uuid())
+  id_comment String
+  nGOId      String
+  comment    Comment @relation(fields: [id_comment], references: [id], onDelete: Cascade, map: "fk_tbl_comment_tbl_ngo")
+  ngo        NGO     @relation(fields: [nGOId], references: [id], onDelete: Cascade)
+
+  @@index([id_comment], map: "fk_tbl_comment_tbl_ngo")
+  @@index([nGOId], map: "tbl_comment_ngo_nGOId_fkey")
+  @@map("tbl_comment_ngo")
 }

@@ -7,29 +7,29 @@ async function main() {
   // // await prisma.gender.deleteMany();
   // await prisma.address.deleteMany();
 
-  await prisma.gender.createMany({
-    data: [
-      {
-        name: 'Feminino',
-        abbreviation: 'F',
-      },
-      {
-        name: 'Masculino',
-        abbreviation: 'M',
-      },
-      {
-        name: 'Prefiro não informar',
-        abbreviation: ' ',
-      },
-    ],
-  });
-
-  await prisma.type.createMany({
-    data: [
-      { name: 'USER' },
-      { name: 'ONG' },
-    ],
-  });
+  // await prisma.gender.createMany({
+  //   data: [
+  //     {
+  //       name: 'Feminino',
+  //       abbreviation: 'F',
+  //     },
+  //     {
+  //       name: 'Masculino',
+  //       abbreviation: 'M',
+  //     },
+  //     {
+  //       name: 'Prefiro não informar',
+  //       abbreviation: ' ',
+  //     },
+  //   ],
+  // });
+  //
+  // await prisma.type.createMany({
+  //   data: [
+  //     { name: 'USER' },
+  //     { name: 'ONG' },
+  //   ],
+  // });
 
   // @ts-ignore
   // const user1 = await prisma.user.create({
@@ -39,6 +39,11 @@ async function main() {
   //     cpf: '48937257501',
   //     email: 'Teste@hotmail.com',
   //     password: 'teste123',
+  //     tbl_type: {
+  //       connect: {
+  //         name: 'USER',
+  //       },
+  //     },
   //     // @ts-ignore
   //     userAddress: {
   //       create: {
@@ -61,7 +66,7 @@ async function main() {
   //     },
   //     gender: {
   //       connect: {
-  //         id: 'a3bd225a-9baf-439a-ae73-56eae0521a39',
+  //         id: 'a473a683-30a6-470c-b329-bd23de75426d',
   //       },
   //     },
   //   },

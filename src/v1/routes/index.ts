@@ -5,6 +5,7 @@ import { tokenRoutes } from './token/tokenRoutes';
 import { causesRoutes } from './cause/causesRoutes';
 import { testsRoutes } from './test/testsRoutes';
 import { campaignRoutes } from './campaign/campaignRoutes';
+import { publicationRoutes } from './publication/publicationRoutes';
 
 // Declaration of an api route
 
@@ -16,4 +17,5 @@ export {
   causesRoutes,
   testsRoutes,
   campaignRoutes,
+  publicationRoutes,
 };

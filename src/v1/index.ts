@@ -12,6 +12,7 @@ import {
   testsRoutes,
   tokenRoutes,
   userRoutes,
+  publicationRoutes,
 } from './routes';
 
 dotenv.config();
@@ -56,6 +57,7 @@ class App {
     this.fastify.register(causesRoutes, { prefix: '/causes' });
     this.fastify.register(testsRoutes, { prefix: '/test' });
     this.fastify.register(campaignRoutes, { prefix: '/campaign' });
+    this.fastify.register(publicationRoutes, { prefix: '/post' });
   }
 
   private decorate() {
