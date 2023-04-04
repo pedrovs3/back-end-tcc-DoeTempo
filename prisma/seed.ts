@@ -23,7 +23,7 @@ async function main() {
   //     },
   //   ],
   // });
-  //
+	//
   // await prisma.type.createMany({
   //   data: [
   //     { name: 'USER' },
