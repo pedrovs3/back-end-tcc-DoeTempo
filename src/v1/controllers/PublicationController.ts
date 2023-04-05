@@ -125,7 +125,7 @@ class PublicationController {
         });
       }
 
-      reply.status(200).send({ message: 'Created with success!', payload: data });
+      reply.status(201).send({ message: 'Created with success!', payload: data });
     } catch (e) {
       console.log(e);
       reply.status(500).send({ errors: ['Não foi possivel criar o post!'] });

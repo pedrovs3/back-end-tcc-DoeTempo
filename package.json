@@ -8,7 +8,7 @@
     "dev": "npm run build && node ./dist/index.js",
     "start": "nodemon ./dist/index.js",
     "build": "tsup src",
-    "format:p": "prisma format"
+    "format:p": "dist/prisma format"
   },
   "engines": {
     "node": "18"
