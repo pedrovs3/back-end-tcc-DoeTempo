@@ -131,6 +131,42 @@ class PublicationController {
       reply.status(500).send({ errors: ['Não foi possivel criar o post!'] });
     }
   }
+
+  async update(request: FastifyRequest, reply: FastifyReply) {
+    try {
+      const createBodyToUpdate = z.object({
+        content: z.string(),
+        photos: z.string().array(),
+      });
+
+      const body = createBodyToUpdate.parse(request.body);
+
+      // @ts-ignore
+      const { id }: string = request.params;
+
+      const updatedBody = await prisma.post.update({
+        where: {
+          id,
+        },
+        data: {
+          content: body.content,
+          PostPhoto: {
+            deleteMany: {
+              id_post: id,
+            },
+            create: body.photos.map((photo_url) => ({ photo_url })),
+          },
+        },
+      });
+
+      console.log(updatedBody);
+
+      reply.status(200).send({ message: 'Updated with success!', updatedBody });
+    } catch (e) {
+      console.log(e);
+      reply.status(500).send({ errors: [e] });
+    }
+  }
 }
 
 export default new PublicationController();
