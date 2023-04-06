@@ -167,6 +167,26 @@ class PublicationController {
       reply.status(500).send({ errors: [e] });
     }
   }
+
+  async delete(request: FastifyRequest, reply: FastifyReply) {
+    try {
+      // @ts-ignore
+      const { id } = request.params;
+
+      if (!id) {
+        reply.status(400).send({ errors: ['ID missing!'] });
+      }
+
+      await prisma.post.delete({
+        where: {
+          id,
+        },
+      });
+    } catch (e) {
+      console.log(e);
+      reply.status(500).send({ errors: [e] });
+    }
+  }
 }
 
 export default new PublicationController();
