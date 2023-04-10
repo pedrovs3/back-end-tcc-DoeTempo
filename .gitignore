@@ -4,3 +4,4 @@ node_modules
 bin/v1
 dist
 dist/test.txt
+dist/prisma

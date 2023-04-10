@@ -112,11 +112,40 @@ class CampaignController {
     }
   }
 
+  async showByName(request: FastifyRequest, reply: FastifyReply) {
+    try {
+      // @ts-ignore
+      const { search } = request.query;
+
+      if (!search) {
+        reply.status(400).send({ errors: ['No value for search!'] });
+      }
+
+      const response = await prisma.campaign.findMany({
+        where: {
+          title: {
+            contains: search,
+          },
+        },
+      });
+
+      if (!response) {
+        reply.status(400).send({ errors: [`No values for search ['${search}]`] });
+      }
+
+      reply.status(200).send({ message: `Values for ['${search}']`, payload: response });
+ 		} catch (e) {
+      console.log(e);
+      reply.status(500).send({ errrors: ['Não foi possivel concluir a requisição.'] });
+    }
+  }
+
   async update(request: FastifyRequest, reply: FastifyReply) {
     try {
       // @ts-ignore
       const { id }: string = request.params;
       const bodyToUpdate = createCampaignBodyToUpdate.parse(request.body);
+      console.log(bodyToUpdate.causes.map((cause) => ({ id_cause: cause.id })));
 
       const updatedCampaign = await prisma.campaign.update({
         where: {
@@ -140,9 +169,8 @@ class CampaignController {
             },
           },
           tbl_campaign_causes: {
-            deleteMany: { id_cause: bodyToUpdate.causes[0].id || undefined },
-            createMany: {
-              data: bodyToUpdate.causes.map(({ id }) => ({ id_cause: id })),
+            deleteMany: {
+              id,
             },
           },
           // TODO
