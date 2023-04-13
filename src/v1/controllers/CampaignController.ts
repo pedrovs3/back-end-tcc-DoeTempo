@@ -26,6 +26,16 @@ class CampaignController {
               cnpj: true,
             },
           },
+          tbl_campaign_causes: {
+            select: {
+              tbl_causes: {
+                select: {
+                  id: true,
+                  title: true,
+                },
+              },
+            },
+          },
           tbl_campaign_address: {
             select: {
               tbl_address: true,
@@ -52,7 +62,11 @@ class CampaignController {
       // @ts-ignore
       const { id }: string = request.params;
 
-      const campaigns = await prisma.campaign.findUnique({
+      if (!id) {
+        reply.status(400).send({ errors: ['Id não enviado!'] });
+      }
+
+      const camapaign = await prisma.campaign.findUnique({
         where: { id },
         select: {
           id: true,
@@ -103,8 +117,12 @@ class CampaignController {
         },
       });
 
+      if (!camapaign) {
+        reply.status(400).send('Ainda não há campanhas registradas!');
+      }
+
       reply.status(200)
-        .send({ campaigns });
+        .send({ campaigns: camapaign });
     } catch (e) {
       console.log(e);
       reply.status(400)
@@ -144,8 +162,13 @@ class CampaignController {
     try {
       // @ts-ignore
       const { id }: string = request.params;
+
+      if (!id) {
+        reply.status(400).send({ errors: ['Id não enviado!'] });
+        return;
+      }
+
       const bodyToUpdate = createCampaignBodyToUpdate.parse(request.body);
-      console.log(bodyToUpdate.causes.map((cause) => ({ id_cause: cause.id })));
 
       const updatedCampaign = await prisma.campaign.update({
         where: {
@@ -172,6 +195,9 @@ class CampaignController {
             deleteMany: {
               id,
             },
+            createMany: {
+              data: bodyToUpdate.causes.map((cause) => ({ id_cause: cause.id })),
+            },
           },
           // TODO
           // tbl_campaign_photos: {
@@ -185,6 +211,11 @@ class CampaignController {
           prerequisites: bodyToUpdate.prerequisites,
         },
       });
+
+      if (!updatedCampaign) {
+        reply.status(400).send({ errors: ['Não foi possivel atualizar a campanha!'] });
+        return;
+      }
 
       reply.status(200)
         .send({ updatedCampaign });
@@ -220,9 +251,14 @@ class CampaignController {
             },
           },
           tbl_campaign_photos: {
-            create: {
-              photo_url: campaignBody.photoURL,
+            createMany: {
+              data: campaignBody.photoURL.map((photo_url) => ({ photo_url })),
             },
+            // Criando a campanha com apenas uma foto! \\
+
+            // create: {
+            //   photo_url: campaignBody.photoURL,
+            // },
           },
           tbl_campaign_causes: {
             createMany: {
@@ -245,14 +281,17 @@ class CampaignController {
     try {
       // @ts-ignore
       const { id }: string = request.params;
-      const deleted = await prisma.campaign.delete({
+
+      if (!id) {
+        reply.status(400).send({ errors: ['Id não enviado'] });
+      }
+      await prisma.campaign.delete({
         where: {
           id,
         },
       });
-
       reply.status(200)
-        .send({ deleted });
+        .send({ deleted: true });
     } catch (e) {
       console.log(e);
       reply.status(200)

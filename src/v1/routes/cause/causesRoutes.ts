@@ -2,6 +2,6 @@ import { FastifyInstance } from 'fastify';
 import causesController from '../../controllers/CausesController';
 
 export async function causesRoutes(fastify: FastifyInstance) {
-  fastify.post('/', { onRequest: fastify.authenticate }, causesController.store);
-  fastify.get('/', { onRequest: fastify.authenticate }, causesController.index);
+  fastify.post('/', { preValidation: fastify.authenticate }, causesController.store);
+  fastify.get('/', { preValidation: fastify.authenticate }, causesController.index);
 }

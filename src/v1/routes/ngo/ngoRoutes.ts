@@ -6,5 +6,5 @@ export async function ngoRoutes(fastify: FastifyInstance) {
   fastify.get('/:id', ngoController.show);
   fastify.post('/', ngoController.store);
   fastify.put('/:id', ngoController.update);
-  fastify.delete('/:id', ngoController.delete);
+  fastify.delete('/:id', { preValidation: fastify.authenticate }, ngoController.delete);
 }

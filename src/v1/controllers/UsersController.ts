@@ -1,6 +1,5 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import 'dotenv/config';
-import * as repl from 'repl';
 import userModel from '../models/UserModel';
 import hashPassword from '../utils/bcryptjs/hashPassword';
 import createUserBody from '../schemas/userBodyZodSchema';
@@ -14,8 +13,6 @@ class UsersController {
       const newPassword = await hashPassword(userSchema.password);
 
       const user = await userModel.createUser(<userSchemaTypes>userSchema, newPassword);
-
-      console.log(user);
 
       reply.status(201)
         .send({
@@ -54,6 +51,10 @@ class UsersController {
       // @ts-ignore
       const id: string = request.params;
 
+      if (!id) {
+        reply.status(400).send({ errors: ['Id is missing!'] });
+      }
+
       const user = await userModel.findUserById(id);
 
       if (!user) {
@@ -73,6 +74,10 @@ class UsersController {
     try {
       // @ts-ignore
       const { id }: string = request.params;
+
+      if (!id) {
+        reply.status(400).send({ errors: ['Id is missing!'] });
+      }
 
       const bodyToUpdate = updateUserBody.parse(request.body);
       const newPassword = await hashPassword(bodyToUpdate.password);
@@ -102,10 +107,14 @@ class UsersController {
         },
       });
 
+      if (!updateUser) {
+        reply.status(500).send({ errors: ['Não foi possivel atualizar o registro do usuário.'] });
+      }
+
       reply.status(200)
         .send({ user: updateUser });
     } catch (e) {
-      reply.status(400)
+      reply.status(500)
         .send({ error: ['Nao foi possivel atualizar o registro de usuário!'] });
     }
   }
@@ -114,6 +123,10 @@ class UsersController {
     try {
       // @ts-ignore
       const { query }: {idUser: string, idCampaign: string} = request;
+
+      if (!query) {
+        reply.status(400).send({ errors: ['Um ou mais argumentos estão faltando!'] });
+      }
 
       const subscribedUser = await prisma.campaignParticipants.create({
         data: {
@@ -129,6 +142,10 @@ class UsersController {
           },
         },
       });
+
+      if (!subscribedUser) {
+        reply.status(500).send({ errors: ['Não foi possivel registrar o usuário nesta campanha!'] });
+      }
 
       reply.send({ message: 'Parabens! Agora você está inscrito na campanha.', data: subscribedUser });
     } catch (e) {

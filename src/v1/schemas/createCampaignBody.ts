@@ -16,7 +16,7 @@ const createCampaignBody = z.object({
       .optional()
       .nullable(),
   }),
-  photoURL: z.string().url(),
+  photoURL: z.string().url().array(),
   causes: z.object({
     id: z.string(),
   }).array(),

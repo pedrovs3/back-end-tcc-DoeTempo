@@ -9,6 +9,11 @@ class NgoController {
     try {
       const ngos = await prisma.nGO.findMany();
 
+      if (!ngos) {
+        reply.status(200).send({ message: 'Não há ong`s registradas!' });
+        return;
+      }
+
       reply.status(200)
         .send({ ngos });
     } catch (e) {
@@ -48,6 +53,10 @@ class NgoController {
           photoURL: ngoSchema.photoURL || undefined,
         },
       });
+
+      if (!ngoCreate.id) {
+        reply.status(400).send({ errors: ['Houve um erro ao registrar a ong.', ngoCreate] });
+      }
 
       reply.status(201)
         .send({
@@ -90,6 +99,13 @@ class NgoController {
           photoURL: ngoSchema.photoURL || undefined,
         },
       });
+
+      if (!ngoUpdate.id) {
+        reply.status(400).send({
+          errors: ['Não foi possivel atualizar o registro de ong.', ngoUpdate],
+        });
+        return;
+      }
 
       reply.status(200)
         .send({ ngoUpdate });
@@ -165,6 +181,10 @@ class NgoController {
           },
         },
       });
+
+      if (!ngo) {
+        reply.status(400).send({ message: 'Não foram encontradas ongs com esse registro!.' });
+      }
 
       reply.status(200).send(ngo);
     } catch (e) {

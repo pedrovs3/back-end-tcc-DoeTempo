@@ -70,8 +70,6 @@ class UserModel {
         },
       });
 
-      console.log(user);
-
       // @ts-ignore
       const idAddress = user?.userAddress.address.id;
       console.log(idAddress);
