@@ -146,6 +146,53 @@ class CampaignController {
             contains: search,
           },
         },
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          how_to_contribute: true,
+          prerequisites: true,
+          home_office: true,
+          begin_date: true,
+          end_date: true,
+          tbl_ngo: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              cnpj: true,
+              description: true,
+              photoURL: true,
+              password: false,
+            },
+          },
+          tbl_campaign_photos: {
+            select: {
+              photo_url: true,
+            },
+          },
+          tbl_campaign_causes: {
+            select: {
+              tbl_causes: {
+                select: {
+                  id: true,
+                  title: true,
+                  description: true,
+                },
+              },
+            },
+          },
+          tbl_campaign_participants: {
+            select: {
+              tbl_user: true,
+            },
+          },
+          tbl_campaign_address: {
+            select: {
+              tbl_address: true,
+            },
+          },
+        },
       });
 
       if (!response) {
