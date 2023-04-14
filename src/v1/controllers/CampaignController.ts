@@ -24,6 +24,7 @@ class CampaignController {
               description: true,
               email: true,
               cnpj: true,
+              photoURL: true,
             },
           },
           tbl_campaign_causes: {
