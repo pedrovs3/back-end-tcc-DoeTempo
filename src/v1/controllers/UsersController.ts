@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import 'dotenv/config';
-import userModel from '../models/UserModel';
-import hashPassword from '../utils/bcryptjs/hashPassword';
+import userModel from '../domain/models/UserModel';
+import hashPassword from '../utils/hashPassword';
 import createUserBody from '../schemas/userBodyZodSchema';
 import { prisma } from '../lib/prisma';
 import updateUserBody from '../schemas/updateUserBody';

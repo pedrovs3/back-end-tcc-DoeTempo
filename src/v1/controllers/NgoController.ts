@@ -1,8 +1,9 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { prisma } from '../lib/prisma';
 import createNgoBody from '../schemas/ngoBodyZodSchema';
-import hashPassword from '../utils/bcryptjs/hashPassword';
+import hashPassword from '../utils/hashPassword';
 import createNgoBodyToUpdate from '../schemas/ngoBodyUpdateZodSchema';
+import ngoRepository from '../domain/repositories/Ngo.repository';
 
 class NgoController {
   async index(request: FastifyRequest, reply: FastifyReply) {
@@ -27,32 +28,7 @@ class NgoController {
       const ngoSchema = createNgoBody.parse(request.body);
       const newPassword = await hashPassword(ngoSchema.password);
 
-      const ngoCreate = await prisma.nGO.create({
-        data: {
-          cnpj: ngoSchema.cnpj,
-          email: ngoSchema.email,
-          name: ngoSchema.name,
-          foundation_date: ngoSchema.foundation_date,
-          tbl_type: {
-            connect: {
-              name: 'ONG',
-            },
-          },
-          tbl_ngo_address: {
-            create: {
-              tbl_address: {
-                create: {
-                  number: ngoSchema.address.number,
-                  postal_code: ngoSchema.address.postal_code,
-                  complement: ngoSchema.address.complement || null,
-                },
-              },
-            },
-          },
-          password: newPassword,
-          photoURL: ngoSchema.photoURL || undefined,
-        },
-      });
+      const ngoCreate = await ngoRepository.createNgo(<ngoSchemaTypes>ngoSchema, newPassword);
 
       if (!ngoCreate.id) {
         reply.status(400).send({ errors: ['Houve um erro ao registrar a ong.', ngoCreate] });

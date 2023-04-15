@@ -1,6 +1,6 @@
-import { prisma } from '../lib/prisma';
+import { prisma } from '../../lib/prisma';
 
-class CausesModel {
+class CausesRepository {
   async createCause(causeSchema: CauseSchemaTypes) {
     try {
       const cause = await prisma.causes.create({
@@ -9,7 +9,6 @@ class CausesModel {
           description: causeSchema.description,
         },
       });
-
       return cause;
     } catch (e) {
       return {
@@ -18,6 +17,10 @@ class CausesModel {
       };
     }
   }
+
+  async findAll() {
+    return prisma.causes.findMany() || 'Nao foram encontradas causas!';
+  }
 }
 
-export default new CausesModel();
+export default new CausesRepository();

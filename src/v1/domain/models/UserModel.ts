@@ -1,4 +1,4 @@
-import { prisma } from '../lib/prisma';
+import { prisma } from '../../lib/prisma';
 
 class UserModel {
   async createUser(userSchema: userSchemaTypes, newPassword: string) {

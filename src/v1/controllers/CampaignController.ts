@@ -346,6 +346,30 @@ class CampaignController {
         .send({ errors: e });
     }
   }
+
+  async findByName(request: FastifyRequest, reply: FastifyReply) {
+    try {
+      // @ts-ignore
+      const { searchString } : string = request.query;
+
+      const result = await prisma.campaign.findMany({
+        where: {
+          title: {
+            contains: searchString,
+          },
+        },
+      });
+
+      if (result.length < 1) {
+        reply.status(404).send({ message: `Not found register's for "${searchString}"` });
+        return;
+      }
+
+      reply.status(200).send({ message: `Results for '${searchString}'`, payload: result });
+    } catch (e) {
+      reply.status(500).send({ errors: [e.map((error) => ({ error }))] });
+    }
+  }
 }
 
 export default new CampaignController();
