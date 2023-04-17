@@ -1,5 +1,5 @@
 import { FastifyInstance } from 'fastify';
-import publicationController from '../../controllers/PublicationController';
+import publicationController from '../controllers/Publication.controller';
 
 export async function publicationRoutes(fastify: FastifyInstance) {
   fastify.get('/', publicationController.index);

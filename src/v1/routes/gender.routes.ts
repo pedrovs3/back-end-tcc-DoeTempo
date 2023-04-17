@@ -1,5 +1,5 @@
 import { FastifyInstance } from 'fastify';
-import { prisma } from '../../lib/prisma';
+import { prisma } from '../lib/prisma';
 
 export async function genderRoutes(fastify: FastifyInstance) {
   fastify.get('/', async (request, reply) => {

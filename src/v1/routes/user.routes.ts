@@ -1,5 +1,5 @@
 import { FastifyInstance } from 'fastify';
-import usersController from '../../controllers/UsersController';
+import usersController from '../controllers/Users.controller';
 
 export async function userRoutes(fastify: FastifyInstance) {
   fastify.post('/', { onRequest: fastify.verifyBody }, usersController.store);

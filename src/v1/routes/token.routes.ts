@@ -1,6 +1,6 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
-import { prisma } from '../../lib/prisma';
-import checkPassword from '../../utils/checkPassword';
+import { prisma } from '../lib/prisma';
+import checkPassword from '../utils/checkPassword';
 
 export async function tokenRoutes(fastify :FastifyInstance) {
   fastify.post('/', async (request: FastifyRequest, reply: FastifyReply) => {

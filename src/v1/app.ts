@@ -22,7 +22,7 @@ class App {
   // @ts-ignore
   private app_port: number = parseInt(process.env.PORT, 10) || 3333;
 
-  constructor(appInit: { plugins: any }) {
+  constructor() {
     // Creating the Fastify Instance
     this.fastify = Fastify({
       logger: true,

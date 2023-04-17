@@ -241,20 +241,20 @@ class CampaignController {
           },
           tbl_campaign_causes: {
             deleteMany: {
-              id,
+              id_campaign: id,
             },
             createMany: {
               data: bodyToUpdate.causes.map((cause) => ({ id_cause: cause.id })),
             },
           },
-          // TODO
-          // tbl_campaign_photos: {
-          //   update: {
-          //     where: {
-          //       id: bodyToUpdate.photoURL?.map()
-          //     }
-          //   }
-          // }
+          tbl_campaign_photos: {
+            deleteMany: {
+              id_campaign: id,
+            },
+            createMany: {
+              data: bodyToUpdate.photoURL.map((photo) => ({ photo_url: photo })),
+            },
+          },
           how_to_contribute: bodyToUpdate.how_to_contribute,
           prerequisites: bodyToUpdate.prerequisites,
         },
@@ -367,7 +367,7 @@ class CampaignController {
 
       reply.status(200).send({ message: `Results for '${searchString}'`, payload: result });
     } catch (e) {
-      reply.status(500).send({ errors: [e.map((error) => ({ error }))] });
+      reply.status(500).send({ errors: [e] });
     }
   }
 }

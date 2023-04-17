@@ -1,5 +1,5 @@
 import { FastifyInstance } from 'fastify';
-import ngoController from '../../controllers/NgoController';
+import ngoController from '../controllers/Ngo.controller';
 
 export async function ngoRoutes(fastify: FastifyInstance) {
   fastify.get('/', ngoController.index);

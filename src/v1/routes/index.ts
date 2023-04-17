@@ -1,11 +1,11 @@
-import { userRoutes } from './user/userRoutes';
-import { genderRoutes } from './gender/genderRoutes';
-import { ngoRoutes } from './ngo/ngoRoutes';
-import { tokenRoutes } from './token/tokenRoutes';
-import { causesRoutes } from './cause/causesRoutes';
-import { testsRoutes } from './test/testsRoutes';
-import { campaignRoutes } from './campaign/campaignRoutes';
-import { publicationRoutes } from './publication/publicationRoutes';
+import { userRoutes } from './user.routes';
+import { genderRoutes } from './gender.routes';
+import { ngoRoutes } from './ngo.routes';
+import { tokenRoutes } from './token.routes';
+import { causesRoutes } from './causes.routes';
+import { testsRoutes } from './tests.routes';
+import { campaignRoutes } from './campaign.routes';
+import { publicationRoutes } from './publication.routes';
 
 // Declaration of an api route
 

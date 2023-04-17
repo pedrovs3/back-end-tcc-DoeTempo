@@ -1,5 +1,5 @@
 import { FastifyInstance } from 'fastify';
-import campaignController from '../../controllers/CampaignController';
+import campaignController from '../controllers/Campaign.controller';
 
 export async function campaignRoutes(fastify: FastifyInstance) {
   fastify.get('/', campaignController.index);
