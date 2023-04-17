@@ -17,7 +17,7 @@ model User {
   birthdate                 DateTime               @db.Date
   rg                        String?                @db.VarChar(30)
   id_type                   String
-  photoURL                  String                 @default("https://firebasestorage.googleapis.com/v0/b/doe-tempo-50ccb.appspot.com/o/images%2Fdefault-user-icon-13.jpg?alt=media&token=83439f87-8b14-44fc-a4f1-d20106d9ab70")
+  photoURL                  String                 @default("https://firebasestorage.googleapis.com/v0/b/doe-tempo-50ccb.appspot.com/o/images%2Fdefault-cause-icon-13.jpg?alt=media&token=83439f87-8b14-44fc-a4f1-d20106d9ab70")
   tbl_campaign_participants CampaignParticipants[]
   CommentUser               CommentUser[]
   tbl_following             Following[]
@@ -173,7 +173,7 @@ model NGO {
   email           String       @unique @db.VarChar(256)
   password        String
   id_type         String
-  photoURL        String       @default("https://firebasestorage.googleapis.com/v0/b/doe-tempo-50ccb.appspot.com/o/images%2Fdefault-user-icon-13.jpg?alt=media&token=83439f87-8b14-44fc-a4f1-d20106d9ab70")
+  photoURL        String       @default("https://firebasestorage.googleapis.com/v0/b/doe-tempo-50ccb.appspot.com/o/images%2Fdefault-cause-icon-13.jpg?alt=media&token=83439f87-8b14-44fc-a4f1-d20106d9ab70")
   tbl_campaign    Campaign[]
   CommentNgo      CommentNgo[]
   tbl_following   Following[]

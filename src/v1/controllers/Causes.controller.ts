@@ -1,8 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
-import createCauseSchema from '../schemas/causeBodyZodSchema';
 import causesRepository from '../domain/repositories/Causes.repository';
-import { Cause } from '../domain/models/Cause';
-import { CreateUserUseCase } from '../domain/useCases/user/create.user.use.case';
+import { CreateCauseUseCase } from '../domain/useCases/cause/create.cause.use.case';
 
 class CausesController {
   async store(request: FastifyRequest, reply: FastifyReply) {
@@ -10,7 +8,11 @@ class CausesController {
       const cause = request.body;
 
       // @ts-ignore
-      const causeCreated = new CreateUserUseCase().execute(cause);
+      const causeCreated = new CreateCauseUseCase().execute(cause);
+
+      if (!causeCreated) {
+        reply.status(400).send({ errors: ['Não foi possivel criar a causa, tente novamente mais tarde!'] });
+      }
 
       reply.status(201)
         .send({

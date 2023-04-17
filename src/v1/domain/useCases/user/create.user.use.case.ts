@@ -1,28 +1,19 @@
-import createCauseSchema from '../../../schemas/causeBodyZodSchema';
-import { Cause } from '../../models/Cause';
-import { prisma } from '../../../lib/prisma';
-import causesRepository from '../../repositories/Causes.repository';
+import { User } from '../../models/User';
+import createUserBody from '../../../schemas/userBodyZodSchema';
+import hashPassword from '../../../utils/hashPassword';
+import userRepository from '../../repositories/User.repository';
 
 export class CreateUserUseCase {
-  async execute(cause: Cause) {
+  async execute(user: User) {
     try {
-      const causeSchema = createCauseSchema.parse(cause);
+      const userSchema = createUserBody.parse(user);
+      const newPassword = await hashPassword(userSchema.password);
 
-      const causeWithSameName = await prisma.causes.findFirst({
-        where: {
-          title: cause.title,
-        },
-      });
+      const userCreated = await userRepository.createUser(<userSchemaTypes>userSchema, newPassword);
 
-      if (causeWithSameName) {
-        throw new Error('Title already in use!');
-      }
-
-      const causeCreated = await causesRepository.createCause(causeSchema);
-
-      return causeCreated as Cause;
-    } catch (e) {
-      return e;
+      return userCreated as User;
+    } catch (error) {
+      return error;
     }
   }
 }

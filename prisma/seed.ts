@@ -3,7 +3,7 @@ import { prisma } from '../../src/v1/lib/prisma';
 const date = new Date(Date.now());
 
 async function main() {
-  // await prisma.user.deleteMany();
+  // await prisma.cause.deleteMany();
   // // await prisma.gender.deleteMany();
   // await prisma.address.deleteMany();
 
@@ -23,7 +23,7 @@ async function main() {
   //     },
   //   ],
   // });
-	//
+  //
   // await prisma.type.createMany({
   //   data: [
   //     { name: 'USER' },
@@ -32,7 +32,7 @@ async function main() {
   // });
 
   // @ts-ignore
-  // const user1 = await prisma.user.create({
+  // const user1 = await prisma.cause.create({
   //   data: {
   //     name: 'Pedro Vieira',
   //     birthdate: date,
@@ -72,7 +72,7 @@ async function main() {
   //   },
   // });
   //
-  // const user2 = await prisma.user.create({
+  // const user2 = await prisma.cause.create({
   //   data: {
   //     name: 'Enzo Prado',
   //     birthdate: date,
@@ -98,7 +98,7 @@ async function main() {
   //   },
   // });
   //
-  // const user3 = await prisma.user.create({
+  // const user3 = await prisma.cause.create({
   //   data: {
   //     name: 'Gui Japo',
   //     birthdate: date,
@@ -124,7 +124,7 @@ async function main() {
   //   },
   // });
   //
-  // const user = await prisma.user.findUnique({
+  // const cause = await prisma.cause.findUnique({
   //   where: {
   //     email: 'Teste@hotmail.com',
   //   },
@@ -182,8 +182,8 @@ async function main() {
   //
   // console.log(ngo);
   //
-  // const users = await prisma.user.findMany();
-  // const userToDelete = await prisma.user.findUnique({
+  // const users = await prisma.cause.findMany();
+  // const userToDelete = await prisma.cause.findUnique({
   //   where: {
   //     email: 'enzodp@gmail.com',
   //   },
@@ -204,7 +204,7 @@ async function main() {
   //   },
   // });
   //
-  // await prisma.user.delete({
+  // await prisma.cause.delete({
   //   where: {
   //     email: 'enzodp@gmail.com',
   //   },
@@ -212,7 +212,7 @@ async function main() {
   // const addresses = await prisma.address.findMany();
   //
   // console.log({
-  //   user,
+  //   cause,
   //   users,
   //   addresses,
   // });

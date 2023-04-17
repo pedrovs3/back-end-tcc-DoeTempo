@@ -1,6 +1,5 @@
 import App from './app';
-import AuthPlugin from './plugins/auth.plugin';
 
-const app = new App({ plugins: [AuthPlugin] });
+const app = new App();
 
 app.listen();

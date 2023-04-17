@@ -3,13 +3,12 @@ import { prisma } from '../../lib/prisma';
 class CausesRepository {
   async createCause(causeSchema: CauseSchemaTypes) {
     try {
-      const cause = await prisma.causes.create({
+      return await prisma.causes.create({
         data: {
           title: causeSchema.title,
           description: causeSchema.description,
         },
       });
-      return cause;
     } catch (e) {
       return {
         error: 500,

@@ -2,7 +2,7 @@ import { FastifyInstance } from 'fastify';
 import usersController from '../controllers/Users.controller';
 
 export async function userRoutes(fastify: FastifyInstance) {
-  fastify.post('/', { onRequest: fastify.verifyBody }, usersController.store);
+  fastify.post('/', usersController.store);
   fastify.post('/campaign/', usersController.loginInCampaign);
   fastify.get('/:id', { preValidation: fastify.authenticate }, usersController.show);
   fastify.put('/:id', { preValidation: fastify.authenticate }, usersController.update);
@@ -11,8 +11,8 @@ export async function userRoutes(fastify: FastifyInstance) {
 
 /* -- Controller functions
   index - show all users
-  show - show one user
-  store - Create user
-  delete - Delete user
-  update - Update user
+  show - show one cause
+  store - Create cause
+  delete - Delete cause
+  update - Update cause
 */

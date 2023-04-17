@@ -2,17 +2,24 @@ import { FastifyReply, FastifyRequest } from 'fastify';
 import 'dotenv/config';
 import userModel from '../domain/models/UserModel';
 import hashPassword from '../utils/hashPassword';
-import createUserBody from '../schemas/userBodyZodSchema';
 import { prisma } from '../lib/prisma';
 import updateUserBody from '../schemas/updateUserBody';
+import { CreateUserUseCase } from '../domain/useCases/user/create.user.use.case';
 
 class UsersController {
   async store(request: FastifyRequest, reply: FastifyReply) {
     try {
-      const userSchema = createUserBody.parse(request.body);
-      const newPassword = await hashPassword(userSchema.password);
+      const { body } = request;
 
-      const user = await userModel.createUser(<userSchemaTypes>userSchema, newPassword);
+      // @ts-ignore
+      const user = await new CreateUserUseCase().execute(body);
+      console.log(user);
+
+      if (!user) {
+        console.log('Não foi possivel criar o usuário');
+        reply.status(400).send({ message: 'Tente novamente mais tarde!' });
+        return;
+      }
 
       reply.status(201)
         .send({
@@ -104,6 +111,20 @@ class UsersController {
               },
             },
           },
+          tbl_user_phone: {
+            update: {
+              where: {
+                id_user: id,
+              },
+              data: {
+                tbl_phone: {
+                  update: { // @ts-ignore
+                    number: bodyToUpdate.phone[0].number,
+                  },
+                },
+              },
+            },
+          },
         },
       });
 
@@ -114,6 +135,7 @@ class UsersController {
       reply.status(200)
         .send({ user: updateUser });
     } catch (e) {
+      console.log(e);
       reply.status(500)
         .send({ error: ['Nao foi possivel atualizar o registro de usuário!'] });
     }
