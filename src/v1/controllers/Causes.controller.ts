@@ -8,7 +8,7 @@ class CausesController {
       const cause = request.body;
 
       // @ts-ignore
-      const causeCreated = new CreateCauseUseCase().execute(cause);
+      const causeCreated = await new CreateCauseUseCase().execute(cause);
 
       if (!causeCreated) {
         reply.status(400).send({ errors: ['Não foi possivel criar a causa, tente novamente mais tarde!'] });

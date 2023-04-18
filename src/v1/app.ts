@@ -6,6 +6,7 @@ import * as dotenv from 'dotenv';
 import {
   campaignRoutes,
   causesRoutes,
+  countRoutes,
   genderRoutes,
   ngoRoutes,
   publicationRoutes,
@@ -39,7 +40,7 @@ class App {
   }
 
   // eslint-disable-next-line no-mixed-spaces-and-tabs,no-tabs
- 	public async decorate() {
+  public async decorate() {
     // @ts-ignore
     this.fastify.register(fastifyJwt, {
       secret: process.env.SECRET_JWT,
@@ -83,6 +84,7 @@ class App {
     this.fastify.register(testsRoutes, { prefix: '/test' });
     this.fastify.register(campaignRoutes, { prefix: '/campaign' });
     this.fastify.register(publicationRoutes, { prefix: '/post' });
+    this.fastify.register(countRoutes, { prefix: '/count' });
   }
 }
 
