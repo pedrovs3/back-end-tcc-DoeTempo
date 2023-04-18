@@ -12,7 +12,7 @@ datasource db {
 }
 
 model User {
-  id                        String                 @id @unique(map: "id_UNIQUE") @default(uuid())
+  id                        String                 @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
   name                      String                 @db.VarChar(100)
   email                     String                 @unique(map: "email_UNIQUE") @db.VarChar(256)
   password                  String                 @db.VarChar(90)
@@ -37,7 +37,7 @@ model User {
 }
 
 model Gender {
-  id           String @id @unique(map: "id_UNIQUE") @default(uuid())
+  id           String @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
   name         String @unique(map: "name_UNIQUE") @db.VarChar(20)
   abbreviation String @unique(map: "abbreviation_UNIQUE") @db.Char(1)
   User         User[]
@@ -46,7 +46,7 @@ model Gender {
 }
 
 model Phone {
-  id             String      @id @unique(map: "id_UNIQUE") @default(uuid())
+  id             String      @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
   number         String?     @db.VarChar(20)
   tbl_ngo_phone  NgoPhone[]
   tbl_user_phone UserPhone[]
@@ -55,7 +55,7 @@ model Phone {
 }
 
 model Address {
-  id                   String            @id @unique(map: "id_UNIQUE") @default(uuid())
+  id                   String            @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
   postal_code          String            @db.VarChar(14)
   number               String            @db.VarChar(7)
   complement           String?           @db.VarChar(100)
@@ -67,7 +67,7 @@ model Address {
 }
 
 model UserAddress {
-  id         String  @id @unique(map: "id_UNIQUE") @default(uuid())
+  id         String  @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
   id_address String  @db.Char(36)
   id_user    String  @unique @db.Char(36)
   address    Address @relation(fields: [id_address], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_tbl_user_address_tbl_address1")
@@ -79,7 +79,7 @@ model UserAddress {
 }
 
 model Campaign {
-  id                        String                 @id @unique(map: "id_UNIQUE") @default(uuid())
+  id                        String                 @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
   title                     String                 @unique(map: "title_UNIQUE") @db.VarChar(100)
   description               String?                @db.Text
   begin_date                DateTime               @db.Date
@@ -99,7 +99,7 @@ model Campaign {
 }
 
 model CampaignAddress {
-  id           String   @id @unique(map: "id_UNIQUE") @default(uuid())
+  id           String   @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
   id_campaign  String   @unique @db.Char(36)
   id_address   String   @db.Char(36)
   tbl_campaign Campaign @relation(fields: [id_campaign], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_Campaign_address_tbl_campaign1")
@@ -111,7 +111,7 @@ model CampaignAddress {
 }
 
 model CampaignCauses {
-  id           String   @id @unique(map: "id_UNIQUE") @default(uuid())
+  id           String   @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
   id_cause     String
   id_campaign  String
   tbl_campaign Campaign @relation(fields: [id_campaign], references: [id], onDelete: Cascade, map: "fk_tbl_campaign_causes_tbl_campaign1")
@@ -124,7 +124,7 @@ model CampaignCauses {
 }
 
 model CampaignParticipants {
-  id           String   @id @unique(map: "id_UNIQUE") @default(uuid())
+  id           String   @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
   id_campaign  String   @db.Char(36)
   id_user      String   @db.Char(36)
   tbl_campaign Campaign @relation(fields: [id_campaign], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_tbl_campaign_participants_tbl_campaign1")
@@ -137,7 +137,7 @@ model CampaignParticipants {
 }
 
 model CampaignPhotos {
-  id           String   @id @unique(map: "id_UNIQUE") @default(uuid())
+  id           String   @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
   photo_url    String   @db.VarChar(256)
   id_campaign  String   @db.Char(36)
   tbl_campaign Campaign @relation(fields: [id_campaign], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_tbl_campaign_photos_tbl_campaign1")
@@ -147,7 +147,7 @@ model CampaignPhotos {
 }
 
 model Causes {
-  id                  String           @id @unique @default(uuid())
+  id                  String           @id @unique @default(dbgenerated("(uuid())"))
   title               String           @db.VarChar(100)
   description         String?          @db.Text
   tbl_campaign_causes CampaignCauses[]
@@ -157,7 +157,7 @@ model Causes {
 }
 
 model Following {
-  id       String @id @unique(map: "id_UNIQUE") @default(uuid())
+  id       String @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
   id_user  String @db.Char(36)
   id_ngo   String @db.Char(36)
   tbl_ngo  NGO    @relation(fields: [id_ngo], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tbl_following_tbl_ngo1")
@@ -169,7 +169,7 @@ model Following {
 }
 
 model NGO {
-  id              String       @id @default(uuid())
+  id              String       @id @default(dbgenerated("(uuid())"))
   name            String       @db.VarChar(100)
   cnpj            String       @unique @db.VarChar(17)
   foundation_date DateTime?    @db.Date
@@ -193,7 +193,7 @@ model NGO {
 }
 
 model NgoAddress {
-  id          String  @id @unique(map: "id_UNIQUE") @default(uuid())
+  id          String  @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
   id_ngo      String  @unique @db.Char(36)
   id_address  String  @db.Char(36)
   tbl_address Address @relation(fields: [id_address], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_tbl_ngo_address_tbl_address1")
@@ -205,7 +205,7 @@ model NgoAddress {
 }
 
 model NgoCauses {
-  id         String @id @unique(map: "id_UNIQUE") @default(uuid())
+  id         String @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
   id_causes  String @db.Char(36)
   id_ngo     String @db.Char(36)
   tbl_causes Causes @relation(fields: [id_causes], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tbl_ngo_causes_tbl_causes1")
@@ -217,7 +217,7 @@ model NgoCauses {
 }
 
 model NgoPhone {
-  id        String @id @unique(map: "id_UNIQUE") @default(uuid())
+  id        String @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
   id_ngo    String @db.Char(36)
   id_phone  String
   tbl_ngo   NGO    @relation(fields: [id_ngo], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tbl_ngo_phone_tbl_ngo1")
@@ -229,7 +229,7 @@ model NgoPhone {
 }
 
 model UserPhone {
-  id        String @id @unique @default(uuid())
+  id        String @id @unique @default(dbgenerated("(uuid())"))
   id_phone  String @db.Char(36)
   id_user   String @unique @db.Char(36)
   tbl_phone Phone  @relation(fields: [id_phone], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tbl_user_phone_tbl_phone1")
@@ -241,7 +241,7 @@ model UserPhone {
 }
 
 model Type {
-  id   String @id @default(uuid())
+  id   String @id @default(dbgenerated("(uuid())"))
   name String @unique @db.VarChar(10)
   Ngo  NGO[]
   User User[]
@@ -262,7 +262,7 @@ model Post {
 }
 
 model PostPhoto {
-  id        String @id @unique @default(uuid())
+  id        String @id @unique @default(dbgenerated("(uuid())"))
   id_post   String
   photo_url String @db.VarChar(256)
   post      Post   @relation(fields: [id_post], references: [id], onDelete: Cascade)
@@ -272,7 +272,7 @@ model PostPhoto {
 }
 
 model PostNgo {
-  id      String @id @unique @default(uuid())
+  id      String @id @unique @default(dbgenerated("(uuid())"))
   id_post String
   id_ngo  String
   ngo     NGO    @relation(fields: [id_ngo], references: [id], onDelete: Cascade)
@@ -284,7 +284,7 @@ model PostNgo {
 }
 
 model PostUser {
-  id      String @id @unique @default(uuid())
+  id      String @id @unique @default(dbgenerated("(uuid())"))
   id_post String
   id_user String
   post    Post   @relation(fields: [id_post], references: [id], onDelete: Cascade)
@@ -296,7 +296,7 @@ model PostUser {
 }
 
 model Comment {
-  id          String        @id @unique @default(uuid())
+  id          String        @id @unique @default(dbgenerated("(uuid())"))
   content     String        @db.Text
   likes       Int
   created_at  DateTime      @default(now())
@@ -310,7 +310,7 @@ model Comment {
 }
 
 model CommentUser {
-  id         String  @id @unique @default(uuid())
+  id         String  @id @unique @default(dbgenerated("(uuid())"))
   id_comment String
   id_user    String
   comment    Comment @relation(fields: [id_comment], references: [id], onDelete: Cascade, map: "fk_tbl_comment_tbl_user")
@@ -322,7 +322,7 @@ model CommentUser {
 }
 
 model CommentNgo {
-  id         String  @id @unique @default(uuid())
+  id         String  @id @unique @default(dbgenerated("(uuid())"))
   id_comment String
   nGOId      String
   comment    Comment @relation(fields: [id_comment], references: [id], onDelete: Cascade, map: "fk_tbl_comment_tbl_ngo")

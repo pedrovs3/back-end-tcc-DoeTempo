@@ -144,7 +144,7 @@ class UsersController {
   async loginInCampaign(request: FastifyRequest, reply: FastifyReply) {
     try {
       // @ts-ignore
-      const { query }: {idUser: string, idCampaign: string} = request;
+      const { query }: { idUser: string, idCampaign: string } = request;
 
       if (!query) {
         reply.status(400).send({ errors: ['Um ou mais argumentos estão faltando!'] });
