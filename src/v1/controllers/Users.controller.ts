@@ -1,10 +1,13 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import 'dotenv/config';
+import createError from '@fastify/error';
 import userModel from '../domain/models/UserModel';
-import hashPassword from '../utils/hashPassword';
-import { prisma } from '../lib/prisma';
-import updateUserBody from '../schemas/updateUserBody';
 import { CreateUserUseCase } from '../domain/useCases/user/create.user.use.case';
+import { LoginCampaignUseCase } from '../domain/useCases/user/login.campaign.use.case';
+import { UpdateUserUseCase } from '../domain/useCases/user/update.user.use.case';
+import { genericError500 } from '../errors/GenericError500';
+
+const emptyQuery = createError('401', 'Está faltando dados para esta requisição!');
 
 class UsersController {
   async store(request: FastifyRequest, reply: FastifyReply) {
@@ -83,53 +86,15 @@ class UsersController {
       const { id }: string = request.params;
 
       if (!id) {
-        reply.status(400).send({ errors: ['Id is missing!'] });
+        const missingIdError = createError('400', 'O id do usuário que deverá ser atualizado está faltando', 400);
+        reply.status(400).send(new missingIdError());
+        return new missingIdError();
       }
 
-      const bodyToUpdate = updateUserBody.parse(request.body);
-      const newPassword = await hashPassword(bodyToUpdate.password);
+      const updateUser = await new UpdateUserUseCase().execute(id, request.body);
 
-      const updateUser = await prisma.user.update({
-        where: {
-          id,
-        },
-        data: {
-          password: newPassword,
-          name: bodyToUpdate.name,
-          birthdate: bodyToUpdate.birthdate,
-          email: bodyToUpdate.email,
-          rg: bodyToUpdate.rg || undefined,
-          photoURL: bodyToUpdate.photoURL || undefined,
-          userAddress: {
-            update: {
-              address: {
-                update: {
-                  number: bodyToUpdate.address.number,
-                  postal_code: bodyToUpdate.address.postal_code,
-                  complement: bodyToUpdate.address.complement,
-                },
-              },
-            },
-          },
-          tbl_user_phone: {
-            update: {
-              where: {
-                id_user: id,
-              },
-              data: {
-                tbl_phone: {
-                  update: { // @ts-ignore
-                    number: bodyToUpdate.phone[0].number,
-                  },
-                },
-              },
-            },
-          },
-        },
-      });
-
-      if (!updateUser) {
-        reply.status(500).send({ errors: ['Não foi possivel atualizar o registro do usuário.'] });
+      if (typeof updateUser === 'string') {
+        reply.status(500).send(new genericError500(updateUser));
       }
 
       reply.status(200)
@@ -137,39 +102,28 @@ class UsersController {
     } catch (e) {
       console.log(e);
       reply.status(500)
-        .send({ error: ['Nao foi possivel atualizar o registro de usuário!'] });
+        .send(new genericError500('Não foi possivel atualizar o registro de usuário'));
     }
   }
 
   async loginInCampaign(request: FastifyRequest, reply: FastifyReply) {
     try {
-      // @ts-ignore
+      // @ts-ignores
       const { query }: { idUser: string, idCampaign: string } = request;
 
-      if (!query) {
-        reply.status(400).send({ errors: ['Um ou mais argumentos estão faltando!'] });
+      if (query.idUser === '' || query.idCampaign === '' || !query.idUser || !query.idCampaign) {
+        const errorTeste = createError('401', 'Não há dados necessários para concluir a requisição.', 401);
+        return new errorTeste();
       }
 
-      const subscribedUser = await prisma.campaignParticipants.create({
-        data: {
-          tbl_user: {
-            connect: {
-              id: query.idUser,
-            },
-          },
-          tbl_campaign: {
-            connect: {
-              id: query.idCampaign,
-            },
-          },
-        },
-      });
+      const subscribedUser = await new LoginCampaignUseCase().execute(query);
 
-      if (!subscribedUser) {
-        reply.status(500).send({ errors: ['Não foi possivel registrar o usuário nesta campanha!'] });
+      if (typeof subscribedUser === 'string') {
+        const errorMessage = createError('400', subscribedUser, 400);
+        return reply.status(500).send(new errorMessage());
       }
 
-      reply.send({ message: 'Parabens! Agora você está inscrito na campanha.', data: subscribedUser });
+      reply.status(200).send({ message: 'Parabens! Agora você está inscrito na campanha.', data: subscribedUser });
     } catch (e) {
       reply.send(e);
     }

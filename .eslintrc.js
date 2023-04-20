@@ -24,5 +24,6 @@ module.exports = {
     '@typescript-eslint/ban-ts-comment': 'off',
     'class-methods-use-this': 'off',
     'consistent-return': 'off',
+    'new-cap': 'off',
   },
 };
