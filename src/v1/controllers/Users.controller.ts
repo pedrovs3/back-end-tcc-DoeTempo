@@ -6,6 +6,7 @@ import { CreateUserUseCase } from '../domain/useCases/user/create.user.use.case'
 import { LoginCampaignUseCase } from '../domain/useCases/user/login.campaign.use.case';
 import { UpdateUserUseCase } from '../domain/useCases/user/update.user.use.case';
 import { genericError500 } from '../errors/GenericError500';
+import { genericError } from '../errors/GenericError';
 
 const emptyQuery = createError('401', 'Está faltando dados para esta requisição!');
 
@@ -84,6 +85,7 @@ class UsersController {
     try {
       // @ts-ignore
       const { id }: string = request.params;
+      const decodedJwt = request.user;
 
       if (!id) {
         const missingIdError = createError('400', 'O id do usuário que deverá ser atualizado está faltando', 400);
@@ -91,9 +93,14 @@ class UsersController {
         return new missingIdError();
       }
 
-      const updateUser = await new UpdateUserUseCase().execute(id, request.body);
+      // @ts-ignore
+      const updateUser = await new UpdateUserUseCase().execute(id, request.body, decodedJwt.id);
 
       if (typeof updateUser === 'string') {
+        if (updateUser.includes('Você nao pode atualizar os dados de outro usuário!')) {
+          return reply.status(400).send(new genericError(updateUser));
+        }
+
         reply.status(500).send(new genericError500(updateUser));
       }
 

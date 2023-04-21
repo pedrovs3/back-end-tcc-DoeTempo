@@ -88,7 +88,7 @@ class UserRepository {
               data: {
                 tbl_phone: {
                   update: { // @ts-ignore
-                    number: bodyToUpdate.phone[0].number,
+                    number: bodyToUpdate.phone[0].number || undefined,
                   },
                 },
               },
@@ -103,6 +103,7 @@ class UserRepository {
 
       return updateUser;
     } catch (e) {
+      console.log(e);
       return 'Não foi possivel contatar os servidores!';
     }
   }
