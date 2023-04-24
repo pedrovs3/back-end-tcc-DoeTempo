@@ -45,7 +45,7 @@ class UserModel {
   }
 
   // @ts-ignore
-  async findUserById({ id }: string) {
+  async findUserById(id : string) {
     try {
       const user = await prisma.user.findUnique({
         where: { id },
@@ -56,6 +56,8 @@ class UserModel {
           password: false,
           cpf: true,
           birthdate: true,
+          photoURL: true,
+          rg: true,
           userAddress: {
             select: {
               address: {
@@ -104,6 +106,7 @@ class UserModel {
 
       return user;
     } catch (e) {
+      console.log(e);
       return e;
     }
   }

@@ -108,6 +108,106 @@ class UserRepository {
     }
   }
 
+  async delete(id: string) {
+    try {
+      const user = await prisma.user.findUnique({
+        where: {
+          id,
+        },
+        include: {
+          userAddress: {
+            select: {
+              address: {
+                select: {
+                  id: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (!user) {
+        return 'Usuário não cadastrado na base de dados!';
+      }
+
+      // @ts-ignore
+      const idAddress: string = user?.userAddress.address.id;
+      await prisma.user.delete({
+        where: {
+          id,
+        },
+      });
+      await prisma.address.delete({
+       	where: {
+					 id: idAddress,
+        },
+      });
+      return `Usuário '${user.name}' deletado com sucesso!`;
+    } catch (e) {
+      return 'Não foi possivel deletar o usuário! Tente novamente mais tarde ou entre em contato com o suporte.';
+    }
+  }
+
+  async findById(id: string) {
+    try {
+      const user = await prisma.user.findUnique({
+        where: {
+          id,
+        },
+        include: {
+          userAddress: {
+            include: {
+              address: true,
+            },
+          },
+          gender: {
+            select: {
+              name: true,
+              abbreviation: true,
+            },
+          },
+          tbl_user_phone: {
+            select: {
+              tbl_phone: {
+                select: {
+                  number: true,
+                },
+              },
+            },
+          },
+          tbl_campaign_participants: {
+            where: {
+              id_user: id,
+            },
+            select: {
+              tbl_campaign: {
+                select: {
+                  id: true,
+                  title: true,
+                },
+              },
+            },
+          },
+          _count: {
+            select: {
+              tbl_campaign_participants: true,
+              tbl_following: true,
+            },
+          },
+        },
+      });
+
+      if (!user) {
+        return 'Não foi possivel encontrar o usuário';
+      }
+
+      return user;
+    } catch (e) {
+      return 'Não foi possivel contatar os servidores! Tente novamente mais tarde ou entre em contato com o suporte.';
+    }
+  }
+
   async loginInCampaign(query: Query) {
     try {
       const subscribedUser = await prisma.campaignParticipants.create({
