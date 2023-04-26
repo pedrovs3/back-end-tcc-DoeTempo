@@ -8,6 +8,51 @@ class PublicationController {
       const allPosts = await prisma.post.findMany({
         include: {
           _count: true,
+          PostNgo: {
+            select: {
+              ngo: {
+                select: {
+                  name: true,
+                  email: true,
+                  photoURL: true,
+                  tbl_type: {
+                    select: {
+                      name: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          PostUser: {
+            select: {
+              user: {
+                select: {
+                  name: true,
+                  email: true,
+                  photoURL: true,
+                  gender: {
+                    select: {
+                      name: true,
+                      abbreviation: true,
+                    },
+                  },
+                  tbl_type: {
+                    select: {
+                      name: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          PostPhoto: {
+            select: {
+              photo_url: true,
+              id: true,
+            },
+          },
+          Comment: true,
         },
       });
 
