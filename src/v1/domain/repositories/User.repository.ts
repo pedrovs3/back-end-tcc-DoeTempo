@@ -82,14 +82,9 @@ class UserRepository {
           },
           tbl_user_phone: {
             update: {
-              where: {
-                id_user: id,
-              },
-              data: {
-                tbl_phone: {
-                  update: { // @ts-ignore
-                    number: bodyToUpdate.phone[0].number || undefined,
-                  },
+              tbl_phone: {
+                update: { // @ts-ignore
+                  number: bodyToUpdate.phone[0].number || undefined,
                 },
               },
             },
@@ -139,7 +134,9 @@ class UserRepository {
         },
       });
       await prisma.address.delete({
+        // eslint-disable-next-line
        	where: {
+          // eslint-disable-next-line
 					 id: idAddress,
         },
       });
