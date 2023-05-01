@@ -1,4 +1,5 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
+import * as repl from 'repl';
 import { prisma } from '../lib/prisma';
 import createCampaignBody from '../schemas/createCampaignBody';
 import createCampaignBodyToUpdate from '../schemas/createCampaignBodyToUpdate';
@@ -9,6 +10,7 @@ import { FindByIdCampaignUseCase } from '../domain/useCases/campaign/find.by.id.
 import { FindByNameCampaignUseCase } from '../domain/useCases/campaign/find.by.name.campaign.use.case';
 import { UpdateCampaignUseCase } from '../domain/useCases/campaign/update.campaign.use.case';
 import { CreateCampaignUseCase } from '../domain/useCases/campaign/create.campaign.use.case';
+import { DeleteCampaignUseCase } from '../domain/useCases/campaign/delete.campaign.use.case';
 
 class CampaignController {
   async index(request: FastifyRequest, reply: FastifyReply) {
@@ -113,7 +115,7 @@ class CampaignController {
 
   async store(request: FastifyRequest, reply: FastifyReply) {
     try {
-      const { body } = request.params;
+      const { body }: any = request.params;
 
       const campaignCreated = await new CreateCampaignUseCase().execute(body);
 
@@ -137,15 +139,22 @@ class CampaignController {
     try {
       // @ts-ignore
       const { id }: string = request.params;
+      const decodedJWT = request.user;
 
       if (!id) {
-        reply.status(400).send({ errors: ['Id não enviado'] });
+        reply.status(400).send(new genericError('Id não enviado'));
       }
-      await prisma.campaign.delete({
-        where: {
-          id,
-        },
-      });
+
+      // @ts-ignore
+      const deletedUser = await new DeleteCampaignUseCase().execute(id, decodedJWT.id);
+
+      if (deletedUser.includes('servidor')) {
+        return reply.status(500).send(new genericError500(deletedUser));
+      }
+      if (deletedUser.includes('erro')) {
+        return reply.status(400).send(new genericError(deletedUser));
+      }
+
       reply.status(200)
         .send({ deleted: true });
     } catch (e) {

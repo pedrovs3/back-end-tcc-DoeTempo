@@ -50,6 +50,14 @@ class NgoRepository {
 
     return ngo;
   }
+
+  async findById(id: string) {
+    try {
+
+    } catch (e) {
+
+    }
+  }
 }
 
 export default new NgoRepository();

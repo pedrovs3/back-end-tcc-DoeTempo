@@ -302,6 +302,25 @@ class CampaignRepository {
       return ServerMessageError.MESSAGE;
     }
   }
+
+  async delete(id: string) {
+    try {
+      const deleted = await prisma.campaign.delete({
+        where: {
+          id,
+        },
+      });
+
+      if (!deleted.id) {
+        return 'Houve um erro ao deletar a campanha!';
+      }
+
+      return `Campanha ${deleted.title} deletada com sucesso!`;
+    } catch (e) {
+      console.log(e);
+      return ServerMessageError.MESSAGE;
+    }
+  }
 }
 
 export default new CampaignRepository();
