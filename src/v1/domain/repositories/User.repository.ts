@@ -173,7 +173,7 @@ class UserRepository {
               },
             },
           },
-          campaign_participants: {
+          supported_campaigns: {
             where: {
               id_user: id,
             },
@@ -188,7 +188,7 @@ class UserRepository {
           },
           _count: {
             select: {
-              campaign_participants: true,
+              supported_campaigns: true,
               following: true,
             },
           },

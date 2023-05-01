@@ -1,6 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import 'dotenv/config';
 import createError from '@fastify/error';
+import { generateKeyPair } from 'crypto';
 import userModel from '../domain/models/UserModel';
 import { CreateUserUseCase } from '../domain/useCases/user/create.user.use.case';
 import { LoginCampaignUseCase } from '../domain/useCases/user/login.campaign.use.case';
@@ -8,6 +9,9 @@ import { UpdateUserUseCase } from '../domain/useCases/user/update.user.use.case'
 import { genericError500 } from '../errors/GenericError500';
 import { genericError } from '../errors/GenericError';
 import { DeleteUserUseCase } from '../domain/useCases/user/delete.user.use.case';
+import userRepository from '../domain/repositories/User.repository';
+import { FindUserUseCase } from '../domain/useCases/user/find.user.use.case';
+import { NotFoundError } from '../errors/NotFoundError';
 
 const emptyQuery = createError('401', 'Está faltando dados para esta requisição!');
 
@@ -76,11 +80,15 @@ class UsersController {
         reply.status(400).send({ errors: ['Id is missing!'] });
       }
 
-      const user = await userModel.findUserById(id);
+      const user = await new FindUserUseCase().execute(id);
 
-      if (!user) {
-        reply.status(404)
-          .send({ error: ['Usuário nao encontrado!'] });
+      if (typeof user === 'string') {
+        if (user.includes('servidor')) {
+          return reply.status(500).send(new genericError500(user));
+        } if (user.includes('encontrar')) {
+          return reply.status(404).send(new NotFoundError(user));
+        }
+        return reply.status(400).send(new genericError(user));
       }
 
       reply.status(200)
@@ -99,8 +107,7 @@ class UsersController {
 
       if (!id) {
         const missingIdError = createError('400', 'O id do usuário que deverá ser atualizado está faltando', 400);
-        reply.status(400).send(new missingIdError());
-        return new missingIdError();
+        return reply.status(400).send(new missingIdError());
       }
 
       // @ts-ignore
