@@ -1,4 +1,5 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
+import firebase from 'firebase/compat/app';
 import { prisma } from '../lib/prisma';
 import checkPassword from '../utils/checkPassword';
 
@@ -17,7 +18,7 @@ export async function tokenRoutes(fastify :FastifyInstance) {
       select: {
         id: true,
         name: true,
-        tbl_type: {
+        type: {
           select: {
             name: true,
           },
@@ -32,7 +33,7 @@ export async function tokenRoutes(fastify :FastifyInstance) {
       select: {
         id: true,
         name: true,
-        tbl_type: {
+        type: {
           select: {
             name: true,
           },
@@ -42,7 +43,7 @@ export async function tokenRoutes(fastify :FastifyInstance) {
       },
     });
 
-    const type = user?.tbl_type.name;
+    const type = user?.type.name;
 
     if (!user) {
       reply.status(400)
@@ -54,7 +55,6 @@ export async function tokenRoutes(fastify :FastifyInstance) {
       reply.status(401)
         .send({ error: ['Dados incorretos!'] });
     }
-
     const { id } = user;
 
     const token = fastify.jwt.sign(
@@ -75,7 +75,7 @@ export async function tokenRoutes(fastify :FastifyInstance) {
           id: user.id,
           name: user.name,
           email: user.email,
-          type: user.tbl_type.name,
+          type: user.type.name,
         },
       });
   });

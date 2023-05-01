@@ -8,14 +8,14 @@ class PublicationController {
       const allPosts = await prisma.post.findMany({
         include: {
           _count: true,
-          PostNgo: {
+          post_ngo: {
             select: {
               ngo: {
                 select: {
                   name: true,
                   email: true,
-                  photoURL: true,
-                  tbl_type: {
+                  photo_url: true,
+                  type: {
                     select: {
                       name: true,
                     },
@@ -24,20 +24,20 @@ class PublicationController {
               },
             },
           },
-          PostUser: {
+          post_user: {
             select: {
               user: {
                 select: {
                   name: true,
                   email: true,
-                  photoURL: true,
+                  photo_url: true,
                   gender: {
                     select: {
                       name: true,
                       abbreviation: true,
                     },
                   },
-                  tbl_type: {
+                  type: {
                     select: {
                       name: true,
                     },
@@ -46,13 +46,13 @@ class PublicationController {
               },
             },
           },
-          PostPhoto: {
+          post_photo: {
             select: {
               photo_url: true,
               id: true,
             },
           },
-          Comment: true,
+          comment: true,
         },
       });
 
@@ -76,30 +76,30 @@ class PublicationController {
           content: true,
           created_at: true,
           _count: true,
-          PostNgo: {
+          post_ngo: {
             select: {
               ngo: true,
             },
           },
-          PostPhoto: {
+          post_photo: {
             select: {
               photo_url: true,
             },
           },
-          PostUser: {
+          post_user: {
             select: {
               user: {
                 select: {
                   id: true,
                   name: true,
                   email: true,
-                  photoURL: true,
+                  photo_url: true,
                   gender: true,
                 },
               },
             },
           },
-          Comment: true,
+          comment: true,
         },
       });
 
@@ -132,12 +132,12 @@ class PublicationController {
         data = await prisma.post.create({
           data: {
             content: body.content,
-            PostPhoto: {
+            post_photo: {
               createMany: {
                 data: body.photos.map((photo_url) => ({ photo_url })),
               },
             },
-            PostUser: {
+            post_user: {
               create: {
                 user: {
                   connect: {
@@ -152,12 +152,12 @@ class PublicationController {
         data = await prisma.post.create({
           data: {
             content: body.content,
-            PostPhoto: {
+            post_photo: {
               createMany: {
                 data: body.photos.map((photo_url) => ({ photo_url })),
               },
             },
-            PostNgo: {
+            post_ngo: {
               create: {
                 ngo: {
                   connect: {
@@ -195,7 +195,7 @@ class PublicationController {
         },
         data: {
           content: body.content,
-          PostPhoto: {
+          post_photo: {
             deleteMany: {
               id_post: id,
             },

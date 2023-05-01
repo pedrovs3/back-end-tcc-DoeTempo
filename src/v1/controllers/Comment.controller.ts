@@ -28,26 +28,30 @@ class CommentController {
     }
   }
 
-  async store(request: FastifyRequest, reply: FastifyReply) {
-    try {
-      const { body, params } = request;
-
-      if (body.type_of_user === 'USER') {
-        const createComment = await prisma.comment.create({
-          data: { // @ts-ignore
-            id_post: params.id,
-            CommentUser: {
-              create: {
-                id_user: body.id_user,
-              },
-            },
-          },
-        });
-      }
-    } catch (e) {
-
-    }
-  }
+  // async store(request: FastifyRequest, reply: FastifyReply) {
+  //   try {
+  //     const { body, params } = request;
+  //
+  //     if (body.type_of_user === 'USER') {
+  //       const createComment = await prisma.comment.create({
+  //         data: { // @ts-ignore
+  //           id_post: params.id,
+  //           comment_user: {
+  //             create: {
+  //               id_user: body.id_user,
+  //             },
+  // 						createMany: {
+  // 							data: {
+  // 							}
+  // 						}
+  //           },
+  //         },
+  //       });
+  //     }
+  //   } catch (e) {
+  //
+  //   }
+  // }
 }
 
 export default new CommentController();

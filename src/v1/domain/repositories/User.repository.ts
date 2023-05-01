@@ -9,16 +9,16 @@ class UserRepository {
         data: {
           cpf: userSchema.cpf,
           rg: userSchema.rg,
-          tbl_user_phone: {
+          user_phone: {
             create: {
-              tbl_phone: {
+              phone: {
                 create: { // @ts-ignore
                   number: userSchema.phone[0].number,
                 },
               },
             },
           },
-          userAddress: {
+          user_address: {
             create: {
               address: {
                 create: {
@@ -33,7 +33,7 @@ class UserRepository {
               id: userSchema.gender,
             },
           },
-          tbl_type: {
+          type: {
             connect: {
               name: 'USER',
             },
@@ -42,7 +42,7 @@ class UserRepository {
           password: newPassword,
           name: userSchema.name,
           birthdate: userSchema.birthdate,
-          photoURL: userSchema.photoURL,
+          photo_url: userSchema.photoURL,
         },
       });
 
@@ -68,8 +68,8 @@ class UserRepository {
           birthdate: bodyToUpdate.birthdate,
           email: bodyToUpdate.email,
           rg: bodyToUpdate.rg || undefined,
-          photoURL: bodyToUpdate.photoURL || undefined,
-          userAddress: {
+          photo_url: bodyToUpdate.photoURL || undefined,
+          user_address: {
             update: {
               address: {
                 update: {
@@ -80,9 +80,9 @@ class UserRepository {
               },
             },
           },
-          tbl_user_phone: {
+          user_phone: {
             update: {
-              tbl_phone: {
+              phone: {
                 update: { // @ts-ignore
                   number: bodyToUpdate.phone[0].number || undefined,
                 },
@@ -110,7 +110,7 @@ class UserRepository {
           id,
         },
         include: {
-          userAddress: {
+          user_address: {
             select: {
               address: {
                 select: {
@@ -127,7 +127,7 @@ class UserRepository {
       }
 
       // @ts-ignore
-      const idAddress: string = user?.userAddress.address.id;
+      const idAddress: string = user?.user_address.address.id;
       await prisma.user.delete({
         where: {
           id,
@@ -153,7 +153,7 @@ class UserRepository {
           id,
         },
         include: {
-          userAddress: {
+          user_address: {
             include: {
               address: true,
             },
@@ -164,21 +164,21 @@ class UserRepository {
               abbreviation: true,
             },
           },
-          tbl_user_phone: {
+          user_phone: {
             select: {
-              tbl_phone: {
+              phone: {
                 select: {
                   number: true,
                 },
               },
             },
           },
-          tbl_campaign_participants: {
+          campaign_participants: {
             where: {
               id_user: id,
             },
             select: {
-              tbl_campaign: {
+              campaign: {
                 select: {
                   id: true,
                   title: true,
@@ -188,8 +188,8 @@ class UserRepository {
           },
           _count: {
             select: {
-              tbl_campaign_participants: true,
-              tbl_following: true,
+              campaign_participants: true,
+              following: true,
             },
           },
         },
@@ -209,12 +209,12 @@ class UserRepository {
     try {
       const subscribedUser = await prisma.campaignParticipants.create({
         data: {
-          tbl_user: {
+          user: {
             connect: {
               id: query.idUser,
             },
           },
-          tbl_campaign: {
+          campaign: {
             connect: {
               id: query.idCampaign,
             },

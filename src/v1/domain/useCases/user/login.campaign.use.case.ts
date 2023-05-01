@@ -9,16 +9,14 @@ export class LoginCampaignUseCase {
         .participantsByCampaign(query.idCampaign);
 
       if (campaignParticipants) {
-        campaignParticipants.tbl_campaign_participants.forEach((user) => {
+        campaignParticipants.campaign_participants.forEach((user) => {
           if (user.id_user.includes(query.idUser)) {
             return 'Você já está inscrito nessa campanha!';
           }
         });
       }
 
-      const subscribedUser = await userRepository.loginInCampaign(query);
-
-      return subscribedUser;
+      return await userRepository.loginInCampaign(query);
     } catch (e) {
       return 'Houve algum erro ao processar a solicitação';
     }

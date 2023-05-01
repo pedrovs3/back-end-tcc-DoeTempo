@@ -40,7 +40,6 @@ class App {
     this.decorate();
   }
 
-  // eslint-disable-next-line no-mixed-spaces-and-tabs,no-tabs
   public async decorate() {
     // @ts-ignore
     this.fastify.register(fastifyJwt, {

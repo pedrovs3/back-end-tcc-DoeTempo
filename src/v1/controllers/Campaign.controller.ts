@@ -2,51 +2,24 @@ import { FastifyReply, FastifyRequest } from 'fastify';
 import { prisma } from '../lib/prisma';
 import createCampaignBody from '../schemas/createCampaignBody';
 import createCampaignBodyToUpdate from '../schemas/createCampaignBodyToUpdate';
+import { FindAllCampaignsUseCase } from '../domain/useCases/campaign/find.all.campaigns.use.case';
+import { genericError } from '../errors/GenericError';
+import { genericError500 } from '../errors/GenericError500';
+import { FindByIdCampaignUseCase } from '../domain/useCases/campaign/find.by.id.campaign.use.case';
+import { FindByNameCampaignUseCase } from '../domain/useCases/campaign/find.by.name.campaign.use.case';
+import { UpdateCampaignUseCase } from '../domain/useCases/campaign/update.campaign.use.case';
+import { CreateCampaignUseCase } from '../domain/useCases/campaign/create.campaign.use.case';
 
 class CampaignController {
   async index(request: FastifyRequest, reply: FastifyReply) {
     try {
-      const campaigns = await prisma.campaign.findMany({
-        select: {
-          id: true,
-          id_ngo: false,
-          title: true,
-          description: true,
-          begin_date: true,
-          end_date: true,
-          home_office: true,
-          prerequisites: true,
-          how_to_contribute: true,
-          tbl_ngo: {
-            select: {
-              id: true,
-              name: true,
-              description: true,
-              email: true,
-              cnpj: true,
-              photoURL: true,
-            },
-          },
-          tbl_campaign_causes: {
-            select: {
-              tbl_causes: {
-                select: {
-                  id: true,
-                  title: true,
-                },
-              },
-            },
-          },
-          tbl_campaign_address: {
-            select: {
-              tbl_address: true,
-            },
-          },
-        },
-      });
+      const campaigns = await new FindAllCampaignsUseCase().execute();
 
-      if (campaigns.length < 1) {
-        return { message: 'Não houve campanhas registradas!' };
+      if (typeof campaigns === 'string') {
+        if (campaigns.includes('erro')) {
+          return reply.status(500).send(new genericError500(campaigns));
+        }
+        return reply.status(400).send(new genericError(campaigns));
       }
 
       reply.status(200)
@@ -64,66 +37,20 @@ class CampaignController {
       const { id }: string = request.params;
 
       if (!id) {
-        reply.status(400).send({ errors: ['Id não enviado!'] });
+        reply.status(400).send(new genericError('Id não enviado!'));
       }
 
-      const camapaign = await prisma.campaign.findUnique({
-        where: { id },
-        select: {
-          id: true,
-          title: true,
-          description: true,
-          how_to_contribute: true,
-          prerequisites: true,
-          home_office: true,
-          begin_date: true,
-          end_date: true,
-          tbl_ngo: {
-            select: {
-              id: true,
-              name: true,
-              email: true,
-              cnpj: true,
-              description: true,
-              photoURL: true,
-              password: false,
-            },
-          },
-          tbl_campaign_photos: {
-            select: {
-              photo_url: true,
-            },
-          },
-          tbl_campaign_causes: {
-            select: {
-              tbl_causes: {
-                select: {
-                  id: true,
-                  title: true,
-                  description: true,
-                },
-              },
-            },
-          },
-          tbl_campaign_participants: {
-            select: {
-              tbl_user: true,
-            },
-          },
-          tbl_campaign_address: {
-            select: {
-              tbl_address: true,
-            },
-          },
-        },
-      });
+      const campaign = await new FindByIdCampaignUseCase().execute(id);
 
-      if (!camapaign) {
-        reply.status(400).send('Ainda não há campanhas registradas!');
+      if (typeof campaign === 'string') {
+        if (campaign.includes('servidores')) {
+          return reply.status(500).send(campaign);
+        }
+        return reply.status(400).send(new genericError(campaign));
       }
 
       reply.status(200)
-        .send({ campaigns: camapaign });
+        .send(campaign);
     } catch (e) {
       console.log(e);
       reply.status(400)
@@ -137,69 +64,19 @@ class CampaignController {
       const { search } = request.query;
 
       if (!search) {
-        reply.status(400).send({ errors: ['No value for search!'] });
+        reply.status(400).send(new genericError('Não foi enviado valor para a pesquisa!'));
       }
 
-      const response = await prisma.campaign.findMany({
-        where: {
-          title: {
-            contains: search,
-          },
-        },
-        select: {
-          id: true,
-          title: true,
-          description: true,
-          how_to_contribute: true,
-          prerequisites: true,
-          home_office: true,
-          begin_date: true,
-          end_date: true,
-          tbl_ngo: {
-            select: {
-              id: true,
-              name: true,
-              email: true,
-              cnpj: true,
-              description: true,
-              photoURL: true,
-              password: false,
-            },
-          },
-          tbl_campaign_photos: {
-            select: {
-              photo_url: true,
-            },
-          },
-          tbl_campaign_causes: {
-            select: {
-              tbl_causes: {
-                select: {
-                  id: true,
-                  title: true,
-                  description: true,
-                },
-              },
-            },
-          },
-          tbl_campaign_participants: {
-            select: {
-              tbl_user: true,
-            },
-          },
-          tbl_campaign_address: {
-            select: {
-              tbl_address: true,
-            },
-          },
-        },
-      });
+      const campaignByName = await new FindByNameCampaignUseCase().execute(search);
 
-      if (!response) {
-        reply.status(400).send({ errors: [`No values for search ['${search}]`] });
+      if (typeof campaignByName === 'string') {
+        if (campaignByName.includes('servidores')) {
+          return reply.status(500).send(new genericError500(campaignByName));
+        }
+        return reply.status(400).send(new genericError(campaignByName));
       }
 
-      reply.status(200).send({ message: `Values for ['${search}']`, payload: response });
+      reply.status(200).send({ message: `Valores para ['${search}']`, payload: campaignByName });
  		} catch (e) {
       console.log(e);
       reply.status(500).send({ errrors: ['Não foi possivel concluir a requisição.'] });
@@ -210,59 +87,19 @@ class CampaignController {
     try {
       // @ts-ignore
       const { id }: string = request.params;
+      const { body } = request;
 
       if (!id) {
-        reply.status(400).send({ errors: ['Id não enviado!'] });
+        reply.status(400).send(new genericError('Id não enviado!'));
         return;
       }
 
-      const bodyToUpdate = createCampaignBodyToUpdate.parse(request.body);
-
-      const updatedCampaign = await prisma.campaign.update({
-        where: {
-          id,
-        },
-        data: {
-          title: bodyToUpdate.title,
-          description: bodyToUpdate.description,
-          begin_date: bodyToUpdate.begin_date,
-          end_date: bodyToUpdate.end_date,
-          home_office: bodyToUpdate.home_office,
-          tbl_campaign_address: {
-            update: {
-              tbl_address: {
-                update: {
-                  postal_code: bodyToUpdate.address.postal_code,
-                  number: bodyToUpdate.address.number,
-                  complement: bodyToUpdate.address.complement,
-                },
-              },
-            },
-          },
-          tbl_campaign_causes: {
-            deleteMany: {
-              id_campaign: id,
-            },
-            createMany: {
-              data: bodyToUpdate.causes.map((cause) => ({ id_cause: cause.id })),
-            },
-          },
-          tbl_campaign_photos: {
-            deleteMany: {
-              id_campaign: id,
-            },
-            createMany: {
-              data: bodyToUpdate.photoURL.map((photo) => ({ photo_url: photo })),
-            },
-          },
-          how_to_contribute: bodyToUpdate.how_to_contribute,
-          prerequisites: bodyToUpdate.prerequisites,
-        },
-      });
-
-      if (!updatedCampaign) {
-        reply.status(400).send({ errors: ['Não foi possivel atualizar a campanha!'] });
-        return;
+      const updatedCampaign = await new UpdateCampaignUseCase().execute(id, body);
+      if (typeof updatedCampaign === 'string') {
+        if (updatedCampaign.includes('servidores')) {
+          return reply.status(500).send(new genericError500(updatedCampaign));
+        }
+        return reply.status(400).send(new genericError(updatedCampaign));
       }
 
       reply.status(200)
@@ -276,50 +113,21 @@ class CampaignController {
 
   async store(request: FastifyRequest, reply: FastifyReply) {
     try {
-      const campaignBody = createCampaignBody.parse(request.body);
+      const { body } = request.params;
 
-      const campaign = await prisma.campaign.create({
-        data: {
-          title: campaignBody.title,
-          description: campaignBody.description || undefined,
-          begin_date: campaignBody.begin_date,
-          end_date: campaignBody.end_date,
-          home_office: campaignBody.home_office,
-          how_to_contribute: campaignBody.how_to_contribute,
-          prerequisites: campaignBody.prerequisites,
-          tbl_campaign_address: {
-            create: {
-              tbl_address: {
-                create: {
-                  number: campaignBody.address.number,
-                  postal_code: campaignBody.address.postal_code,
-                  complement: campaignBody.address.complement || undefined,
-                },
-              },
-            },
-          },
-          tbl_campaign_photos: {
-            createMany: {
-              data: campaignBody.photoURL.map((photo_url) => ({ photo_url })),
-            },
-            // Criando a campanha com apenas uma foto! \\
+      const campaignCreated = await new CreateCampaignUseCase().execute(body);
 
-            // create: {
-            //   photo_url: campaignBody.photoURL,
-            // },
-          },
-          tbl_campaign_causes: {
-            createMany: {
-              data: campaignBody.causes.map(({ id }) => ({ id_cause: id })),
-            },
-          },
-          id_ngo: campaignBody.id_ngo,
-        },
-      });
+      if (typeof campaignCreated === 'string') {
+        if (campaignCreated.includes('servidores')) {
+          return reply.status(500).send(new genericError500(campaignCreated));
+        }
+        return reply.status(400).send(new genericError(campaignCreated));
+      }
 
       reply.status(201)
-        .send({ payload: campaign });
+        .send({ payload: campaignCreated });
     } catch (e) {
+      console.log(e);
       reply.status(400)
         .send({ error: e });
     }

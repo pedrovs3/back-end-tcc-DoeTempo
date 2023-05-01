@@ -11,17 +11,17 @@ class HomeController {
           cpf: true,
           birthdate: true,
           email: true,
-          photoURL: true,
+          photo_url: true,
           name: true,
           password: true,
-          tbl_user_phone: {
+          user_phone: {
             select: {
-              tbl_phone: {
+              phone: {
                 select: {
                   number: true,
                 },
               },
-              tbl_user: false,
+              user: false,
               id_user: false,
               id_phone: false,
             },

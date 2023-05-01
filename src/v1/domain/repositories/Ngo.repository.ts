@@ -27,14 +27,14 @@ class NgoRepository {
         email: ngoSchema.email,
         name: ngoSchema.name,
         foundation_date: ngoSchema.foundation_date,
-        tbl_type: {
+        type: {
           connect: {
             name: 'ONG',
           },
         },
-        tbl_ngo_address: {
+        ngo_address: {
           create: {
-            tbl_address: {
+            address: {
               create: {
                 number: ngoSchema.address.number,
                 postal_code: ngoSchema.address.postal_code,
@@ -44,7 +44,7 @@ class NgoRepository {
           },
         },
         password: newPassword,
-        photoURL: ngoSchema.photoURL || undefined,
+        photo_url: ngoSchema.photoURL || undefined,
       },
     });
 

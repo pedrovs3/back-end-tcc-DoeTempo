@@ -60,9 +60,9 @@ class NgoController {
           email: ngoSchema.email,
           foundation_date: ngoSchema.foundation_date,
           description: ngoSchema.description,
-          tbl_ngo_address: {
+          ngo_address: {
             update: {
-              tbl_address: {
+              address: {
                 update: {
                   number: ngoSchema.address.number,
                   complement: ngoSchema.address.complement || undefined,
@@ -72,7 +72,7 @@ class NgoController {
             },
           },
           password: newPassword,
-          photoURL: ngoSchema.photoURL || undefined,
+          photo_url: ngoSchema.photoURL || undefined,
         },
       });
 
@@ -102,9 +102,9 @@ class NgoController {
         },
         select: {
           id: true,
-          tbl_ngo_address: {
+          ngo_address: {
             select: {
-              tbl_address: {
+              address: {
                 select: {
                   id: true,
                   complement: true,
@@ -114,9 +114,9 @@ class NgoController {
               },
             },
           },
-          tbl_ngo_causes: {
+          ngo_causes: {
             select: {
-              tbl_causes: {
+              causes: {
                 select: {
                   title: true,
                   id: true,
@@ -128,27 +128,27 @@ class NgoController {
           name: true,
           password: true,
           foundation_date: true,
-          tbl_type: {
+          type: {
             select: {
               name: true,
             },
           },
           cnpj: true,
-          tbl_campaign: {
+          campaign: {
             select: {
               title: true,
               id: true,
             },
           },
           description: true,
-          tbl_following: {
+          following: {
             select: {
               id: true,
             },
           },
-          tbl_ngo_phone: {
+          ngo_phone: {
             select: {
-              tbl_phone: {
+              phone: {
                 select: {
                   number: true,
                 },

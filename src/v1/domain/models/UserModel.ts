@@ -9,7 +9,7 @@ class UserModel {
           id,
         },
         include: {
-          userAddress: {
+          user_address: {
             select: {
               address: {
                 select: {
@@ -56,9 +56,9 @@ class UserModel {
           password: false,
           cpf: true,
           birthdate: true,
-          photoURL: true,
+          photo_url: true,
           rg: true,
-          userAddress: {
+          user_address: {
             select: {
               address: {
                 select: {
@@ -74,27 +74,27 @@ class UserModel {
               abbreviation: true,
             },
           },
-          tbl_user_phone: {
+          user_phone: {
             select: {
-              tbl_phone: {
+              phone: {
                 select: {
                   number: true,
                 },
               },
             },
           },
-          tbl_following: {
+          following: {
             include: {
-              tbl_user: {
+              user: {
                 include: {
                   _count: true,
                 },
               },
             },
           },
-          tbl_campaign_participants: {
+          campaign_participants: {
             select: {
-              tbl_user: {
+              user: {
                 select: {
                   _count: true,
                 },
