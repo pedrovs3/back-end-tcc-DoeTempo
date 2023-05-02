@@ -12,6 +12,7 @@ class PublicationController {
             select: {
               ngo: {
                 select: {
+                  id: true,
                   name: true,
                   email: true,
                   photo_url: true,
@@ -28,6 +29,7 @@ class PublicationController {
             select: {
               user: {
                 select: {
+                  id: true,
                   name: true,
                   email: true,
                   photo_url: true,
@@ -52,7 +54,17 @@ class PublicationController {
               id: true,
             },
           },
-          comment: true,
+          comment: {
+            select: {
+              id: true,
+              content: true,
+              created_at: true,
+              comment_user: true,
+              comment_ngo: true,
+              comment_likes: true,
+              _count: true,
+            },
+          },
         },
       });
 

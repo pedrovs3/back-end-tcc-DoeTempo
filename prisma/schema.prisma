@@ -4,6 +4,7 @@ generator client {
 
 // generator erd {
 //   provider = "prisma-erd-generator"
+//   theme    = "dark"
 // }
 
 datasource db {
@@ -34,7 +35,8 @@ model User {
   type                Type                   @relation(fields: [id_type], references: [id])
   user_address        UserAddress?
   user_phone          UserPhone?
-  likes               Likes[]
+  comment_likes       CommentLikes[]
+  post_likes          PostLikes[]
 
   @@index([id_gender], map: "fk_tbl_user_tbl_gender_idx")
   @@index([id_type], map: "tbl_user_id_type_fkey")
@@ -193,14 +195,16 @@ model NGO {
   photo_url       String    @default("https://firebasestorage.googleapis.com/v0/b/doe-tempo-50ccb.appspot.com/o/images%2Fshapes-1682345333624.svg?alt=media&token=813975f8-b9ef-443b-b868-ec8733d4f096")
   created_at      DateTime  @default(now())
 
-  campaign    Campaign[]
-  comment_ngo CommentNgo[]
-  following   Following[]
-  type        Type         @relation(fields: [id_type], references: [id])
-  ngo_address NgoAddress?
-  ngo_causes  NgoCauses[]
-  ngo_phone   NgoPhone[]
-  post_ngo    PostNgo[]
+  campaign      Campaign[]
+  comment_ngo   CommentNgo[]
+  following     Following[]
+  type          Type           @relation(fields: [id_type], references: [id])
+  ngo_address   NgoAddress?
+  ngo_causes    NgoCauses[]
+  ngo_phone     NgoPhone[]
+  post_ngo      PostNgo[]
+  comment_likes CommentLikes[]
+  post_likes    PostLikes[]
 
   @@index([id])
   @@index([id_type], map: "tbl_ngo_id_type_fkey")
@@ -273,7 +277,7 @@ model Post {
   post_ngo   PostNgo[]
   post_photo PostPhoto[]
   post_user  PostUser[]
-  likes      Likes[]
+  post_likes PostLikes[]
 
   @@map("tbl_post")
 }
@@ -316,14 +320,15 @@ model PostUser {
 }
 
 model Comment {
-  id           String        @id @unique @default(dbgenerated("(uuid())"))
-  content      String        @db.Text
-  created_at   DateTime      @default(now())
-  id_post      String
-  post         Post          @relation(fields: [id_post], references: [id], onDelete: Cascade)
-  comment_ngo  CommentNgo[]
-  comment_user CommentUser[]
-  likes        Likes[]
+  id         String   @id @unique @default(dbgenerated("(uuid())"))
+  content    String   @db.Text
+  created_at DateTime @default(now())
+  id_post    String
+
+  post          Post           @relation(fields: [id_post], references: [id], onDelete: Cascade)
+  comment_ngo   CommentNgo[]
+  comment_user  CommentUser[]
+  comment_likes CommentLikes[]
 
   @@index([id_post], map: "tbl_comment_id_post_fkey")
   @@map("tbl_comment")
@@ -355,15 +360,28 @@ model CommentNgo {
   @@map("tbl_comment_ngo")
 }
 
-model Likes {
-  id         String @id @unique @default(dbgenerated("(uuid())"))
-  id_user    String @unique
-  id_post    String
+model CommentLikes {
+  id         String  @id @unique @default(dbgenerated("(uuid())"))
   id_comment String
+  id_user    String?
+  id_ngo     String?
 
-  comment Comment @relation(fields: [id_comment], references: [id])
-  post    Post    @relation(fields: [id_post], references: [id])
-  user    User    @relation(fields: [id_user], references: [id])
+  ngo     NGO?    @relation(fields: [id_ngo], references: [id], onUpdate: NoAction, onDelete: Cascade)
+  user    User?   @relation(fields: [id_user], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  comment Comment @relation(references: [id], fields: [id_comment], onDelete: Cascade, onUpdate: NoAction)
 
-  @@map("tbl_likes")
+  @@map("tbl_comment_likes")
+}
+
+model PostLikes {
+  id      String  @id @unique @default(dbgenerated("(uuid())"))
+  id_user String?
+  id_ngo  String?
+  id_post String
+
+  ngo  NGO?  @relation(fields: [id_ngo], references: [id], onUpdate: NoAction, onDelete: Cascade)
+  user User? @relation(fields: [id_user], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  post Post  @relation(fields: [id_post], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@map("tbl_post_likes")
 }

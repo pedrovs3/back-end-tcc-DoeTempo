@@ -1,369 +1,382 @@
 generator client {
-  provider = "prisma-client-js"
+	provider = "prisma-client-js"
 }
 
-// generator erd {
-//   provider = "prisma-erd-generator"
-// }
-
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+	provider = "mysql"
+	url      = env("DATABASE_URL")
 }
 
 model User {
-  id            String   @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
-  name          String   @db.VarChar(100)
-  email         String   @unique(map: "email_UNIQUE") @db.VarChar(256)
-  password      String   @db.VarChar(90)
-  cpf           String   @unique(map: "cpf_UNIQUE") @db.VarChar(17)
-  id_gender     String   @db.Char(36)
-  birthdate     DateTime @db.Date
-  rg            String?  @db.VarChar(30)
-  id_type       String
-  banner_photo  String   @default("https://firebasestorage.googleapis.com/v0/b/doe-tempo-50ccb.appspot.com/o/images%2Fimage%2030.svg?alt=media&token=5ea50da8-a824-42b6-aad8-34a24cee5cae")
-  attached_link String?
-  photo_url     String   @default("https://firebasestorage.googleapis.com/v0/b/doe-tempo-50ccb.appspot.com/o/images%2Fthumbs-1682345055241.svg?alt=media&token=eb57a2d6-0240-4f32-b05d-079ff19ed160")
-  created_at    DateTime @default(now())
+	id            String   @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
+	name          String   @db.VarChar(100)
+	email         String   @unique(map: "email_UNIQUE") @db.VarChar(256)
+	password      String   @db.VarChar(90)
+	cpf           String   @unique(map: "cpf_UNIQUE") @db.VarChar(17)
+	id_gender     String   @db.Char(36)
+	birthdate     DateTime @db.Date
+	rg            String?  @db.VarChar(30)
+	id_type       String
+	banner_photo  String   @default("https://firebasestorage.googleapis.com/v0/b/doe-tempo-50ccb.appspot.com/o/images%2Fimage%2030.svg?alt=media&token=5ea50da8-a824-42b6-aad8-34a24cee5cae")
+	attached_link String?
+	photo_url     String   @default("https://firebasestorage.googleapis.com/v0/b/doe-tempo-50ccb.appspot.com/o/images%2Fthumbs-1682345055241.svg?alt=media&token=eb57a2d6-0240-4f32-b05d-079ff19ed160")
+	created_at    DateTime @default(now())
 
-  supported_campaigns CampaignParticipants[]
-  comment_user        CommentUser[]
-  following           Following[]
-  post_user           PostUser[]
-  gender              Gender                 @relation(fields: [id_gender], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tbl_user_tbl_gender")
-  type                Type                   @relation(fields: [id_type], references: [id])
-  user_address        UserAddress?
-  user_phone          UserPhone?
-  likes               Likes[]
+	supported_campaigns CampaignParticipants[]
+	comment_user        CommentUser[]
+	following           Following[]
+	post_user           PostUser[]
+	gender              Gender                 @relation(fields: [id_gender], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tbl_user_tbl_gender")
+	type                Type                   @relation(fields: [id_type], references: [id])
+	user_address        UserAddress?
+	user_phone          UserPhone?
+	comment_likes       CommentLikes[]
+	post_likes          PostLikes[]
 
-  @@index([id_gender], map: "fk_tbl_user_tbl_gender_idx")
-  @@index([id_type], map: "tbl_user_id_type_fkey")
-  @@map("tbl_user")
+	@@index([id_gender], map: "fk_tbl_user_tbl_gender_idx")
+	@@index([id_type], map: "tbl_user_id_type_fkey")
+	@@map("tbl_user")
 }
 
 model Gender {
-  id           String @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
-  name         String @unique(map: "name_UNIQUE") @db.VarChar(20)
-  abbreviation String @unique(map: "abbreviation_UNIQUE") @db.Char(1)
-  user         User[]
+	id           String @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
+	name         String @unique(map: "name_UNIQUE") @db.VarChar(20)
+	abbreviation String @unique(map: "abbreviation_UNIQUE") @db.Char(1)
+	user         User[]
 
-  @@map("tbl_gender")
+	@@map("tbl_gender")
 }
 
 model Phone {
-  id     String  @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
-  number String? @db.VarChar(20)
+	id     String  @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
+	number String? @db.VarChar(20)
 
-  ngo_phone  NgoPhone[]
-  user_phone UserPhone[]
+	ngo_phone  NgoPhone[]
+	user_phone UserPhone[]
 
-  @@map("tbl_phone")
+	@@map("tbl_phone")
 }
 
 model Address {
-  id          String  @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
-  postal_code String  @db.VarChar(14)
-  number      String  @db.VarChar(7)
-  complement  String? @db.VarChar(100)
+	id          String  @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
+	postal_code String  @db.VarChar(14)
+	number      String  @db.VarChar(7)
+	complement  String? @db.VarChar(100)
 
-  campaign_address CampaignAddress[]
-  ngo_address      NgoAddress[]
-  user_address     UserAddress[]
+	campaign_address CampaignAddress[]
+	ngo_address      NgoAddress[]
+	user_address     UserAddress[]
 
-  @@map("tbl_address")
+	@@map("tbl_address")
 }
 
 model UserAddress {
-  id         String  @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
-  id_address String  @db.Char(36)
-  id_user    String  @unique @db.Char(36)
-  address    Address @relation(fields: [id_address], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_tbl_user_address_tbl_address1")
-  user       User    @relation(fields: [id_user], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_tbl_user_address_tbl_user1")
+	id         String  @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
+	id_address String  @db.Char(36)
+	id_user    String  @unique @db.Char(36)
+	address    Address @relation(fields: [id_address], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_tbl_user_address_tbl_address1")
+	user       User    @relation(fields: [id_user], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_tbl_user_address_tbl_user1")
 
-  @@index([id_address], map: "fk_tbl_user_address_tbl_address1_idx")
-  @@index([id_user], map: "fk_tbl_user_address_tbl_user1_idx")
-  @@map("tbl_user_address")
+	@@index([id_address], map: "fk_tbl_user_address_tbl_address1_idx")
+	@@index([id_user], map: "fk_tbl_user_address_tbl_user1_idx")
+	@@map("tbl_user_address")
 }
 
 model Campaign {
-  id                String   @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
-  title             String   @unique(map: "title_UNIQUE") @db.VarChar(100)
-  description       String?  @db.Text
-  begin_date        DateTime @db.Date
-  end_date          DateTime @db.Date
-  home_office       Boolean  @default(false)
-  id_ngo            String   @db.Char(36)
-  how_to_contribute String   @db.Text
-  prerequisites     String   @db.Text
-  created_at        DateTime @default(now())
+	id                String   @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
+	title             String   @unique(map: "title_UNIQUE") @db.VarChar(100)
+	description       String?  @db.Text
+	begin_date        DateTime @db.Date
+	end_date          DateTime @db.Date
+	home_office       Boolean  @default(false)
+	id_ngo            String   @db.Char(36)
+	how_to_contribute String   @db.Text
+	prerequisites     String   @db.Text
+	created_at        DateTime @default(now())
 
-  ngo                   NGO                    @relation(fields: [id_ngo], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_tbl_campaign_tbl_ngo1")
-  campaign_address      CampaignAddress?
-  campaign_causes       CampaignCauses[]
-  campaign_participants CampaignParticipants[]
-  campaign_photos       CampaignPhotos[]
+	ngo                   NGO                    @relation(fields: [id_ngo], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_tbl_campaign_tbl_ngo1")
+	campaign_address      CampaignAddress?
+	campaign_causes       CampaignCauses[]
+	campaign_participants CampaignParticipants[]
+	campaign_photos       CampaignPhotos[]
 
-  @@index([id_ngo], map: "fk_tbl_campaign_tbl_ngo1_idx")
-  @@map("tbl_campaign")
+	@@index([id_ngo], map: "fk_tbl_campaign_tbl_ngo1_idx")
+	@@map("tbl_campaign")
 }
 
 model CampaignAddress {
-  id          String @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
-  id_campaign String @unique @db.Char(36)
-  id_address  String @db.Char(36)
+	id          String @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
+	id_campaign String @unique @db.Char(36)
+	id_address  String @db.Char(36)
 
-  campaign Campaign @relation(fields: [id_campaign], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_Campaign_address_tbl_campaign1")
-  address  Address  @relation(fields: [id_address], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_tbl_campaign_address_tbl_address1")
+	campaign Campaign @relation(fields: [id_campaign], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_Campaign_address_tbl_campaign1")
+	address  Address  @relation(fields: [id_address], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_tbl_campaign_address_tbl_address1")
 
-  @@index([id_address], map: "fk_tbl_campaign_address_tbl_address1_idx")
-  @@index([id_campaign], map: "fk_tbl_campaign_address_tbl_campaign1_idx")
-  @@map("tbl_campaign_address")
+	@@index([id_address], map: "fk_tbl_campaign_address_tbl_address1_idx")
+	@@index([id_campaign], map: "fk_tbl_campaign_address_tbl_campaign1_idx")
+	@@map("tbl_campaign_address")
 }
 
 model CampaignCauses {
-  id          String @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
-  id_cause    String
-  id_campaign String
+	id          String @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
+	id_cause    String
+	id_campaign String
 
-  campaign Campaign @relation(fields: [id_campaign], references: [id], onDelete: Cascade, map: "fk_tbl_campaign_causes_tbl_campaign1")
-  causes   Causes   @relation(fields: [id_cause], references: [id], onDelete: Cascade, map: "fk_tbl_campaign_causes_tbl_causes1")
+	campaign Campaign @relation(fields: [id_campaign], references: [id], onDelete: Cascade, map: "fk_tbl_campaign_causes_tbl_campaign1")
+	causes   Causes   @relation(fields: [id_cause], references: [id], onDelete: Cascade, map: "fk_tbl_campaign_causes_tbl_causes1")
 
-  @@unique([id_cause, id_campaign])
-  @@index([id_campaign], map: "fk_tbl_campaign_causes_tbl_campaign1_idx")
-  @@index([id_cause], map: "fk_tbl_campaign_causes_tbl_causes1_idx")
-  @@map("tbl_campaign_causes")
+	@@unique([id_cause, id_campaign])
+	@@index([id_campaign], map: "fk_tbl_campaign_causes_tbl_campaign1_idx")
+	@@index([id_cause], map: "fk_tbl_campaign_causes_tbl_causes1_idx")
+	@@map("tbl_campaign_causes")
 }
 
 model CampaignParticipants {
-  id          String @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
-  id_campaign String @db.Char(36)
-  id_user     String @db.Char(36)
+	id          String @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
+	id_campaign String @db.Char(36)
+	id_user     String @db.Char(36)
 
-  campaign Campaign @relation(fields: [id_campaign], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_tbl_campaign_participants_tbl_campaign1")
-  user     User     @relation(fields: [id_user], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tbl_campaign_participants_tbl_user1")
+	campaign Campaign @relation(fields: [id_campaign], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_tbl_campaign_participants_tbl_campaign1")
+	user     User     @relation(fields: [id_user], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tbl_campaign_participants_tbl_user1")
 
-  @@unique([id_campaign, id_user])
-  @@index([id_campaign], map: "fk_tbl_campaign_participants_tbl_campaign1_idx")
-  @@index([id_user], map: "fk_tbl_campaign_participants_tbl_user1_idx")
-  @@map("tbl_campaign_participants")
+	@@unique([id_campaign, id_user])
+	@@index([id_campaign], map: "fk_tbl_campaign_participants_tbl_campaign1_idx")
+	@@index([id_user], map: "fk_tbl_campaign_participants_tbl_user1_idx")
+	@@map("tbl_campaign_participants")
 }
 
 model CampaignPhotos {
-  id          String @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
-  photo_url   String @db.VarChar(256)
-  id_campaign String @db.Char(36)
+	id          String @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
+	photo_url   String @db.VarChar(256)
+	id_campaign String @db.Char(36)
 
-  campaign Campaign @relation(fields: [id_campaign], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_tbl_campaign_photos_tbl_campaign1")
+	campaign Campaign @relation(fields: [id_campaign], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_tbl_campaign_photos_tbl_campaign1")
 
-  @@index([id_campaign], map: "fk_tbl_campaign_photos_tbl_campaign1_idx")
-  @@map("tbl_campaign_photos")
+	@@index([id_campaign], map: "fk_tbl_campaign_photos_tbl_campaign1_idx")
+	@@map("tbl_campaign_photos")
 }
 
 model Causes {
-  id              String           @id @unique @default(dbgenerated("(uuid())"))
-  title           String           @db.VarChar(100)
-  description     String?          @db.Text
-  campaign_causes CampaignCauses[]
-  ngo_causes      NgoCauses[]
+	id              String           @id @unique @default(dbgenerated("(uuid())"))
+	title           String           @db.VarChar(100)
+	description     String?          @db.Text
+	campaign_causes CampaignCauses[]
+	ngo_causes      NgoCauses[]
 
-  @@map("tbl_causes")
+	@@map("tbl_causes")
 }
 
 model Following {
-  id      String @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
-  id_user String @db.Char(36)
-  id_ngo  String @db.Char(36)
-  ngo     NGO    @relation(fields: [id_ngo], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tbl_following_tbl_ngo1")
-  user    User   @relation(fields: [id_user], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_tbl_following_tbl_user1")
+	id      String @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
+	id_user String @db.Char(36)
+	id_ngo  String @db.Char(36)
+	ngo     NGO    @relation(fields: [id_ngo], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tbl_following_tbl_ngo1")
+	user    User   @relation(fields: [id_user], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_tbl_following_tbl_user1")
 
-  @@index([id_ngo], map: "fk_tbl_following_tbl_ngo1_idx")
-  @@index([id_user], map: "fk_tbl_following_tbl_user1_idx")
-  @@map("tbl_following")
+	@@index([id_ngo], map: "fk_tbl_following_tbl_ngo1_idx")
+	@@index([id_user], map: "fk_tbl_following_tbl_user1_idx")
+	@@map("tbl_following")
 }
 
 model NGO {
-  id              String    @id @default(dbgenerated("(uuid())"))
-  name            String    @db.VarChar(100)
-  cnpj            String    @unique @db.VarChar(17)
-  foundation_date DateTime? @db.Date
-  description     String?   @db.Text
-  email           String    @unique @db.VarChar(256)
-  password        String
-  id_type         String
-  photo_url       String    @default("https://firebasestorage.googleapis.com/v0/b/doe-tempo-50ccb.appspot.com/o/images%2Fshapes-1682345333624.svg?alt=media&token=813975f8-b9ef-443b-b868-ec8733d4f096")
-  created_at      DateTime  @default(now())
+	id              String    @id @default(dbgenerated("(uuid())"))
+	name            String    @db.VarChar(100)
+	cnpj            String    @unique @db.VarChar(17)
+	foundation_date DateTime? @db.Date
+	description     String?   @db.Text
+	email           String    @unique @db.VarChar(256)
+	password        String
+	id_type         String
+	photo_url       String    @default("https://firebasestorage.googleapis.com/v0/b/doe-tempo-50ccb.appspot.com/o/images%2Fshapes-1682345333624.svg?alt=media&token=813975f8-b9ef-443b-b868-ec8733d4f096")
+	created_at      DateTime  @default(now())
 
-  campaign    Campaign[]
-  comment_ngo CommentNgo[]
-  following   Following[]
-  type        Type         @relation(fields: [id_type], references: [id])
-  ngo_address NgoAddress?
-  ngo_causes  NgoCauses[]
-  ngo_phone   NgoPhone[]
-  post_ngo    PostNgo[]
+	campaign      Campaign[]
+	comment_ngo   CommentNgo[]
+	following     Following[]
+	type          Type           @relation(fields: [id_type], references: [id])
+	ngo_address   NgoAddress?
+	ngo_causes    NgoCauses[]
+	ngo_phone     NgoPhone[]
+	post_ngo      PostNgo[]
+	comment_likes CommentLikes[]
+	post_likes    PostLikes[]
 
-  @@index([id])
-  @@index([id_type], map: "tbl_ngo_id_type_fkey")
-  @@map("tbl_ngo")
+	@@index([id])
+	@@index([id_type], map: "tbl_ngo_id_type_fkey")
+	@@map("tbl_ngo")
 }
 
 model NgoAddress {
-  id         String  @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
-  id_ngo     String  @unique @db.Char(36)
-  id_address String  @db.Char(36)
-  address    Address @relation(fields: [id_address], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_tbl_ngo_address_tbl_address1")
-  ngo        NGO     @relation(fields: [id_ngo], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tbl_ngo_address_tbl_ngo1")
+	id         String  @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
+	id_ngo     String  @unique @db.Char(36)
+	id_address String  @db.Char(36)
+	address    Address @relation(fields: [id_address], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_tbl_ngo_address_tbl_address1")
+	ngo        NGO     @relation(fields: [id_ngo], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tbl_ngo_address_tbl_ngo1")
 
-  @@index([id_address], map: "fk_tbl_ngo_address_tbl_address1_idx")
-  @@index([id_ngo], map: "fk_tbl_ngo_address_tbl_ngo1_idx")
-  @@map("tbl_ngo_address")
+	@@index([id_address], map: "fk_tbl_ngo_address_tbl_address1_idx")
+	@@index([id_ngo], map: "fk_tbl_ngo_address_tbl_ngo1_idx")
+	@@map("tbl_ngo_address")
 }
 
 model NgoCauses {
-  id        String @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
-  id_causes String @db.Char(36)
-  id_ngo    String @db.Char(36)
-  causes    Causes @relation(fields: [id_causes], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tbl_ngo_causes_tbl_causes1")
-  ngo       NGO    @relation(fields: [id_ngo], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tbl_ngo_causes_tbl_ngo1")
+	id        String @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
+	id_causes String @db.Char(36)
+	id_ngo    String @db.Char(36)
+	causes    Causes @relation(fields: [id_causes], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tbl_ngo_causes_tbl_causes1")
+	ngo       NGO    @relation(fields: [id_ngo], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tbl_ngo_causes_tbl_ngo1")
 
-  @@index([id_causes], map: "fk_tbl_ngo_causes_tbl_causes1_idx")
-  @@index([id_ngo], map: "fk_tbl_ngo_causes_tbl_ngo1_idx")
-  @@map("tbl_ngo_causes")
+	@@index([id_causes], map: "fk_tbl_ngo_causes_tbl_causes1_idx")
+	@@index([id_ngo], map: "fk_tbl_ngo_causes_tbl_ngo1_idx")
+	@@map("tbl_ngo_causes")
 }
 
 model NgoPhone {
-  id       String @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
-  id_ngo   String @db.Char(36)
-  id_phone String
-  ngo      NGO    @relation(fields: [id_ngo], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tbl_ngo_phone_tbl_ngo1")
-  phone    Phone  @relation(fields: [id_phone], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tbl_ngo_phone_tbl_phone1")
+	id       String @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
+	id_ngo   String @db.Char(36)
+	id_phone String
+	ngo      NGO    @relation(fields: [id_ngo], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tbl_ngo_phone_tbl_ngo1")
+	phone    Phone  @relation(fields: [id_phone], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tbl_ngo_phone_tbl_phone1")
 
-  @@index([id_ngo], map: "fk_tbl_ngo_phone_tbl_ngo1_idx")
-  @@index([id_phone], map: "fk_tbl_ngo_phone_tbl_phone1_idx")
-  @@map("tbl_ngo_phone")
+	@@index([id_ngo], map: "fk_tbl_ngo_phone_tbl_ngo1_idx")
+	@@index([id_phone], map: "fk_tbl_ngo_phone_tbl_phone1_idx")
+	@@map("tbl_ngo_phone")
 }
 
 model UserPhone {
-  id       String @id @unique @default(dbgenerated("(uuid())"))
-  id_phone String @db.Char(36)
-  id_user  String @unique @db.Char(36)
-  phone    Phone  @relation(fields: [id_phone], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tbl_user_phone_tbl_phone1")
-  user     User   @relation(fields: [id_user], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_tbl_user_phone_tbl_user1")
+	id       String @id @unique @default(dbgenerated("(uuid())"))
+	id_phone String @db.Char(36)
+	id_user  String @unique @db.Char(36)
+	phone    Phone  @relation(fields: [id_phone], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tbl_user_phone_tbl_phone1")
+	user     User   @relation(fields: [id_user], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_tbl_user_phone_tbl_user1")
 
-  @@index([id_phone], map: "fk_tbl_user_phone_tbl_phone1_idx")
-  @@index([id_user], map: "fk_tbl_user_phone_tbl_user1_idx")
-  @@map("tbl_user_phone")
+	@@index([id_phone], map: "fk_tbl_user_phone_tbl_phone1_idx")
+	@@index([id_user], map: "fk_tbl_user_phone_tbl_user1_idx")
+	@@map("tbl_user_phone")
 }
 
 model Type {
-  id   String @id @default(dbgenerated("(uuid())"))
-  name String @unique @db.VarChar(10)
-  ngo  NGO[]
-  user User[]
+	id   String @id @default(dbgenerated("(uuid())"))
+	name String @unique @db.VarChar(10)
+	ngo  NGO[]
+	user User[]
 
-  @@map("tbl_type")
+	@@map("tbl_type")
 }
 
 model Post {
-  id         String   @id @unique @default(dbgenerated("(uuid())"))
-  content    String?  @db.Text
-  created_at DateTime @default(now())
+	id         String   @id @unique @default(dbgenerated("(uuid())"))
+	content    String?  @db.Text
+	created_at DateTime @default(now())
 
-  comment    Comment[]
-  post_ngo   PostNgo[]
-  post_photo PostPhoto[]
-  post_user  PostUser[]
-  likes      Likes[]
+	comment    Comment[]
+	post_ngo   PostNgo[]
+	post_photo PostPhoto[]
+	post_user  PostUser[]
+	post_likes PostLikes[]
 
-  @@map("tbl_post")
+	@@map("tbl_post")
 }
 
 model PostPhoto {
-  id        String @id @unique @default(dbgenerated("(uuid())"))
-  id_post   String
-  photo_url String @db.VarChar(256)
+	id        String @id @unique @default(dbgenerated("(uuid())"))
+	id_post   String
+	photo_url String @db.VarChar(256)
 
-  post Post @relation(fields: [id_post], references: [id], onDelete: Cascade)
+	post Post @relation(fields: [id_post], references: [id], onDelete: Cascade)
 
-  @@index([id_post], map: "tbl_post_photo_id_post_fkey")
-  @@map("tbl_post_photo")
+	@@index([id_post], map: "tbl_post_photo_id_post_fkey")
+	@@map("tbl_post_photo")
 }
 
 model PostNgo {
-  id      String @id @unique @default(dbgenerated("(uuid())"))
-  id_post String
-  id_ngo  String
+	id      String @id @unique @default(dbgenerated("(uuid())"))
+	id_post String
+	id_ngo  String
 
-  ngo  NGO  @relation(fields: [id_ngo], references: [id], onDelete: Cascade)
-  post Post @relation(fields: [id_post], references: [id], onDelete: Cascade)
+	ngo  NGO  @relation(fields: [id_ngo], references: [id], onDelete: Cascade)
+	post Post @relation(fields: [id_post], references: [id], onDelete: Cascade)
 
-  @@index([id_ngo], map: "tbl_post_ngo_id_ngo_fkey")
-  @@index([id_post], map: "tbl_post_ngo_id_post_fkey")
-  @@map("tbl_post_ngo")
+	@@index([id_ngo], map: "tbl_post_ngo_id_ngo_fkey")
+	@@index([id_post], map: "tbl_post_ngo_id_post_fkey")
+	@@map("tbl_post_ngo")
 }
 
 model PostUser {
-  id      String @id @unique @default(dbgenerated("(uuid())"))
-  id_post String
-  id_user String
+	id      String @id @unique @default(dbgenerated("(uuid())"))
+	id_post String
+	id_user String
 
-  post Post @relation(fields: [id_post], references: [id], onDelete: Cascade)
-  user User @relation(fields: [id_user], references: [id], onDelete: Cascade)
+	post Post @relation(fields: [id_post], references: [id], onDelete: Cascade)
+	user User @relation(fields: [id_user], references: [id], onDelete: Cascade)
 
-  @@index([id_post], map: "tbl_post_user_id_post_fkey")
-  @@index([id_user], map: "tbl_post_user_id_user_fkey")
-  @@map("tbl_post_user")
+	@@index([id_post], map: "tbl_post_user_id_post_fkey")
+	@@index([id_user], map: "tbl_post_user_id_user_fkey")
+	@@map("tbl_post_user")
 }
 
 model Comment {
-  id           String        @id @unique @default(dbgenerated("(uuid())"))
-  content      String        @db.Text
-  created_at   DateTime      @default(now())
-  id_post      String
-  post         Post          @relation(fields: [id_post], references: [id], onDelete: Cascade)
-  comment_ngo  CommentNgo[]
-  comment_user CommentUser[]
-  likes        Likes[]
+	id         String   @id @unique @default(dbgenerated("(uuid())"))
+	content    String   @db.Text
+	created_at DateTime @default(now())
+	id_post    String
 
-  @@index([id_post], map: "tbl_comment_id_post_fkey")
-  @@map("tbl_comment")
+	post          Post           @relation(fields: [id_post], references: [id], onDelete: Cascade)
+	comment_ngo   CommentNgo[]
+	comment_user  CommentUser[]
+	comment_likes CommentLikes[]
+
+	@@index([id_post], map: "tbl_comment_id_post_fkey")
+	@@map("tbl_comment")
 }
 
 model CommentUser {
-  id         String @id @unique @default(dbgenerated("(uuid())"))
-  id_comment String
-  id_user    String
+	id         String @id @unique @default(dbgenerated("(uuid())"))
+	id_comment String
+	id_user    String
 
-  comment Comment @relation(fields: [id_comment], references: [id], onDelete: Cascade, map: "fk_tbl_comment_tbl_user")
-  user    User    @relation(fields: [id_user], references: [id], onDelete: Cascade)
+	comment Comment @relation(fields: [id_comment], references: [id], onDelete: Cascade, map: "fk_tbl_comment_tbl_user")
+	user    User    @relation(fields: [id_user], references: [id], onDelete: Cascade)
 
-  @@index([id_comment], map: "fk_tbl_comment_tbl_user")
-  @@index([id_user], map: "tbl_comment_user_id_user_fkey")
-  @@map("tbl_comment_user")
+	@@index([id_comment], map: "fk_tbl_comment_tbl_user")
+	@@index([id_user], map: "tbl_comment_user_id_user_fkey")
+	@@map("tbl_comment_user")
 }
 
 model CommentNgo {
-  id         String @id @unique @default(dbgenerated("(uuid())"))
-  id_comment String
-  id_ngo     String
+	id         String @id @unique @default(dbgenerated("(uuid())"))
+	id_comment String
+	id_ngo     String
 
-  comment Comment @relation(fields: [id_comment], references: [id], onDelete: Cascade, map: "fk_tbl_comment_tbl_ngo")
-  ngo     NGO     @relation(fields: [id_ngo], references: [id], onDelete: Cascade)
+	comment Comment @relation(fields: [id_comment], references: [id], onDelete: Cascade, map: "fk_tbl_comment_tbl_ngo")
+	ngo     NGO     @relation(fields: [id_ngo], references: [id], onDelete: Cascade)
 
-  @@index([id_comment], map: "fk_tbl_comment_tbl_ngo")
-  @@index([id_ngo], map: "tbl_comment_ngo_nGOId_fkey")
-  @@map("tbl_comment_ngo")
+	@@index([id_comment], map: "fk_tbl_comment_tbl_ngo")
+	@@index([id_ngo], map: "tbl_comment_ngo_nGOId_fkey")
+	@@map("tbl_comment_ngo")
 }
 
-model Likes {
-  id         String @id @unique @default(dbgenerated("(uuid())"))
-  id_user    String @unique
-  id_post    String
-  id_comment String
+model CommentLikes {
+	id         String  @id @unique @default(dbgenerated("(uuid())"))
+	id_comment String
+	id_user    String?
+	id_ngo     String?
 
-  comment Comment @relation(fields: [id_comment], references: [id])
-  post    Post    @relation(fields: [id_post], references: [id])
-  user    User    @relation(fields: [id_user], references: [id])
+	ngo     NGO?    @relation(fields: [id_ngo], references: [id], onUpdate: NoAction, onDelete: Cascade)
+	user    User?   @relation(fields: [id_user], references: [id], onDelete: Cascade, onUpdate: NoAction)
+	comment Comment @relation(references: [id], fields: [id_comment], onDelete: Cascade, onUpdate: NoAction)
 
-  @@map("tbl_likes")
+	@@map("tbl_comment_likes")
+}
+
+model PostLikes {
+	id      String  @id @unique @default(dbgenerated("(uuid())"))
+	id_user String?
+	id_ngo  String?
+	id_post String
+
+	ngo  NGO?  @relation(fields: [id_ngo], references: [id], onUpdate: NoAction, onDelete: Cascade)
+	user User? @relation(fields: [id_user], references: [id], onDelete: Cascade, onUpdate: NoAction)
+	post Post  @relation(fields: [id_post], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+	@@map("tbl_post_likes")
 }
