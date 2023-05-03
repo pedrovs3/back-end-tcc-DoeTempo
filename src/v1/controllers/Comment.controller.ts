@@ -28,30 +28,55 @@ class CommentController {
     }
   }
 
-  // async store(request: FastifyRequest, reply: FastifyReply) {
-  //   try {
-  //     const { body, params } = request;
-  //
-  //     if (body.type_of_user === 'USER') {
-  //       const createComment = await prisma.comment.create({
-  //         data: { // @ts-ignore
-  //           id_post: params.id,
-  //           comment_user: {
-  //             create: {
-  //               id_user: body.id_user,
-  //             },
-  // 						createMany: {
-  // 							data: {
-  // 							}
-  // 						}
-  //           },
-  //         },
-  //       });
-  //     }
-  //   } catch (e) {
-  //
-  //   }
-  // }
+  async store(request: FastifyRequest, reply: FastifyReply) {
+    try {
+      const { body, params } = request;
+      const decodedJwt = request.user;
+
+      if (decodedJwt.type === 'USER') {
+        const createComment = await prisma.comment.create({
+          data: {
+            id_post: params.id,
+            comment_user: {
+              create: {
+                user: {
+                  connect: {
+                    id: decodedJwt.id,
+                  },
+                },
+              },
+            },
+            content: body.content,
+          },
+        });
+
+        reply.status(200).send({ createComment });
+      }
+
+      if (decodedJwt.type === 'ONG') {
+        const createComment = await prisma.comment.create({
+          data: {
+            id_post: params.id,
+            comment_ngo: {
+              connect: {
+                id: decodedJwt.id,
+              },
+            },
+            content: body.content,
+          },
+        });
+
+        if (!createComment) {
+          return reply.status(400).send(new genericError('Não foi possivel criar o comentário!'));
+        }
+
+        reply.status(200).send({ createComment });
+      }
+    } catch (e) {
+      console.log(e);
+      reply.status(400).send('Houve um erro');
+    }
+  }
 }
 
 export default new CommentController();

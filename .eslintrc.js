@@ -25,5 +25,7 @@ module.exports = {
     'class-methods-use-this': 'off',
     'consistent-return': 'off',
     'new-cap': 'off',
+    'no-param-reassign': 'off',
+    'no-underscore-dangle': 'off',
   },
 };

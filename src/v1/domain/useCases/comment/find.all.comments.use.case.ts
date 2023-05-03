@@ -10,41 +10,62 @@ export default class FindAllCommentsUseCase {
         },
         select: {
           id: true,
-          CommentNgo: {
+          comment_ngo: {
             select: {
-              ngo: true,
+              ngo: {
+                select: {
+                  id: true,
+                  name: true,
+                  email: true,
+                  photo_url: true,
+                },
+              },
             },
           },
-          CommentUser: {
+          comment_user: {
             select: {
-              user: true,
+              user: {
+                select: {
+                  id: true,
+                  name: true,
+                  email: true,
+                  photo_url: true,
+                },
+              },
             },
           },
           content: true,
           created_at: true,
-          likes: true,
+          comment_likes: {
+            select: {
+              id: true,
+              comment: true,
+            },
+          },
           post: true,
           _count: {
             select: {
-              CommentNgo: true,
-              CommentUser: true,
+              comment_ngo: true,
+              comment_user: true,
             },
           },
         },
       });
 
       commentsForSamePublication.forEach((comment) => {
-        if (comment._count.CommentUser === 0) {
+        if (comment._count.comment_user === 0) {
           // @ts-ignore
-          delete comment.CommentUser;
+          delete comment.comment_user;
           // @ts-ignore
-          delete Object.assign(comment, { user: comment.CommentNgo[0] }).CommentNgo;
-        } else if (comment._count.CommentNgo === 0) {
+          delete Object.assign(comment, { user: comment.comment_ngo[0] }).comment_ngo;
+        } else if (comment._count.comment_ngo === 0) {
           // @ts-ignore
-          delete comment.CommentNgo;
+          delete comment.comment_ngo;
           // @ts-ignore
-          delete Object.assign(comment, { user: comment.CommentUser[0] }).CommentUser;
+          delete Object.assign(comment, { user: comment.comment_user[0] }).comment_user;
         }
+        // @ts-ignore
+        delete comment._count;
       });
 
       if (commentsForSamePublication.length < 1) {

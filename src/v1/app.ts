@@ -6,7 +6,6 @@ import * as dotenv from 'dotenv';
 import {
   campaignRoutes,
   causesRoutes,
-  commentRoutes,
   countRoutes,
   genderRoutes,
   ngoRoutes,
@@ -86,7 +85,6 @@ class App {
     this.fastify.register(campaignRoutes, { prefix: '/campaign' });
     this.fastify.register(publicationRoutes, { prefix: '/post' });
     this.fastify.register(countRoutes, { prefix: '/count' });
-    this.fastify.register(commentRoutes, { prefix: '/comment' });
   }
 }
 

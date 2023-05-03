@@ -1,3 +1,4 @@
+import { User } from '@prisma/client';
 import { prisma } from '../../lib/prisma';
 import { Query } from '../models/Query';
 import { UpdateBodyUser } from '../models/UpdateBodyUser';
@@ -5,46 +6,81 @@ import { UpdateBodyUser } from '../models/UpdateBodyUser';
 class UserRepository {
   async createUser(userSchema: userSchemaTypes, newPassword: string) {
     try {
-      const user = await prisma.user.create({
-        data: {
-          cpf: userSchema.cpf,
-          rg: userSchema.rg,
-          user_phone: {
-            create: {
-              phone: {
-                create: { // @ts-ignore
-                  number: userSchema.phone[0].number,
+      let user: User;
+      if (!userSchema.phone) {
+        user = await prisma.user.create({
+          data: {
+            cpf: userSchema.cpf,
+            rg: userSchema.rg,
+            user_address: {
+              create: {
+                address: {
+                  create: {
+                    number: userSchema.address.number,
+                    postal_code: userSchema.address.postal_code,
+                  },
                 },
               },
             },
+            gender: {
+              connect: {
+                id: userSchema.gender,
+              },
+            },
+            type: {
+              connect: {
+                name: 'USER',
+              },
+            },
+            email: userSchema.email,
+            password: newPassword,
+            name: userSchema.name,
+            birthdate: userSchema.birthdate,
+            photo_url: userSchema.photoURL,
           },
-          user_address: {
-            create: {
-              address: {
-                create: {
-                  number: userSchema.address.number,
-                  postal_code: userSchema.address.postal_code,
+        });
+      } else {
+        user = await prisma.user.create({
+          data: {
+            cpf: userSchema.cpf,
+            rg: userSchema.rg,
+            user_phone: {
+              create: {
+                phone: {
+                  create: { // @ts-ignore
+                    number: userSchema.phone[0].number || undefined,
+                  },
                 },
               },
             },
-          },
-          gender: {
-            connect: {
-              id: userSchema.gender,
+            user_address: {
+              create: {
+                address: {
+                  create: {
+                    number: userSchema.address.number,
+                    postal_code: userSchema.address.postal_code,
+                  },
+                },
+              },
             },
-          },
-          type: {
-            connect: {
-              name: 'USER',
+            gender: {
+              connect: {
+                id: userSchema.gender,
+              },
             },
+            type: {
+              connect: {
+                name: 'USER',
+              },
+            },
+            email: userSchema.email,
+            password: newPassword,
+            name: userSchema.name,
+            birthdate: userSchema.birthdate,
+            photo_url: userSchema.photoURL,
           },
-          email: userSchema.email,
-          password: newPassword,
-          name: userSchema.name,
-          birthdate: userSchema.birthdate,
-          photo_url: userSchema.photoURL,
-        },
-      });
+        });
+      }
 
       if (!user) {
         throw new Error('Houve um erro ao criar o usuário');
@@ -182,6 +218,21 @@ class UserRepository {
                 select: {
                   id: true,
                   title: true,
+                },
+              },
+            },
+          },
+          post_user: {
+            select: {
+              post: {
+                select: {
+                  id: true,
+                  content: true,
+                  post_likes: true,
+                  created_at: true,
+                  post_photo: true,
+                  _count: true,
+                  comment: true,
                 },
               },
             },

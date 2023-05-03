@@ -6,6 +6,9 @@ class PublicationController {
   async index(request: FastifyRequest, reply: FastifyReply) {
     try {
       const allPosts = await prisma.post.findMany({
+        orderBy: {
+          created_at: 'desc',
+        },
         include: {
           _count: true,
           post_ngo: {
@@ -59,8 +62,30 @@ class PublicationController {
               id: true,
               content: true,
               created_at: true,
-              comment_user: true,
-              comment_ngo: true,
+              comment_user: {
+                select: {
+                  user: {
+                    select: {
+                      id: true,
+                      name: true,
+                      email: true,
+                      type: true,
+                    },
+                  },
+                },
+              },
+              comment_ngo: {
+                select: {
+                  ngo: {
+                    select: {
+                      id: true,
+                      name: true,
+                      email: true,
+                      type: true,
+                    },
+                  },
+                },
+              },
               comment_likes: true,
               _count: true,
             },
