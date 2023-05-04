@@ -62,6 +62,7 @@ class PublicationController {
               id: true,
               content: true,
               created_at: true,
+              comment_likes: true,
               comment_user: {
                 select: {
                   user: {
@@ -86,7 +87,6 @@ class PublicationController {
                   },
                 },
               },
-              comment_likes: true,
               _count: true,
             },
           },
