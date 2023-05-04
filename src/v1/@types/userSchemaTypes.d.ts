@@ -12,5 +12,5 @@ type userSchemaTypes = {
 	gender: string,
 	phone?: [{ number: string }]
 	rg?: string,
-	photoURL?: string
+	photo_url?: string
 }

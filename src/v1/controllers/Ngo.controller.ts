@@ -58,8 +58,11 @@ class NgoController {
         },
         data: {
           email: ngoSchema.email,
+          // @ts-ignore
+          attached_link: ngoSchema.attached_link || undefined,
+          banner_photo: ngoSchema.banner_photo || undefined,
           foundation_date: ngoSchema.foundation_date,
-          description: ngoSchema.description,
+          description: ngoSchema.description || undefined,
           ngo_address: {
             update: {
               address: {
@@ -72,7 +75,7 @@ class NgoController {
             },
           },
           password: newPassword,
-          photo_url: ngoSchema.photoURL || undefined,
+          photo_url: ngoSchema.photo_url || undefined,
         },
       });
 
@@ -102,6 +105,15 @@ class NgoController {
         },
         select: {
           id: true,
+          photo_url: true,
+          created_at: true,
+          attached_link: true,
+          banner_photo: true,
+          post_ngo: {
+            select: {
+              post: true,
+            },
+          },
           ngo_address: {
             select: {
               address: {

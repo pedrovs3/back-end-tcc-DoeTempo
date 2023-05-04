@@ -15,5 +15,5 @@ export interface User {
 	email: string,
 	password: string
 	birthdate: Date
-	photoURL: string
+	photo_url: string
 }

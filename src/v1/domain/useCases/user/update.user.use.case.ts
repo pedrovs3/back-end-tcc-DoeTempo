@@ -17,6 +17,7 @@ export class UpdateUserUseCase {
 
       return updateUser;
     } catch (e) {
+      console.log(e);
       return 'Não foi possivel concluir a atualização de registro!';
     }
   }

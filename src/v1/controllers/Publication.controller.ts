@@ -5,7 +5,7 @@ import { prisma } from '../lib/prisma';
 class PublicationController {
   async index(request: FastifyRequest, reply: FastifyReply) {
     try {
-      const allPosts = await prisma.post.findMany({
+      const all_posts = await prisma.post.findMany({
         orderBy: {
           created_at: 'desc',
         },
@@ -93,7 +93,7 @@ class PublicationController {
         },
       });
 
-      reply.status(200).send({ allPosts });
+      reply.status(200).send({ all_posts });
     } catch (e) {
       console.error(e);
       reply.status(500).send(e);
@@ -159,9 +159,7 @@ class PublicationController {
         type_of_user: z.string(),
         photos: z.string().array(),
       });
-
-      // @ts-ignore
-      const { user } = request.query;
+      const decodedJwt = request.user;
 
       const body = createPostBody.parse(request.body);
 
@@ -178,7 +176,7 @@ class PublicationController {
               create: {
                 user: {
                   connect: {
-                    id: user,
+                    id: decodedJwt.id,
                   },
                 },
               },
@@ -198,7 +196,7 @@ class PublicationController {
               create: {
                 ngo: {
                   connect: {
-                    id: user,
+                    id: decodedJwt.id,
                   },
                 },
               },

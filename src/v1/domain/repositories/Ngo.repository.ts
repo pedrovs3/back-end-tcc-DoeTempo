@@ -1,6 +1,3 @@
-import {
-  Campaign, CommentNgo, Following, Type,
-} from '@prisma/client';
 import { prisma } from '../../lib/prisma';
 
 // export interface NGO{
@@ -44,7 +41,7 @@ class NgoRepository {
           },
         },
         password: newPassword,
-        photo_url: ngoSchema.photoURL || undefined,
+        photo_url: ngoSchema.photo_url || undefined,
       },
     });
 

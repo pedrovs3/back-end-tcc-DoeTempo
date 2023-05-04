@@ -9,9 +9,11 @@ class CommentController {
     try {
       const { params } = request;
 
-      if (!params) {
+      // @ts-ignore
+      if (!params.id) {
         reply.status(400).send(new genericError('Não foram enviados os dados necessários!'));
       }
+
       // @ts-ignore
       const allComments = await new FindAllCommentsUseCase().execute(params.id);
 

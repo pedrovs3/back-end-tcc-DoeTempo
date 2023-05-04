@@ -1,15 +1,12 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import 'dotenv/config';
 import createError from '@fastify/error';
-import { generateKeyPair } from 'crypto';
-import userModel from '../domain/models/UserModel';
 import { CreateUserUseCase } from '../domain/useCases/user/create.user.use.case';
 import { LoginCampaignUseCase } from '../domain/useCases/user/login.campaign.use.case';
 import { UpdateUserUseCase } from '../domain/useCases/user/update.user.use.case';
 import { genericError500 } from '../errors/GenericError500';
 import { genericError } from '../errors/GenericError';
 import { DeleteUserUseCase } from '../domain/useCases/user/delete.user.use.case';
-import userRepository from '../domain/repositories/User.repository';
 import { FindUserUseCase } from '../domain/useCases/user/find.user.use.case';
 import { NotFoundError } from '../errors/NotFoundError';
 
@@ -114,7 +111,7 @@ class UsersController {
       const updateUser = await new UpdateUserUseCase().execute(id, request.body, decodedJwt.id);
 
       if (typeof updateUser === 'string') {
-        if (updateUser.includes('Você nao pode atualizar os dados de outro usuário!')) {
+        if (updateUser.includes('Você nao pode atualizar')) {
           return reply.status(400).send(new genericError(updateUser));
         }
 

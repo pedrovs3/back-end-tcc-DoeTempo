@@ -10,6 +10,7 @@ export class CreateCampaignUseCase {
 
       return campaignRepositoryResponse;
     } catch (e) {
+      console.log(e);
       return 'Não foi possivel concluir a requisição!';
     }
   }

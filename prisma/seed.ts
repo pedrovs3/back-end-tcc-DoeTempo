@@ -6,30 +6,30 @@ async function main() {
   // await prisma.cause.deleteMany();
   // // await prisma.gender.deleteMany();
   // await prisma.address.deleteMany();
-
-  // await prisma.gender.createMany({
-  //   data: [
-  //     {
-  //       name: 'Feminino',
-  //       abbreviation: 'F',
-  //     },
-  //     {
-  //       name: 'Masculino',
-  //       abbreviation: 'M',
-  //     },
-  //     {
-  //       name: 'Prefiro não informar',
-  //       abbreviation: ' ',
-  //     },
-  //   ],
-  // });
   //
-  // await prisma.type.createMany({
-  //   data: [
-  //     { name: 'USER' },
-  //     { name: 'ONG' },
-  //   ],
-  // });
+  await prisma.gender.createMany({
+    data: [
+      {
+        name: 'Feminino',
+        abbreviation: 'F',
+      },
+      {
+        name: 'Masculino',
+        abbreviation: 'M',
+      },
+      {
+        name: 'Prefiro não informar',
+        abbreviation: ' ',
+      },
+    ],
+  });
+
+  await prisma.type.createMany({
+    data: [
+      { name: 'USER' },
+      { name: 'ONG' },
+    ],
+  });
 
   // @ts-ignore
   // const user1 = await prisma.cause.create({

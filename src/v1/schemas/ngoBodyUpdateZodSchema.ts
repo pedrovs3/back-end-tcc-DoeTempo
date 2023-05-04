@@ -5,6 +5,8 @@ const createNgoBodyToUpdate = z.object({
   email: z.string()
     .email(),
   password: z.string(),
+  attached_link: z.string().url().optional().nullable(),
+  banner_photo: z.string().url().optional().nullable(),
   cnpj: z.string()
     .min(10)
     .max(15),
@@ -16,13 +18,13 @@ const createNgoBodyToUpdate = z.object({
       .optional()
       .nullable(),
   }),
-  description: z.string(),
+  description: z.string().optional().nullable(),
   phone: z.object({
     number: z.string(),
   })
     .array()
     .optional(),
-  photoURL: z.string().optional().nullable(),
+  photo_url: z.string().optional().nullable(),
 });
 
 export default createNgoBodyToUpdate;

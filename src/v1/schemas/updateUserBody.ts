@@ -5,6 +5,9 @@ const createUserBody = z.object({
   email: z.string()
     .email(),
   password: z.string(),
+  description: z.string().optional().nullable(),
+  attached_link: z.string().url().optional().nullable(),
+  banner_photo: z.string().optional().nullable(),
   cpf: z.string(),
   birthdate: z.coerce.date(),
   address: z.object({
@@ -23,7 +26,7 @@ const createUserBody = z.object({
   rg: z.string()
     .optional()
     .nullable(),
-  photoURL: z.string().optional().nullable(),
+  photo_url: z.string().optional().nullable(),
 });
 
 export default createUserBody;

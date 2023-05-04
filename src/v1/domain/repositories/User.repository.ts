@@ -36,7 +36,7 @@ class UserRepository {
             password: newPassword,
             name: userSchema.name,
             birthdate: userSchema.birthdate,
-            photo_url: userSchema.photoURL,
+            photo_url: userSchema.photo_url,
           },
         });
       } else {
@@ -77,7 +77,7 @@ class UserRepository {
             password: newPassword,
             name: userSchema.name,
             birthdate: userSchema.birthdate,
-            photo_url: userSchema.photoURL,
+            photo_url: userSchema.photo_url,
           },
         });
       }
@@ -94,45 +94,79 @@ class UserRepository {
 
   async update(id: string, bodyToUpdate: UpdateBodyUser, newPassword: string) {
     try {
-      const updateUser = await prisma.user.update({
-        where: {
-          id,
-        },
-        data: {
-          password: newPassword,
-          name: bodyToUpdate.name,
-          birthdate: bodyToUpdate.birthdate,
-          email: bodyToUpdate.email,
-          rg: bodyToUpdate.rg || undefined,
-          photo_url: bodyToUpdate.photoURL || undefined,
-          user_address: {
-            update: {
-              address: {
-                update: {
-                  number: bodyToUpdate.address.number,
-                  postal_code: bodyToUpdate.address.postal_code,
-                  complement: bodyToUpdate.address.complement,
+      let user: User;
+      if (bodyToUpdate.phone) {
+        user = await prisma.user.update({
+          where: {
+            id,
+          },
+          data: {
+            password: newPassword,
+            attached_link: bodyToUpdate.attached_link || undefined,
+            banner_photo: bodyToUpdate.banner_photo || undefined,
+            description: bodyToUpdate.description || undefined,
+            name: bodyToUpdate.name,
+            birthdate: bodyToUpdate.birthdate,
+            email: bodyToUpdate.email,
+            rg: bodyToUpdate.rg || undefined,
+            photo_url: bodyToUpdate.photo_url || undefined,
+            user_address: {
+              update: {
+                address: {
+                  update: {
+                    number: bodyToUpdate.address.number,
+                    postal_code: bodyToUpdate.address.postal_code,
+                    complement: bodyToUpdate.address.complement,
+                  },
+                },
+              },
+            },
+            user_phone: {
+              update: {
+                phone: {
+                  update: { // @ts-ignore
+                    number: bodyToUpdate.phone[0].number || undefined,
+                  },
                 },
               },
             },
           },
-          user_phone: {
-            update: {
-              phone: {
-                update: { // @ts-ignore
-                  number: bodyToUpdate.phone[0].number || undefined,
+        });
+      } else {
+        user = await prisma.user.update({
+          where: {
+            id,
+          },
+          data: {
+            attached_link: bodyToUpdate.attached_link || undefined,
+            banner_photo: bodyToUpdate.banner_photo || undefined,
+            description: bodyToUpdate.description || undefined,
+            password: newPassword,
+            name: bodyToUpdate.name,
+            birthdate: bodyToUpdate.birthdate,
+            email: bodyToUpdate.email,
+            rg: bodyToUpdate.rg || undefined,
+            photo_url: bodyToUpdate.photo_url || undefined,
+            user_address: {
+              update: {
+                address: {
+                  update: {
+                    number: bodyToUpdate.address.number,
+                    postal_code: bodyToUpdate.address.postal_code,
+                    complement: bodyToUpdate.address.complement,
+                  },
                 },
               },
             },
           },
-        },
-      });
+        });
+      }
 
-      if (!updateUser) {
+      if (!user) {
         throw new Error('Não foi possível atualizar o registro de usuário');
       }
 
-      return updateUser;
+      return user;
     } catch (e) {
       console.log(e);
       return 'Não foi possivel contatar os servidores!';

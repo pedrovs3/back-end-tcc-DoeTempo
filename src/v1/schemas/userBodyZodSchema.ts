@@ -23,7 +23,7 @@ const createUserBody = z.object({
   rg: z.string()
     .optional()
     .nullable(),
-  photoURL: z.string().optional().nullable(),
+  photo_url: z.string().optional().nullable(),
 });
 
 export default createUserBody;

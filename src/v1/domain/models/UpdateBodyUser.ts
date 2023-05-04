@@ -8,5 +8,8 @@ export interface UpdateBodyUser {
 	address: { number: string; postal_code: string; complement?: string | null | undefined; };
 	phone?: { number: string; }[] | undefined;
 	rg?: string | null | undefined;
-	photoURL?: string | null | undefined;
+	photo_url?: string | null | undefined;
+	attached_link?: string | null | undefined;
+	banner_photo?: string;
+	description?: string;
 }
