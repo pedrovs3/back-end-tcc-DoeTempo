@@ -1,7 +1,5 @@
-import { Campaign } from '@prisma/client';
 import { prisma } from '../../lib/prisma';
-import CreateCampaignBodyToUpdate from '../../schemas/createCampaignBodyToUpdate';
-import CreateCampaignBody from '../../schemas/createCampaignBody';
+import ServerMessageE
 
 class CampaignRepository {
   async getAll() {
@@ -243,7 +241,7 @@ class CampaignRepository {
               id_campaign: id,
             },
             createMany: { // @ts-ignore
-              data: bodyToUpdate.photoURL.map((photo) => ({ photo_url: photo })),
+              data: bodyToUpdate.photo_url.map((photo) => ({ photo_url: photo })),
             },
           },
           how_to_contribute: bodyToUpdate.how_to_contribute,
@@ -253,6 +251,7 @@ class CampaignRepository {
 
       return updatedCampaign;
     } catch (e) {
+      console.log(e);
       return ServerMessageError.MESSAGE;
     }
   }

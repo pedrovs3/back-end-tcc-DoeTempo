@@ -13,6 +13,7 @@ export class UpdateCampaignUseCase {
 
       return updatedCampaign;
     } catch (e) {
+      console.log(e);
       return 'Não foi possivel concluir a requisição!';
     }
   }

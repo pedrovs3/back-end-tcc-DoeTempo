@@ -58,10 +58,18 @@ class CommentController {
       if (decodedJwt.type === 'ONG') {
         const createComment = await prisma.comment.create({
           data: {
-            id_post: params.id,
-            comment_ngo: {
+            post: {
               connect: {
-                id: decodedJwt.id,
+                id: params.id,
+              },
+            },
+            comment_ngo: {
+              create: {
+                ngo: {
+                  connect: {
+                    id: decodedJwt.id,
+                  },
+                },
               },
             },
             content: body.content,
