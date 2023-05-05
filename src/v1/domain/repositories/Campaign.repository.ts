@@ -1,5 +1,4 @@
 import { prisma } from '../../lib/prisma';
-import ServerMessageE
 
 class CampaignRepository {
   async getAll() {
