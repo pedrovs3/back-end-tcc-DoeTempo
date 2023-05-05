@@ -6,7 +6,7 @@ const createCampaignBody = z.object({
   begin_date: z.coerce.date(),
   end_date: z.coerce.date(),
   home_office: z.boolean(),
-  id_ngo: z.string(),
+  id_ngo: z.string().optional(),
   how_to_contribute: z.string(),
   prerequisites: z.string(),
   address: z.object({

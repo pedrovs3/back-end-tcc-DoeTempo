@@ -11,6 +11,7 @@ import { FindByNameCampaignUseCase } from '../domain/useCases/campaign/find.by.n
 import { UpdateCampaignUseCase } from '../domain/useCases/campaign/update.campaign.use.case';
 import { CreateCampaignUseCase } from '../domain/useCases/campaign/create.campaign.use.case';
 import { DeleteCampaignUseCase } from '../domain/useCases/campaign/delete.campaign.use.case';
+import { unauthorizedError } from '../errors/UnauthorizedError';
 
 class CampaignController {
   async index(request: FastifyRequest, reply: FastifyReply) {
@@ -115,9 +116,14 @@ class CampaignController {
 
   async store(request: FastifyRequest, reply: FastifyReply) {
     try {
-      const { body }: any = request.params;
+      const { body }: any = request;
+      const decodedJwt = request.user;
 
-      const campaignCreated = await new CreateCampaignUseCase().execute(body);
+      if (decodedJwt.type === 'USER') {
+        return reply.status(401).send(new unauthorizedError('Apenas ongs podem criar campanhas'));
+      }
+
+      const campaignCreated = await new CreateCampaignUseCase().execute(body, decodedJwt.id);
 
       if (typeof campaignCreated === 'string') {
         if (campaignCreated.includes('servidores')) {

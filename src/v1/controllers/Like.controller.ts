@@ -48,7 +48,6 @@ class LikeController {
         });
       }
 
-      console.log(like);
       reply.status(200).send({ liked: true, like });
     } catch (e) {
       console.log(e);
@@ -64,6 +63,7 @@ class LikeController {
       if (decodedJwt.type === 'ONG') {
         await prisma.postLikes.delete({
           where: {
+            // @ts-ignore
             id_ngo_id_post: {
               id_ngo: decodedJwt.id,
               id_post: params.id,
@@ -73,6 +73,7 @@ class LikeController {
       } else if (decodedJwt.type === 'USER') {
         await prisma.postLikes.delete({
           where: {
+            // @ts-ignore
             id_user_id_post: {
               id_user: decodedJwt.id,
               id_post: params.id,
@@ -81,7 +82,7 @@ class LikeController {
         });
       }
 
-      reply.status(200).send({ desliked: true });
+      reply.status(200).send({ disliked: true });
     } catch (e) {
       console.log(e);
       reply.status(400).send(new genericError('Não foi possivel concluir a requisição'));

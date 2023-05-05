@@ -259,6 +259,7 @@ class CampaignRepository {
 
   async create(campaignBody: any) {
     try {
+      console.log(campaignBody.id_ngo);
       const campaign = await prisma.campaign.create({
         data: {
           title: campaignBody.title,
@@ -281,7 +282,7 @@ class CampaignRepository {
           },
           campaign_photos: {
             createMany: {
-              data: campaignBody.photoURL.map((photo_url: any) => ({ photo_url })),
+              data: campaignBody.photo_url.map((photo_url: any) => ({ photo_url })),
             },
           },
           campaign_causes: {
@@ -289,16 +290,21 @@ class CampaignRepository {
               data: campaignBody.causes.map(({ id }: any) => ({ id_cause: id })),
             },
           },
-          id_ngo: campaignBody.id_ngo,
+          ngo: {
+            connect: {
+              id: campaignBody.id_ngo,
+            },
+          },
         },
       });
 
       if (!campaign.id) {
-        return 'Não foi possivel criar o usuário! Verifique os dados e tente novamente!';
+        return 'Não foi possivel criar a campanha! Verifique os dados e tente novamente!';
       }
 
       return campaign;
     } catch (e) {
+      console.log(e);
       return ServerMessageError.MESSAGE;
     }
   }

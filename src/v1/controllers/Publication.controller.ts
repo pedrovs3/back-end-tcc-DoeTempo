@@ -1,5 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { z } from 'zod';
+import { pathToFileURL } from 'url';
 import { prisma } from '../lib/prisma';
 
 class PublicationController {
@@ -136,7 +137,24 @@ class PublicationController {
               },
             },
           },
-          comment: true,
+          comment: {
+            select: {
+              id: true,
+              comment_user: {
+                select: {
+                  user: {
+                    select: {
+                      id: true,
+                      name: true,
+                      email: true,
+                      photo_url: true,
+                      type: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
         },
       });
 
@@ -238,8 +256,6 @@ class PublicationController {
           },
         },
       });
-
-      console.log(updatedBody);
 
       reply.status(200).send({ message: 'Updated with success!', updatedBody });
     } catch (e) {

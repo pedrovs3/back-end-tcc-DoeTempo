@@ -21,7 +21,7 @@ class App {
   public fastify: FastifyInstance;
 
   // @ts-ignore
-  private app_port: number = parseInt(process.env.PORT, 10) || 3333;
+  private app_port: number = process.env.PORT || 3333;
 
   constructor() {
     // Creating the Fastify Instance
