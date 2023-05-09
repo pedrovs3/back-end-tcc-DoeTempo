@@ -1,6 +1,5 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { z } from 'zod';
-import { pathToFileURL } from 'url';
 import { prisma } from '../lib/prisma';
 
 class PublicationController {
@@ -72,6 +71,7 @@ class PublicationController {
                       name: true,
                       email: true,
                       type: true,
+                      photo_url: true,
                     },
                   },
                 },
@@ -84,6 +84,7 @@ class PublicationController {
                       name: true,
                       email: true,
                       type: true,
+                      photo_url: true,
                     },
                   },
                 },
