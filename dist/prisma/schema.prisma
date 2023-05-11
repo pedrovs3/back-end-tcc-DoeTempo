@@ -386,5 +386,9 @@ model PostLikes {
   user User? @relation(fields: [id_user], references: [id], onDelete: Cascade, onUpdate: NoAction)
   post Post  @relation(fields: [id_post], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
+  @@unique([id_ngo, id_post], map: "ngoLike")
+  @@unique([id_user, id_post], map: "userLike")
+  @@index([id_user], map: "tbl_post_likes_id_user_fkey")
+  @@index([id_ngo], map: "tbl_post_likes_id_ngo_fkey")
   @@map("tbl_post_likes")
 }
