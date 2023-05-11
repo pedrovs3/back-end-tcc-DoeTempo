@@ -19,10 +19,8 @@ class UsersController {
 
       // @ts-ignore
       const user = await new CreateUserUseCase().execute(body);
-      console.log(user);
 
       if (!user) {
-        console.log('Não foi possivel criar o usuário');
         reply.status(400).send({ message: 'Tente novamente mais tarde!' });
         return;
       }

@@ -7,27 +7,36 @@ async function main() {
   // // await prisma.gender.deleteMany();
   // await prisma.address.deleteMany();
   //
-  await prisma.gender.createMany({
-    data: [
-      {
-        name: 'Feminino',
-        abbreviation: 'F',
-      },
-      {
-        name: 'Masculino',
-        abbreviation: 'M',
-      },
-      {
-        name: 'Prefiro não informar',
-        abbreviation: ' ',
-      },
-    ],
-  });
+  // await prisma.gender.createMany({
+  //   data: [
+  //     {
+  //       name: 'Feminino',
+  //       abbreviation: 'F',
+  //     },
+  //     {
+  //       name: 'Masculino',
+  //       abbreviation: 'M',
+  //     },
+  //     {
+  //       name: 'Prefiro não informar',
+  //       abbreviation: ' ',
+  //     },
+  //   ],
+  // });
+  //
+  // await prisma.type.createMany({
+  //   data: [
+  //     { name: 'USER' },
+  //     { name: 'ONG' },
+  //   ],
+  // });
 
-  await prisma.type.createMany({
+  await prisma.source.createMany({
     data: [
-      { name: 'USER' },
-      { name: 'ONG' },
+      { name: 'Instagram' },
+      { name: 'LinkedIn' },
+      { name: 'Twitter' },
+      { name: 'Facebook' },
     ],
   });
 

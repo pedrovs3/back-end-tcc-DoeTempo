@@ -9,7 +9,7 @@ export interface UpdateBodyUser {
 	phone?: { number: string; }[] | undefined;
 	rg?: string | null | undefined;
 	photo_url?: string | null | undefined;
-	attached_link?: string | null | undefined;
+	attached_link?: {link: string, source: string}[] | null | undefined;
 	banner_photo?: string;
 	description?: string;
 }

@@ -13,20 +13,19 @@ datasource db {
 }
 
 model User {
-  id            String   @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
-  name          String   @db.VarChar(100)
-  email         String   @unique(map: "email_UNIQUE") @db.VarChar(256)
-  password      String   @db.VarChar(90)
-  cpf           String   @unique(map: "cpf_UNIQUE") @db.VarChar(17)
-  id_gender     String   @db.Char(36)
-  birthdate     DateTime @db.Date
-  rg            String?  @db.VarChar(30)
-  id_type       String
-  description   String?  @db.Text
-  banner_photo  String   @default("https://firebasestorage.googleapis.com/v0/b/doe-tempo-50ccb.appspot.com/o/images%2Fimage%2030.svg?alt=media&token=5ea50da8-a824-42b6-aad8-34a24cee5cae")
-  attached_link String?
-  photo_url     String   @default("https://firebasestorage.googleapis.com/v0/b/doe-tempo-50ccb.appspot.com/o/images%2Fthumbs-1682345055241.svg?alt=media&token=eb57a2d6-0240-4f32-b05d-079ff19ed160")
-  created_at    DateTime @default(now())
+  id           String   @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
+  name         String   @db.VarChar(100)
+  email        String   @unique(map: "email_UNIQUE") @db.VarChar(256)
+  password     String   @db.VarChar(90)
+  cpf          String   @unique(map: "cpf_UNIQUE") @db.VarChar(17)
+  id_gender    String   @db.Char(36)
+  birthdate    DateTime @db.Date
+  rg           String?  @db.VarChar(30)
+  id_type      String
+  description  String?  @db.Text
+  banner_photo String   @default("https://firebasestorage.googleapis.com/v0/b/doe-tempo-50ccb.appspot.com/o/images%2Fimage%2030.svg?alt=media&token=5ea50da8-a824-42b6-aad8-34a24cee5cae")
+  photo_url    String   @default("https://firebasestorage.googleapis.com/v0/b/doe-tempo-50ccb.appspot.com/o/images%2Fthumbs-1682345055241.svg?alt=media&token=eb57a2d6-0240-4f32-b05d-079ff19ed160")
+  created_at   DateTime @default(now())
 
   supported_campaigns CampaignParticipants[]
   comment_user        CommentUser[]
@@ -38,6 +37,7 @@ model User {
   user_phone          UserPhone?
   comment_likes       CommentLikes[]
   post_likes          PostLikes[]
+  attached_link       AttachedLink[]
 
   @@index([id_gender], map: "fk_tbl_user_tbl_gender_idx")
   @@index([id_type], map: "tbl_user_id_type_fkey")
@@ -194,7 +194,6 @@ model NGO {
   password        String
   id_type         String
   photo_url       String    @default("https://firebasestorage.googleapis.com/v0/b/doe-tempo-50ccb.appspot.com/o/images%2Fshapes-1682345333624.svg?alt=media&token=813975f8-b9ef-443b-b868-ec8733d4f096")
-  attached_link   String?
   banner_photo    String    @default("https://firebasestorage.googleapis.com/v0/b/doe-tempo-50ccb.appspot.com/o/images%2Fimage%2030.svg?alt=media&token=5ea50da8-a824-42b6-aad8-34a24cee5cae")
   created_at      DateTime  @default(now())
 
@@ -208,6 +207,7 @@ model NGO {
   post_ngo      PostNgo[]
   comment_likes CommentLikes[]
   post_likes    PostLikes[]
+  attached_link AttachedLink[]
 
   @@index([id])
   @@index([id_type], map: "tbl_ngo_id_type_fkey")
@@ -391,4 +391,28 @@ model PostLikes {
   @@index([id_user], map: "tbl_post_likes_id_user_fkey")
   @@index([id_ngo], map: "tbl_post_likes_id_ngo_fkey")
   @@map("tbl_post_likes")
+}
+
+model AttachedLink {
+  id            String  @id @unique @default(dbgenerated("(uuid())"))
+  attached_link String
+  id_source     String
+  id_user       String?
+  id_ngo        String?
+
+  source Source @relation(fields: [id_source], references: [id])
+  user   User?  @relation(fields: [id_user], references: [id])
+  ngo    NGO?   @relation(fields: [id_ngo], references: [id])
+
+  @@index([id_user])
+  @@index([id_ngo])
+  @@map("tbl_attached_link")
+}
+
+model Source {
+  id            String         @id @unique @default(dbgenerated("(uuid())"))
+  name          String         @unique
+  attached_link AttachedLink[]
+
+  @@map("tbl_source")
 }

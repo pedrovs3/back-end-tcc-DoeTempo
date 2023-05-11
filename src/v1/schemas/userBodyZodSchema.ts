@@ -13,7 +13,7 @@ const createUserBody = z.object({
     complement: z.string()
       .optional()
       .nullable(),
-  }),
+  }).optional(),
   gender: z.string(),
   phone: z.object({
     number: z.string(),

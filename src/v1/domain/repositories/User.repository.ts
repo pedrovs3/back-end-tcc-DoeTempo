@@ -7,21 +7,21 @@ class UserRepository {
   async createUser(userSchema: userSchemaTypes, newPassword: string) {
     try {
       let user: User;
-      if (!userSchema.phone) {
+      if (!userSchema.phone || !userSchema.address) {
         user = await prisma.user.create({
           data: {
             cpf: userSchema.cpf,
             rg: userSchema.rg,
-            user_address: {
-              create: {
-                address: {
-                  create: {
-                    number: userSchema.address.number,
-                    postal_code: userSchema.address.postal_code,
-                  },
-                },
-              },
-            },
+            // user_address: {
+            //   create: {
+            //     address: {
+            //       create: {
+            //         number: userSchema?.address.number,
+            //         postal_code: userSchema?.address.postal_code,
+            //       },
+            //     },
+            //   },
+            // },
             gender: {
               connect: {
                 id: userSchema.gender,
@@ -81,6 +81,7 @@ class UserRepository {
           },
         });
       }
+      console.log(user);
 
       if (!user) {
         throw new Error('Houve um erro ao criar o usuário');
@@ -88,6 +89,7 @@ class UserRepository {
 
       return user;
     } catch (e) {
+      console.log(e);
       return e;
     }
   }
@@ -95,14 +97,171 @@ class UserRepository {
   async update(id: string, bodyToUpdate: UpdateBodyUser, newPassword: string) {
     try {
       let user: User;
-      if (bodyToUpdate.phone) {
+      const hasAddress = await prisma.user.findUnique({ where: { id } }).user_address();
+      if (bodyToUpdate.phone && bodyToUpdate.address) {
+        if (!hasAddress) {
+          user = await prisma.user.update({
+            where: {
+              id,
+            },
+            data: {
+              password: newPassword,
+              attached_link: {
+                createMany: {
+                  data:
+										bodyToUpdate?.attached_link?.map((link) => ({
+										  attached_link: link.link,
+										  id_source: link.source,
+										})),
+                },
+              },
+              banner_photo: bodyToUpdate.banner_photo || undefined,
+              description: bodyToUpdate.description || undefined,
+              name: bodyToUpdate.name,
+              birthdate: bodyToUpdate.birthdate,
+              email: bodyToUpdate.email,
+              rg: bodyToUpdate.rg || undefined,
+              photo_url: bodyToUpdate.photo_url || undefined,
+              user_address: {
+                create: {
+                  address: {
+                    create: {
+                      number: bodyToUpdate.address.number,
+                      postal_code: bodyToUpdate.address.postal_code,
+                      complement: bodyToUpdate.address.complement,
+                    },
+                  },
+                },
+              },
+              user_phone: {
+                update: {
+                  phone: {
+                    update: { // @ts-ignore
+                      number: bodyToUpdate.phone[0].number || undefined,
+                    },
+                  },
+                },
+              },
+            },
+          });
+        } else {
+          user = await prisma.user.update({
+            where: {
+              id,
+            },
+            data: {
+              password: newPassword,
+              attached_link: {
+                createMany: {
+                  data:
+										bodyToUpdate?.attached_link?.map((link) => ({
+										  attached_link: link.link,
+										  id_source: link.source,
+										})),
+                },
+              },
+              banner_photo: bodyToUpdate.banner_photo || undefined,
+              description: bodyToUpdate.description || undefined,
+              name: bodyToUpdate.name,
+              birthdate: bodyToUpdate.birthdate,
+              email: bodyToUpdate.email,
+              rg: bodyToUpdate.rg || undefined,
+              photo_url: bodyToUpdate.photo_url || undefined,
+              user_address: {
+                update: {
+                  address: {
+                    update: {
+                      number: bodyToUpdate.address.number,
+                      postal_code: bodyToUpdate.address.postal_code,
+                      complement: bodyToUpdate.address.complement,
+                    },
+                  },
+                },
+              },
+              user_phone: {
+                update: {
+                  phone: {
+                    update: { // @ts-ignore
+                      number: bodyToUpdate.phone[0].number || undefined,
+                    },
+                  },
+                },
+              },
+            },
+          });
+        }
+      } else if (!bodyToUpdate.address && !bodyToUpdate.phone) {
+        user = await prisma.user.update({
+          where: {
+            id,
+          },
+          data: {
+            attached_link: {
+              create: bodyToUpdate?.attached_link?.map((link) => ({
+                attached_link: link.link,
+                id_source: link.source,
+              })),
+            },
+            banner_photo: bodyToUpdate.banner_photo || undefined,
+            description: bodyToUpdate.description || undefined,
+            password: newPassword,
+            name: bodyToUpdate.name,
+            birthdate: bodyToUpdate.birthdate,
+            email: bodyToUpdate.email,
+            rg: bodyToUpdate.rg || undefined,
+            photo_url: bodyToUpdate.photo_url || undefined,
+          },
+        });
+      } else if (bodyToUpdate.phone && !bodyToUpdate.address) {
         user = await prisma.user.update({
           where: {
             id,
           },
           data: {
             password: newPassword,
-            attached_link: bodyToUpdate.attached_link || undefined,
+            attached_link: {
+              createMany: {
+                data:
+									bodyToUpdate?.attached_link?.map((link) => ({
+									  attached_link: link.link,
+									  id_source: link.source,
+									})),
+              },
+            },
+            banner_photo: bodyToUpdate.banner_photo || undefined,
+            description: bodyToUpdate.description || undefined,
+            name: bodyToUpdate.name,
+            birthdate: bodyToUpdate.birthdate,
+            email: bodyToUpdate.email,
+            rg: bodyToUpdate.rg || undefined,
+            photo_url: bodyToUpdate.photo_url || undefined,
+            user_phone: {
+              update: {
+                phone: {
+                  update: { // @ts-ignore
+                    number: bodyToUpdate.phone[0].number || undefined,
+                  },
+                },
+              },
+            },
+          },
+        });
+      } else if (!hasAddress) {
+        user = await prisma.user.update({
+          where: {
+            id,
+          },
+          data: {
+            password: newPassword,
+            attached_link: {
+              createMany: {
+                data:
+										bodyToUpdate?.attached_link?.map((link) => ({
+										  attached_link: link.link,
+										  id_source: link.source,
+										})),
+              },
+            },
             banner_photo: bodyToUpdate.banner_photo || undefined,
             description: bodyToUpdate.description || undefined,
             name: bodyToUpdate.name,
@@ -111,9 +270,9 @@ class UserRepository {
             rg: bodyToUpdate.rg || undefined,
             photo_url: bodyToUpdate.photo_url || undefined,
             user_address: {
-              update: {
+              create: {
                 address: {
-                  update: {
+                  create: {
                     number: bodyToUpdate.address.number,
                     postal_code: bodyToUpdate.address.postal_code,
                     complement: bodyToUpdate.address.complement,
@@ -138,10 +297,18 @@ class UserRepository {
             id,
           },
           data: {
-            attached_link: bodyToUpdate.attached_link || undefined,
+            password: newPassword,
+            attached_link: {
+              createMany: {
+                data:
+										bodyToUpdate?.attached_link?.map((link) => ({
+										  attached_link: link.link,
+										  id_source: link.source,
+										})),
+              },
+            },
             banner_photo: bodyToUpdate.banner_photo || undefined,
             description: bodyToUpdate.description || undefined,
-            password: newPassword,
             name: bodyToUpdate.name,
             birthdate: bodyToUpdate.birthdate,
             email: bodyToUpdate.email,
@@ -223,6 +390,11 @@ class UserRepository {
           id,
         },
         include: {
+          attached_link: {
+            include: {
+              source: true,
+            },
+          },
           user_address: {
             include: {
               address: true,

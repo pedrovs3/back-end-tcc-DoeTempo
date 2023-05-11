@@ -111,7 +111,20 @@ class NgoController {
           banner_photo: true,
           post_ngo: {
             select: {
-              post: true,
+              post: {
+                include: {
+                  post_photo: true,
+                  post_likes: true,
+                  comment: {
+                    include: {
+                      comment_likes: true,
+                      comment_ngo: true,
+                      comment_user: true,
+                      _count: true,
+                    },
+                  },
+                },
+              },
             },
           },
           ngo_address: {
