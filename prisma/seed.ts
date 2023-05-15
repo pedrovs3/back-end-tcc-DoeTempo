@@ -31,14 +31,14 @@ async function main() {
   //   ],
   // });
 
-  await prisma.source.createMany({
-    data: [
-      { name: 'Instagram' },
-      { name: 'LinkedIn' },
-      { name: 'Twitter' },
-      { name: 'Facebook' },
-    ],
-  });
+  // await prisma.source.createMany({
+  //   data: [
+  //     { name: 'Instagram' },
+  //     { name: 'LinkedIn' },
+  //     { name: 'Twitter' },
+  //     { name: 'Facebook' },
+  //   ],
+  // });
 
   // @ts-ignore
   // const user1 = await prisma.cause.create({

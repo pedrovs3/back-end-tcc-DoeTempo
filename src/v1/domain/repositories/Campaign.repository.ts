@@ -40,6 +40,11 @@ class CampaignRepository {
             },
           },
         },
+        where: {
+          is_active: {
+            equals: true,
+          },
+        },
       });
 
       if (campaigns.length < 1) {
@@ -122,6 +127,7 @@ class CampaignRepository {
           campaign_participants: {
             select: {
               user: true,
+              accepted: true,
             },
           },
           campaign_address: {
@@ -249,6 +255,24 @@ class CampaignRepository {
       });
 
       return updatedCampaign;
+    } catch (e) {
+      console.log(e);
+      return ServerMessageError.MESSAGE;
+    }
+  }
+
+  async deactivate(id: string) {
+    try {
+      const campaign = await prisma.campaign.update({
+        where: {
+          id,
+        },
+        data: {
+          is_active: false,
+        },
+      });
+
+      return `Campanha "${campaign.title}" desativada!`;
     } catch (e) {
       console.log(e);
       return ServerMessageError.MESSAGE;

@@ -1,17 +1,17 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
-import * as repl from 'repl';
 import { prisma } from '../lib/prisma';
-import createCampaignBody from '../schemas/createCampaignBody';
-import createCampaignBodyToUpdate from '../schemas/createCampaignBodyToUpdate';
 import { FindAllCampaignsUseCase } from '../domain/useCases/campaign/find.all.campaigns.use.case';
 import { genericError } from '../errors/GenericError';
 import { genericError500 } from '../errors/GenericError500';
 import { FindByIdCampaignUseCase } from '../domain/useCases/campaign/find.by.id.campaign.use.case';
-import { FindByNameCampaignUseCase } from '../domain/useCases/campaign/find.by.name.campaign.use.case';
+import {
+  FindByNameCampaignUseCase,
+} from '../domain/useCases/campaign/find.by.name.campaign.use.case';
 import { UpdateCampaignUseCase } from '../domain/useCases/campaign/update.campaign.use.case';
 import { CreateCampaignUseCase } from '../domain/useCases/campaign/create.campaign.use.case';
 import { DeleteCampaignUseCase } from '../domain/useCases/campaign/delete.campaign.use.case';
 import { unauthorizedError } from '../errors/UnauthorizedError';
+import { DeactivateCampaigUseCase } from '../domain/useCases/campaign/deactivate.campaig.use.case';
 
 class CampaignController {
   async index(request: FastifyRequest, reply: FastifyReply) {
@@ -191,6 +191,29 @@ class CampaignController {
       reply.status(200).send({ message: `Results for '${searchString}'`, payload: result });
     } catch (e) {
       reply.status(500).send({ errors: [e] });
+    }
+  }
+
+  async deactivate(request: FastifyRequest, reply: FastifyReply) {
+    try {
+      const { id } = request.params;
+
+      if (!id) {
+        return reply.status(400).send(new genericError('Id não enviado!'));
+      }
+
+      const deactivated = await new DeactivateCampaigUseCase().execute(id);
+
+      if (deactivated.includes('servidor')) {
+        return reply.status(500).send(new genericError500(deactivated));
+      }
+      if (deactivated.includes('erro')) {
+        return reply.status(400).send(new genericError(deactivated));
+      }
+
+      reply.status(200).send(deactivated);
+    } catch (e) {
+      return e.message;
     }
   }
 }

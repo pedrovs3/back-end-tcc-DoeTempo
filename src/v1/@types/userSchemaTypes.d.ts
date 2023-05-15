@@ -4,7 +4,7 @@ type userSchemaTypes = {
 	password: string,
 	cpf: string,
 	birthdate: Date,
-	address?: {
+	address: {
 		postal_code: string,
 		number: string,
 		complement?: string

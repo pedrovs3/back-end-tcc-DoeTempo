@@ -163,6 +163,13 @@ class NgoController {
             select: {
               title: true,
               id: true,
+              description: true,
+              is_active: true,
+              campaign_photos: {
+                select: {
+                  photo_url: true,
+                },
+              },
             },
           },
           description: true,

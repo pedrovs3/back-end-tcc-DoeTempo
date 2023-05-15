@@ -23,8 +23,8 @@ model User {
   rg           String?  @db.VarChar(30)
   id_type      String
   description  String?  @db.Text
-  banner_photo String   @default("https://firebasestorage.googleapis.com/v0/b/doe-tempo-50ccb.appspot.com/o/images%2Fimage%2030.svg?alt=media&token=5ea50da8-a824-42b6-aad8-34a24cee5cae")
-  photo_url    String   @default("https://firebasestorage.googleapis.com/v0/b/doe-tempo-50ccb.appspot.com/o/images%2Fthumbs-1682345055241.svg?alt=media&token=eb57a2d6-0240-4f32-b05d-079ff19ed160")
+  banner_photo String   @default("https://firebasestorage.googleapis.com/v0/b/doe-tempo-50ccb.appspot.com/o/images%2Fheader.png?alt=media&token=eddc9058-9eb3-4f3e-9a7c-eb24b77ac261")
+  photo_url    String   @default("https://firebasestorage.googleapis.com/v0/b/doe-tempo-50ccb.appspot.com/o/images%2Fthumbs-1683805274181.png?alt=media&token=d14089b8-82a4-4283-963b-9027062a54f3")
   created_at   DateTime @default(now())
 
   supported_campaigns CampaignParticipants[]
@@ -99,6 +99,7 @@ model Campaign {
   how_to_contribute String   @db.Text
   prerequisites     String   @db.Text
   created_at        DateTime @default(now())
+  is_active         Boolean  @default(true)
 
   ngo                   NGO                    @relation(fields: [id_ngo], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_tbl_campaign_tbl_ngo1")
   campaign_address      CampaignAddress?
@@ -138,9 +139,10 @@ model CampaignCauses {
 }
 
 model CampaignParticipants {
-  id          String @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
-  id_campaign String @db.Char(36)
-  id_user     String @db.Char(36)
+  id          String   @id @unique(map: "id_UNIQUE") @default(dbgenerated("(uuid())"))
+  id_campaign String   @db.Char(36)
+  id_user     String   @db.Char(36)
+  accepted    Boolean? @default(true)
 
   campaign Campaign @relation(fields: [id_campaign], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_tbl_campaign_participants_tbl_campaign1")
   user     User     @relation(fields: [id_user], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tbl_campaign_participants_tbl_user1")
@@ -193,8 +195,8 @@ model NGO {
   email           String    @unique @db.VarChar(256)
   password        String
   id_type         String
-  photo_url       String    @default("https://firebasestorage.googleapis.com/v0/b/doe-tempo-50ccb.appspot.com/o/images%2Fshapes-1682345333624.svg?alt=media&token=813975f8-b9ef-443b-b868-ec8733d4f096")
-  banner_photo    String    @default("https://firebasestorage.googleapis.com/v0/b/doe-tempo-50ccb.appspot.com/o/images%2Fimage%2030.svg?alt=media&token=5ea50da8-a824-42b6-aad8-34a24cee5cae")
+  photo_url       String    @default("https://firebasestorage.googleapis.com/v0/b/doe-tempo-50ccb.appspot.com/o/images%2Fshapes-1683805372257.png?alt=media&token=64e96414-13c5-4639-b32a-2e642af9e7ea")
+  banner_photo    String    @default("https://firebasestorage.googleapis.com/v0/b/doe-tempo-50ccb.appspot.com/o/images%2Fheader.png?alt=media&token=eddc9058-9eb3-4f3e-9a7c-eb24b77ac261")
   created_at      DateTime  @default(now())
 
   campaign      Campaign[]
