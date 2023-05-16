@@ -45,7 +45,7 @@ class UserModel {
   }
 
   // @ts-ignore
-  async findUserById(id : string) {
+  async findUserById(id: string) {
     try {
       const user = await prisma.user.findUnique({
         where: { id },
@@ -87,15 +87,6 @@ class UserModel {
             include: {
               user: {
                 include: {
-                  _count: true,
-                },
-              },
-            },
-          },
-          campaign_participants: {
-            select: {
-              user: {
-                select: {
                   _count: true,
                 },
               },
