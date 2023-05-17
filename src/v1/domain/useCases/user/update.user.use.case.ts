@@ -6,14 +6,17 @@ import userRepository from '../../repositories/User.repository';
 export class UpdateUserUseCase {
   async execute(id: string, body: unknown, idJwt: string) {
     try {
+      let updateUser;
       const bodyToUpdate: UpdateBodyUser = updateUserBody.parse(body);
-      const newPassword = await hashPassword(bodyToUpdate.password);
-
       if (id !== idJwt) {
         return 'Você nao pode atualizar os dados de outro usuário!';
       }
-
-      const updateUser = await userRepository.update(id, bodyToUpdate, newPassword);
+      if (bodyToUpdate.password) {
+        const newPassword = await hashPassword(bodyToUpdate.password);
+        updateUser = await userRepository.update(id, bodyToUpdate, newPassword);
+      } else {
+        updateUser = await userRepository.update(id, bodyToUpdate);
+      }
 
       return updateUser;
     } catch (e) {

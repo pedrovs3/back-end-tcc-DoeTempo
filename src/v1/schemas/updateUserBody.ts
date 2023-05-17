@@ -4,7 +4,7 @@ const createUserBody = z.object({
   name: z.string(),
   email: z.string()
     .email(),
-  password: z.string(),
+  password: z.string().optional(),
   description: z.string().optional().nullable(),
   attached_link: z.object({
     link: z.string(),

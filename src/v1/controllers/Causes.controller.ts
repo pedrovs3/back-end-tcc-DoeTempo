@@ -1,11 +1,17 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import causesRepository from '../domain/repositories/Causes.repository';
 import { CreateCauseUseCase } from '../domain/useCases/cause/create.cause.use.case';
+import { genericError } from '../errors/GenericError';
 
 class CausesController {
   async store(request: FastifyRequest, reply: FastifyReply) {
     try {
       const cause = request.body;
+
+      // @ts-ignore
+      if (!cause.title || cause.title === '') {
+        return reply.status(400).send(new genericError('Você nao pode criar uma causa sem nome!'));
+      }
 
       // @ts-ignore
       const causeCreated = await new CreateCauseUseCase().execute(cause);

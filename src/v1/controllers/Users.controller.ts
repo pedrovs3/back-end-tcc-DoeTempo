@@ -128,14 +128,16 @@ class UsersController {
   async loginInCampaign(request: FastifyRequest, reply: FastifyReply) {
     try {
       // @ts-ignores
-      const { query }: { idUser: string, idCampaign: string } = request;
+      const { query }: {idCampaign: string } = request;
+      const decodedJwt = request.user;
 
-      if (query.idUser === '' || query.idCampaign === '' || !query.idUser || !query.idCampaign) {
+      if (query.idCampaign === '' || !query.idCampaign) {
         const errorTeste = createError('401', 'Não há dados necessários para concluir a requisição.', 401);
         return reply.status(401).send(new errorTeste());
       }
 
-      const subscribedUser = await new LoginCampaignUseCase().execute(query);
+      // @ts-ignore
+      const subscribedUser = await new LoginCampaignUseCase().execute(query, decodedJwt.id);
 
       if (typeof subscribedUser === 'string') {
         return reply.status(500).send(new genericError(subscribedUser));

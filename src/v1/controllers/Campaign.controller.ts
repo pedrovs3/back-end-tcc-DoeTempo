@@ -12,6 +12,7 @@ import { CreateCampaignUseCase } from '../domain/useCases/campaign/create.campai
 import { DeleteCampaignUseCase } from '../domain/useCases/campaign/delete.campaign.use.case';
 import { unauthorizedError } from '../errors/UnauthorizedError';
 import { DeactivateCampaigUseCase } from '../domain/useCases/campaign/deactivate.campaig.use.case';
+import campaignRepository from '../domain/repositories/Campaign.repository';
 
 class CampaignController {
   async index(request: FastifyRequest, reply: FastifyReply) {
@@ -119,10 +120,12 @@ class CampaignController {
       const { body }: any = request;
       const decodedJwt = request.user;
 
+      // @ts-ignore
       if (decodedJwt.type === 'USER') {
         return reply.status(401).send(new unauthorizedError('Apenas ongs podem criar campanhas'));
       }
 
+      // @ts-ignore
       const campaignCreated = await new CreateCampaignUseCase().execute(body, decodedJwt.id);
 
       if (typeof campaignCreated === 'string') {
@@ -196,6 +199,7 @@ class CampaignController {
 
   async deactivate(request: FastifyRequest, reply: FastifyReply) {
     try {
+      // @ts-ignore
       const { id } = request.params;
 
       if (!id) {
@@ -213,7 +217,41 @@ class CampaignController {
 
       reply.status(200).send(deactivated);
     } catch (e) {
-      return e.message;
+      // @ts-ignore
+      reply.status(400).send(new genericError(e.message));
+    }
+  }
+
+  async checkUser(request: FastifyRequest, reply: FastifyReply) {
+    try {
+      // @ts-ignore
+      const { id, idUser } = request.params;
+      // @ts-ignore
+      const { status }: string = request.query;
+
+      if (status === 'Aguardando' || status === 'Reprovado' || status === 'Aprovado') {
+        if (!id || !idUser || !status) {
+          return reply.status(400).send(new genericError('Algum dado nao foi enviado!'));
+        }
+
+        const setStateUser = await campaignRepository.changeStatusUser(id, idUser, status);
+        if (typeof setStateUser === 'string') {
+          if (setStateUser.includes('servidor')) {
+            reply.status(500).send(new genericError500(setStateUser));
+          } else if (setStateUser.includes('Não foi possivel')) {
+            reply.status(400).send(new genericError(setStateUser));
+          } else {
+            reply.status(200).send({ changed_status: true, new_status: status });
+          }
+        } else {
+          reply.status(200).send({ changed_status: true, new_status: status });
+        }
+      } else {
+        reply.status(400).send(new genericError('O status enviado está incorreto!'));
+      }
+    } catch (e) {
+      // @ts-ignore
+      reply.status(400).send(new genericError(e.message));
     }
   }
 }

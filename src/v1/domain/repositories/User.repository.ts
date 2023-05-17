@@ -94,69 +94,151 @@ class UserRepository {
     }
   }
 
-  async update(id: string, bodyToUpdate: UpdateBodyUser, newPassword: string) {
+  async update(id: string, bodyToUpdate: UpdateBodyUser, newPassword?: string) {
     try {
       let user: User;
-      if (!bodyToUpdate.phone) {
-        user = await prisma.user.update({
-          where: {
-            id,
-          },
-          data: {
-            password: newPassword,
-            attached_link: {
-              createMany: {
-                // @ts-ignore
-                data: bodyToUpdate.attached_link?.map((link) => ({
-                  attached_link: link.link,
-                  id_source: link.source,
-                })),
-              },
+      if (newPassword) {
+        if (!bodyToUpdate.phone) {
+          user = await prisma.user.update({
+            where: {
+              id,
             },
-            banner_photo: bodyToUpdate.banner_photo || undefined,
-            description: bodyToUpdate.description || undefined,
-            name: bodyToUpdate.name,
-            birthdate: bodyToUpdate.birthdate,
-            email: bodyToUpdate.email,
-            rg: bodyToUpdate.rg || undefined,
-            photo_url: bodyToUpdate.photo_url || undefined,
-          },
-        });
-      } else {
-        user = await prisma.user.update({
-          where: {
-            id,
-          },
-          data: {
-            password: newPassword,
-            attached_link: {
-              createMany: {
-                // @ts-ignore
-                data: bodyToUpdate.attached_link?.map((link) => ({
-                  attached_link: link.link,
-                  id_source: link.source,
-                })),
+            data: {
+              password: newPassword,
+              attached_link: {
+                createMany: {
+                  // @ts-ignore
+                  data: bodyToUpdate.attached_link?.map((link) => ({
+                    attached_link: link.link,
+                    id_source: link.source,
+                  })),
+                },
               },
+              banner_photo: bodyToUpdate.banner_photo || undefined,
+              description: bodyToUpdate.description || undefined,
+              name: bodyToUpdate.name,
+              birthdate: bodyToUpdate.birthdate,
+              email: bodyToUpdate.email,
+              rg: bodyToUpdate.rg || undefined,
+              photo_url: bodyToUpdate.photo_url || undefined,
             },
-            banner_photo: bodyToUpdate.banner_photo || undefined,
-            description: bodyToUpdate.description || undefined,
-            name: bodyToUpdate.name,
-            birthdate: bodyToUpdate.birthdate,
-            email: bodyToUpdate.email,
-            rg: bodyToUpdate.rg || undefined,
-            photo_url: bodyToUpdate.photo_url || undefined,
-            user_phone: {
-              create: {
-                phone: {
+          });
+        } else {
+          user = await prisma.user.update({
+            where: {
+              id,
+            },
+            data: {
+              password: newPassword,
+              attached_link: {
+                createMany: {
+                  // @ts-ignore
+                  data: bodyToUpdate.attached_link?.map((link) => ({
+                    attached_link: link.link,
+                    id_source: link.source,
+                  })),
+                },
+              },
+              banner_photo: bodyToUpdate.banner_photo || undefined,
+              description: bodyToUpdate.description || undefined,
+              name: bodyToUpdate.name,
+              birthdate: bodyToUpdate.birthdate,
+              email: bodyToUpdate.email,
+              rg: bodyToUpdate.rg || undefined,
+              photo_url: bodyToUpdate.photo_url || undefined,
+              user_phone: {
+                upsert: {
+                  update: {
+                    phone: {
+                      update: {
+                        number: bodyToUpdate.phone[0].number || undefined,
+                      },
+                    },
+                  },
                   create: {
-                    number: bodyToUpdate.phone[0].number || undefined,
+                    phone: {
+                      create: {
+                        number: bodyToUpdate.phone[0].number || undefined,
+                      },
+                    },
                   },
                 },
               },
             },
-          },
-        });
+          });
+        }
       }
+      if (!newPassword) {
+        if (!bodyToUpdate.phone) {
+          user = await prisma.user.update({
+            where: {
+              id,
+            },
+            data: {
+              attached_link: {
+                createMany: {
+                  // @ts-ignore
+                  data: bodyToUpdate.attached_link?.map((link) => ({
+                    attached_link: link.link,
+                    id_source: link.source,
+                  })),
+                },
+              },
+              banner_photo: bodyToUpdate.banner_photo || undefined,
+              description: bodyToUpdate.description || undefined,
+              name: bodyToUpdate.name,
+              birthdate: bodyToUpdate.birthdate,
+              email: bodyToUpdate.email,
+              rg: bodyToUpdate.rg || undefined,
+              photo_url: bodyToUpdate.photo_url || undefined,
+            },
+          });
+        } else {
+          user = await prisma.user.update({
+            where: {
+              id,
+            },
+            data: {
+
+              attached_link: {
+                createMany: {
+                  // @ts-ignore
+                  data: bodyToUpdate.attached_link?.map((link) => ({
+                    attached_link: link.link,
+                    id_source: link.source,
+                  })),
+                },
+              },
+              banner_photo: bodyToUpdate.banner_photo || undefined,
+              description: bodyToUpdate.description || undefined,
+              name: bodyToUpdate.name,
+              birthdate: bodyToUpdate.birthdate,
+              email: bodyToUpdate.email,
+              rg: bodyToUpdate.rg || undefined,
+              photo_url: bodyToUpdate.photo_url || undefined,
+              user_phone: {
+                upsert: {
+                  update: {
+                    phone: {
+                      update: {
+                        number: bodyToUpdate.phone[0].number || undefined,
+                      },
+                    },
+                  },
+                  create: {
+                    phone: {
+                      create: {
+                        number: bodyToUpdate.phone[0].number || undefined,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          });
+        }
+      }
+
       if (!user) {
         throw new Error('Não foi possível atualizar o registro de usuário');
       }
@@ -297,18 +379,23 @@ class UserRepository {
     }
   }
 
-  async loginInCampaign(query: Query) {
+  async loginInCampaign(query: Query, idUser: string) {
     try {
       const subscribedUser = await prisma.campaignParticipants.create({
         data: {
           user: {
             connect: {
-              id: query.idUser,
+              id: idUser,
             },
           },
           campaign: {
             connect: {
               id: query.idCampaign,
+            },
+          },
+          status: {
+            connect: {
+              name: 'Aguardando',
             },
           },
         },

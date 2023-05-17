@@ -1,4 +1,5 @@
 import { prisma } from '../../lib/prisma';
+import { ServerMessageError } from '../../errors/Server.message.error';
 
 class SourcesRepository {
   async getAll() {

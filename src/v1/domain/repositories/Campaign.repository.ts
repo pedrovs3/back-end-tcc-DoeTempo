@@ -1,4 +1,5 @@
 import { prisma } from '../../lib/prisma';
+import { ServerMessageError } from '../../errors/Server.message.error';
 
 class CampaignRepository {
   async getAll() {
@@ -127,7 +128,11 @@ class CampaignRepository {
           campaign_participants: {
             select: {
               user: true,
-              accepted: true,
+              status: {
+                select: {
+                  name: true,
+                },
+              },
             },
           },
           campaign_address: {
@@ -344,6 +349,35 @@ class CampaignRepository {
       }
 
       return `Campanha ${deleted.title} deletada com sucesso!`;
+    } catch (e) {
+      console.log(e);
+      return ServerMessageError.MESSAGE;
+    }
+  }
+
+  async changeStatusUser(id: string, idUser: string, status: string) {
+    try {
+      const changedStatus = await prisma.campaignParticipants.update({
+        where: {
+          id_campaign_id_user: {
+            id_campaign: id,
+            id_user: idUser,
+          },
+        },
+        data: {
+          status: {
+            connect: {
+              name: status,
+            },
+          },
+        },
+      });
+
+      if (!changedStatus) {
+        return 'Não foi possivel concluir a requisição, tente novamente';
+      }
+
+      return changedStatus;
     } catch (e) {
       console.log(e);
       return ServerMessageError.MESSAGE;

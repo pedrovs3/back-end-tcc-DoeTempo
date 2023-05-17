@@ -1,7 +1,7 @@
 export interface UpdateBodyUser {
 	name: string;
 	email: string;
-	password: string;
+	password?: string;
 	cpf: string;
 	birthdate: Date;
 	gender: string;

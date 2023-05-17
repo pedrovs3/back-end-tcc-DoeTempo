@@ -4,6 +4,7 @@ import campaignController from '../controllers/Campaign.controller';
 export async function campaignRoutes(fastify: FastifyInstance) {
   fastify.get('/', campaignController.index);
   fastify.get('/:id', campaignController.show);
+  fastify.put('/:id/user/:idUser', { preValidation: fastify.authenticate }, campaignController.checkUser);
   fastify.get('/search', campaignController.showByName);
   fastify.put('/:id', { preValidation: fastify.authenticate }, campaignController.update);
   fastify.post('/', { preValidation: fastify.authenticate }, campaignController.store);

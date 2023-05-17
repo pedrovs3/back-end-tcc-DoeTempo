@@ -39,6 +39,14 @@ async function main() {
   //     { name: 'Facebook' },
   //   ],
   // });
+  //
+  // await prisma.status.createMany({
+  //   data: [
+  //     { name: 'Aguardando' },
+  //     { name: 'Aprovado' },
+  //     { name: 'Reprovado' },
+  //   ],
+  // });
 
   // @ts-ignore
   // const user1 = await prisma.cause.create({
