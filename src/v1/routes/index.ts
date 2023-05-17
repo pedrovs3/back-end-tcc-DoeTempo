@@ -7,6 +7,7 @@ import { testsRoutes } from './tests.routes';
 import { campaignRoutes } from './campaign.routes';
 import { publicationRoutes } from './publication.routes';
 import { countRoutes } from './count.routes';
+import { sourcesRoutes } from './sources.routes';
 
 // Declaration of an api route
 
@@ -20,5 +21,5 @@ export {
   campaignRoutes,
   publicationRoutes,
   countRoutes,
-
+  sourcesRoutes,
 };

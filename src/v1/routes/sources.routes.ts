@@ -1,5 +1,6 @@
 import { FastifyInstance } from 'fastify';
+import sourcesController from '../controllers/Sources.controller';
 
-export function sourcesRoutes(fastify: FastifyInstance) {
+export async function sourcesRoutes(fastify: FastifyInstance) {
   fastify.get('/', sourcesController.index);
 }
