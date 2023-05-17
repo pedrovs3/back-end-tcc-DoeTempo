@@ -9,7 +9,7 @@ const createUserBody = z.object({
   attached_link: z.object({
     link: z.string(),
     source: z.string(),
-  }).array(),
+  }).array().optional(),
   banner_photo: z.string().optional().nullable(),
   cpf: z.string(),
   birthdate: z.coerce.date(),

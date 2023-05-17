@@ -17,7 +17,7 @@ export class LoginCampaignUseCase {
         });
       }
 
-      return await userRepository.loginInCampaign(query, idUser);
+      return await userRepository.loginInCampaign(query);
     } catch (e) {
       return 'Houve algum erro ao processar a solicitação';
     }

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "npm run build && node ./dist/index.js",
+    "dev": "npm run build && nodemon ./dist/index.js",
     "start": "nodemon ./dist/index.js",
     "build": "tsup src",
     "format:p": "dist/prisma format"

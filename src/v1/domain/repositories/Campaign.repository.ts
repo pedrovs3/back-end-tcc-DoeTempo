@@ -7,7 +7,7 @@ class CampaignRepository {
       const campaigns = await prisma.campaign.findMany({
         select: {
           id: true,
-          id_ngo: false,
+          is_active: true,
           title: true,
           description: true,
           begin_date: true,
@@ -91,6 +91,7 @@ class CampaignRepository {
         where: { id },
         select: {
           id: true,
+          is_active: true,
           title: true,
           description: true,
           how_to_contribute: true,
