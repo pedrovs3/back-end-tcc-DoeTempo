@@ -109,12 +109,12 @@ class UserRepository {
                 password: newPassword,
                 attached_link: {
                   deleteMany: {
-                    id,
+                    id_user: id,
                   },
                   createMany: {
                     // @ts-ignore
                     data: bodyToUpdate.attached_link?.map(
-                      (link) => ({ attached_link: link.link, id_source: link.source, id }),
+                      (link) => ({ attached_link: link.link, id_source: link.source }),
                     ) || undefined,
                   },
                 },
@@ -135,6 +135,9 @@ class UserRepository {
               data: {
                 password: newPassword,
                 attached_link: {
+                  deleteMany: {
+                    id_user: id,
+                  },
                   createMany: {
                     // @ts-ignore
                     data: bodyToUpdate.attached_link?.map((link) => ({
@@ -180,6 +183,9 @@ class UserRepository {
               },
               data: {
                 attached_link: {
+                  deleteMany: {
+                    id_user: id,
+                  },
                   createMany: {
                     // @ts-ignore
                     data: bodyToUpdate.attached_link?.map((link) => ({
@@ -205,6 +211,9 @@ class UserRepository {
               data: {
 
                 attached_link: {
+                  deleteMany: {
+                    id_user: id,
+                  },
                   createMany: {
                     // @ts-ignore
                     data: bodyToUpdate.attached_link?.map((link) => ({

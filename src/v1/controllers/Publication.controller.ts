@@ -51,6 +51,14 @@ class PublicationController {
               },
             },
           },
+          post_likes: {
+            select: {
+              id: true,
+              ngo: true,
+              user: true,
+              id_post: true,
+            },
+          },
           post_photo: {
             select: {
               photo_url: true,
@@ -136,6 +144,14 @@ class PublicationController {
                   gender: true,
                 },
               },
+            },
+          },
+          post_likes: {
+            select: {
+              id: true,
+              id_post: true,
+              ngo: true,
+              user: true,
             },
           },
           comment: {
