@@ -91,6 +91,7 @@ class CampaignController {
     try {
       // @ts-ignore
       const { id }: string = request.params;
+      const decodedJwt = request.user;
       const { body } = request;
 
       if (!id) {

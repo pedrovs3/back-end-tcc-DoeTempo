@@ -276,7 +276,6 @@ class PublicationController {
 
       reply.status(200).send({ message: 'Updated with success!', updatedBody });
     } catch (e) {
-      console.log(e);
       reply.status(500).send({ errors: [e] });
     }
   }

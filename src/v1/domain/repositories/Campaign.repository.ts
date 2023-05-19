@@ -40,6 +40,11 @@ class CampaignRepository {
               address: true,
             },
           },
+          campaign_photos: {
+            select: {
+              photo_url: true,
+            },
+          },
         },
         where: {
           is_active: {
@@ -92,6 +97,11 @@ class CampaignRepository {
           campaign: {
             id_ngo: idOng,
           },
+          AND: {
+            status: {
+              name: 'Aguardando',
+            },
+          },
         },
         include: {
           campaign: {
@@ -114,6 +124,18 @@ class CampaignRepository {
             include: {
               supported_campaigns: true,
               attached_link: true,
+              user_address: {
+                select: {
+                  address: {
+                    select: {
+                      id: true,
+                      number: true,
+                      postal_code: true,
+                      complement: true,
+                    },
+                  },
+                },
+              },
             },
           },
         },
