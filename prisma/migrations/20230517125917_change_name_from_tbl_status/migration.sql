@@ -4,8 +4,6 @@
   - You are about to drop the `Status` table. If the table is not empty, all the data it contains will be lost.
 
 */
--- DropForeignKey
-ALTER TABLE `tbl_campaign_participants` DROP FOREIGN KEY `tbl_campaign_participants_id_status_fkey`;
 
 -- DropTable
 DROP TABLE `Status`;

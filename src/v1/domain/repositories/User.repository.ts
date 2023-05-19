@@ -503,11 +503,12 @@ class UserRepository {
 
   async loginInCampaign(query: Query, idUser: string) {
     try {
+      console.log(idUser);
       const subscribedUser = await prisma.campaignParticipants.create({
         data: {
           user: {
-            connect: {
-              id: idUser,
+           	connect: {
+							 id: idUser,
             },
           },
           campaign: {
@@ -529,6 +530,7 @@ class UserRepository {
 
       return subscribedUser;
     } catch (e) {
+      console.log(e);
       return 'Houve um erro ao contatar os servidores.';
     }
   }

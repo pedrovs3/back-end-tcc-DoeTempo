@@ -254,6 +254,22 @@ class CampaignController {
       reply.status(400).send(new genericError(e.message));
     }
   }
+
+  async getParticipantsByOng(request:FastifyRequest, reply: FastifyReply) {
+    try {
+      const decodedJwt = request.user;
+
+      // @ts-ignore
+      const participants = await campaignRepository.participantsByOng(decodedJwt.id);
+
+      if (typeof participants === 'string') {
+        return reply.status(500).send(new genericError500(participants));
+      }
+      return reply.status(200).send({ volunteers: participants });
+    } catch (e) {
+      return reply.status(400).send(new genericError('Não foi possivel concluir a requisição!'));
+    }
+  }
 }
 
 export default new CampaignController();

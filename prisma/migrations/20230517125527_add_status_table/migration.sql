@@ -19,5 +19,3 @@ CREATE TABLE `Status` (
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
--- AddForeignKey
-ALTER TABLE `tbl_campaign_participants` ADD CONSTRAINT `tbl_campaign_participants_id_status_fkey` FOREIGN KEY (`id_status`) REFERENCES `Status`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

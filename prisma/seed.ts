@@ -30,7 +30,7 @@ async function main() {
   //     { name: 'ONG' },
   //   ],
   // });
-
+  //
   // await prisma.source.createMany({
   //   data: [
   //     { name: 'Instagram' },
@@ -39,7 +39,7 @@ async function main() {
   //     { name: 'Facebook' },
   //   ],
   // });
-  //
+
   // await prisma.status.createMany({
   //   data: [
   //     { name: 'Aguardando' },

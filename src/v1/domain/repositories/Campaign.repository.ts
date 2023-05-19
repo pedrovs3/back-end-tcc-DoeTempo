@@ -85,6 +85,48 @@ class CampaignRepository {
     }
   }
 
+  async participantsByOng(idOng: string) {
+    try {
+      const participants = await prisma.campaignParticipants.findMany({
+        where: {
+          campaign: {
+            id_ngo: idOng,
+          },
+        },
+        include: {
+          campaign: {
+            select: {
+              id: true,
+              title: true,
+              is_active: true,
+              how_to_contribute: true,
+              description: true,
+              begin_date: true,
+              end_date: true,
+              campaign_photos: true,
+              campaign_address: true,
+              campaign_causes: true,
+              home_office: true,
+              prerequisites: true,
+            },
+          },
+          user: {
+            include: {
+              supported_campaigns: true,
+              attached_link: true,
+            },
+          },
+        },
+      });
+
+      console.log(participants);
+      return participants;
+    } catch (e) {
+      console.log(e);
+      return ServerMessageError.MESSAGE;
+    }
+  }
+
   async findById(id: string) {
     try {
       const campaign = await prisma.campaign.findUnique({
@@ -150,6 +192,7 @@ class CampaignRepository {
 
       return campaign;
     } catch (e) {
+      console.log(e);
       return ServerMessageError.MESSAGE;
     }
   }
