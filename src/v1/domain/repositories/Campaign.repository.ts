@@ -493,49 +493,96 @@ class CampaignRepository {
     }
   }
 
-  async update(id: string, bodyToUpdate: any) {
+  async update(id: string, bodyToUpdate: any, status: number| null) {
     try {
-      const updatedCampaign = await prisma.campaign.update({
-        where: {
-          id,
-        },
-        data: {
-          title: bodyToUpdate.title,
-          description: bodyToUpdate.description,
-          begin_date: bodyToUpdate.begin_date,
-          end_date: bodyToUpdate.end_date,
-          home_office: bodyToUpdate.home_office,
-          campaign_address: {
-            update: {
-              address: {
-                update: {
-                  postal_code: bodyToUpdate.address.postal_code,
-                  number: bodyToUpdate.address.number,
-                  complement: bodyToUpdate.address.complement,
+      let updatedCampaign;
+      console.log(!!status);
+      if (status) {
+        updatedCampaign = await prisma.campaign.update({
+          where: {
+            id,
+          },
+          data: {
+            title: bodyToUpdate.title,
+            description: bodyToUpdate.description,
+            begin_date: bodyToUpdate.begin_date,
+            end_date: bodyToUpdate.end_date,
+            home_office: bodyToUpdate.home_office,
+            campaign_address: {
+              update: {
+                address: {
+                  update: {
+                    postal_code: bodyToUpdate.address.postal_code,
+                    number: bodyToUpdate.address.number,
+                    complement: bodyToUpdate.address.complement,
+                  },
                 },
               },
             },
+            campaign_causes: {
+              deleteMany: {
+                id_campaign: id,
+              },
+              createMany: { // @ts-ignore
+                data: bodyToUpdate.causes.map((cause) => ({ id_cause: cause.id })),
+              },
+            },
+            campaign_photos: {
+              deleteMany: {
+                id_campaign: id,
+              },
+              createMany: { // @ts-ignore
+                data: bodyToUpdate.photo_url.map((photo) => ({ photo_url: photo })),
+              },
+            },
+            how_to_contribute: bodyToUpdate.how_to_contribute,
+            prerequisites: bodyToUpdate.prerequisites,
+            is_active: !!status,
           },
-          campaign_causes: {
-            deleteMany: {
-              id_campaign: id,
-            },
-            createMany: { // @ts-ignore
-              data: bodyToUpdate.causes.map((cause) => ({ id_cause: cause.id })),
-            },
+        });
+      } else {
+        updatedCampaign = await prisma.campaign.update({
+          where: {
+            id,
           },
-          campaign_photos: {
-            deleteMany: {
-              id_campaign: id,
+          data: {
+            title: bodyToUpdate.title,
+            description: bodyToUpdate.description,
+            begin_date: bodyToUpdate.begin_date,
+            end_date: bodyToUpdate.end_date,
+            home_office: bodyToUpdate.home_office,
+            campaign_address: {
+              update: {
+                address: {
+                  update: {
+                    postal_code: bodyToUpdate.address.postal_code,
+                    number: bodyToUpdate.address.number,
+                    complement: bodyToUpdate.address.complement,
+                  },
+                },
+              },
             },
-            createMany: { // @ts-ignore
-              data: bodyToUpdate.photo_url.map((photo) => ({ photo_url: photo })),
+            campaign_causes: {
+              deleteMany: {
+                id_campaign: id,
+              },
+              createMany: { // @ts-ignore
+                data: bodyToUpdate.causes.map((cause) => ({ id_cause: cause.id })),
+              },
             },
+            campaign_photos: {
+              deleteMany: {
+                id_campaign: id,
+              },
+              createMany: { // @ts-ignore
+                data: bodyToUpdate.photo_url.map((photo) => ({ photo_url: photo })),
+              },
+            },
+            how_to_contribute: bodyToUpdate.how_to_contribute,
+            prerequisites: bodyToUpdate.prerequisites,
           },
-          how_to_contribute: bodyToUpdate.how_to_contribute,
-          prerequisites: bodyToUpdate.prerequisites,
-        },
-      });
+        });
+      }
 
       return updatedCampaign;
     } catch (e) {

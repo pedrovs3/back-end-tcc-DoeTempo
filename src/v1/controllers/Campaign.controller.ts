@@ -91,6 +91,7 @@ class CampaignController {
     try {
       // @ts-ignore
       const { id }: string = request.params;
+      const { status } = request.query;
       const decodedJwt = request.user;
       const { body } = request;
 
@@ -99,7 +100,7 @@ class CampaignController {
         return;
       }
 
-      const updatedCampaign = await new UpdateCampaignUseCase().execute(id, body);
+      const updatedCampaign = await new UpdateCampaignUseCase().execute(id, body, status);
       if (typeof updatedCampaign === 'string') {
         if (updatedCampaign.includes('servidores')) {
           return reply.status(500).send(new genericError500(updatedCampaign));

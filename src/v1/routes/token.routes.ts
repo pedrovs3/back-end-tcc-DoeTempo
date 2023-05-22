@@ -1,5 +1,4 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
-import firebase from 'firebase/compat/app';
 import { prisma } from '../lib/prisma';
 import checkPassword from '../utils/checkPassword';
 
@@ -12,6 +11,18 @@ export async function tokenRoutes(fastify :FastifyInstance) {
       reply.status(401)
         .send({ error: ['Credenciais inválidas.'] });
     }
+
+    // Update campaigns in login
+    await prisma.campaign.updateMany({
+      where: {
+        end_date: {
+          lt: new Date(),
+        },
+      },
+      data: {
+        is_active: false,
+      },
+    });
 
     const user = await prisma.user.findUnique({
       where: { email },
