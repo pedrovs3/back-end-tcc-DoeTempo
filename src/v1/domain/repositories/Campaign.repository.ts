@@ -72,8 +72,41 @@ class CampaignRepository {
         },
         select: {
           campaign_participants: {
-            select: {
-              id_user: true,
+            include: {
+              user: {
+                include: {
+                  supported_campaigns: true,
+                  attached_link: true,
+                  user_address: {
+                    select: {
+                      address: {
+                        select: {
+                          id: true,
+                          number: true,
+                          postal_code: true,
+                          complement: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+              campaign: {
+                select: {
+                  id: true,
+                  title: true,
+                  is_active: true,
+                  how_to_contribute: true,
+                  description: true,
+                  begin_date: true,
+                  end_date: true,
+                  campaign_photos: true,
+                  campaign_address: true,
+                  campaign_causes: true,
+                  home_office: true,
+                  prerequisites: true,
+                },
+              },
             },
           },
         },
@@ -97,13 +130,47 @@ class CampaignRepository {
           campaign: {
             id_ngo: idOng,
           },
-          AND: {
-            status: {
-              name: 'Aguardando',
-            },
-          },
         },
         include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              user_address: {
+                select: {
+                  address: true,
+                },
+              },
+              photo_url: true,
+              description: true,
+              attached_link: true,
+              email: true,
+              created_at: true,
+              gender: {
+                select: {
+                  name: true,
+                },
+              },
+              birthdate: true,
+
+            },
+            include: {
+              supported_campaigns: true,
+              attached_link: true,
+              user_address: {
+                select: {
+                  address: {
+                    select: {
+                      id: true,
+                      number: true,
+                      postal_code: true,
+                      complement: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
           campaign: {
             select: {
               id: true,
@@ -120,6 +187,31 @@ class CampaignRepository {
               prerequisites: true,
             },
           },
+        },
+      });
+
+      console.log(participants);
+      return participants;
+    } catch (e) {
+      console.log(e);
+      return ServerMessageError.MESSAGE;
+    }
+  }
+
+  async participantsByOngAndStatus(idOng: string, status: string) {
+    try {
+      const participants = await prisma.campaignParticipants.findMany({
+        where: {
+          campaign: {
+            id_ngo: idOng,
+          },
+          AND: {
+            status: {
+              name: status,
+            },
+          },
+        },
+        include: {
           user: {
             include: {
               supported_campaigns: true,
@@ -136,6 +228,82 @@ class CampaignRepository {
                   },
                 },
               },
+            },
+          },
+          campaign: {
+            select: {
+              id: true,
+              title: true,
+              is_active: true,
+              how_to_contribute: true,
+              description: true,
+              begin_date: true,
+              end_date: true,
+              campaign_photos: true,
+              campaign_address: true,
+              campaign_causes: true,
+              home_office: true,
+              prerequisites: true,
+            },
+          },
+        },
+      });
+
+      console.log(participants);
+      return participants;
+    } catch (e) {
+      console.log(e);
+      return ServerMessageError.MESSAGE;
+    }
+  }
+
+  async participantsByOngStatusAndCampaign(idOng: string, status: string, idCampaign: string) {
+    try {
+      const participants = await prisma.campaignParticipants.findMany({
+        where: {
+          campaign: {
+            id: idCampaign,
+            id_ngo: idOng,
+          },
+          AND: {
+            status: {
+              name: status,
+            },
+          },
+        },
+        include: {
+          user: {
+            include: {
+              supported_campaigns: true,
+              attached_link: true,
+              user_address: {
+                select: {
+                  address: {
+                    select: {
+                      id: true,
+                      number: true,
+                      postal_code: true,
+                      complement: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          campaign: {
+            select: {
+              id: true,
+              title: true,
+              is_active: true,
+              how_to_contribute: true,
+              description: true,
+              begin_date: true,
+              end_date: true,
+              campaign_photos: true,
+              campaign_address: true,
+              campaign_causes: true,
+              home_office: true,
+              prerequisites: true,
             },
           },
         },

@@ -258,10 +258,22 @@ class CampaignController {
 
   async getParticipantsByOng(request:FastifyRequest, reply: FastifyReply) {
     try {
+      let participants;
       const decodedJwt = request.user;
-
       // @ts-ignore
-      const participants = await campaignRepository.participantsByOng(decodedJwt.id);
+      const { status, campaign } = request.query;
+
+      if (!status && !campaign) {
+        // @ts-ignore
+        participants = await campaignRepository.participantsByOng(decodedJwt.id);
+      } else if (status && !campaign) {
+        participants = await campaignRepository.participantsByOngAndStatus(decodedJwt.id, status);
+      } else if (!status && campaign) {
+        participants = await campaignRepository.participantsByCampaign(campaign).then((it) => it.campaign_participants);
+      } else {
+        // eslint-disable-next-line max-len
+        participants = await campaignRepository.participantsByOngStatusAndCampaign(decodedJwt.id, status, campaign);
+      }
 
       if (typeof participants === 'string') {
         return reply.status(500).send(new genericError500(participants));

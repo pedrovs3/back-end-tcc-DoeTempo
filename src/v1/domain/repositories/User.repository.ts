@@ -503,7 +503,6 @@ class UserRepository {
 
   async loginInCampaign(query: Query, idUser: string) {
     try {
-      console.log(idUser);
       const subscribedUser = await prisma.campaignParticipants.create({
         data: {
           user: {
