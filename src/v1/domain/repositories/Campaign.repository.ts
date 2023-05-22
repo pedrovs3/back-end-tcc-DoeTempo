@@ -64,6 +64,66 @@ class CampaignRepository {
     }
   }
 
+  async getAllByOng(idOng: string) {
+    try {
+      const campaigns = await prisma.campaign.findMany({
+        select: {
+          id: true,
+          is_active: true,
+          title: true,
+          description: true,
+          begin_date: true,
+          end_date: true,
+          home_office: true,
+          prerequisites: true,
+          how_to_contribute: true,
+          ngo: {
+            select: {
+              id: true,
+              name: true,
+              description: true,
+              email: true,
+              cnpj: true,
+              photo_url: true,
+            },
+          },
+          campaign_causes: {
+            select: {
+              causes: {
+                select: {
+                  id: true,
+                  title: true,
+                },
+              },
+            },
+          },
+          campaign_address: {
+            select: {
+              address: true,
+            },
+          },
+          campaign_photos: {
+            select: {
+              photo_url: true,
+            },
+          },
+        },
+        where: {
+          id_ngo: idOng,
+        },
+      });
+
+      if (campaigns.length < 1) {
+        return 'Não houve campanhas registradas para essa ONG!';
+      }
+
+      return campaigns;
+    } catch (e) {
+      console.log(e);
+      return ServerMessageError.MESSAGE;
+    }
+  }
+
   async participantsByCampaign(idCampaign: string) {
     try {
       const campaignParticipants = await prisma.campaign.findUnique({
@@ -152,23 +212,7 @@ class CampaignRepository {
                 },
               },
               birthdate: true,
-
-            },
-            include: {
               supported_campaigns: true,
-              attached_link: true,
-              user_address: {
-                select: {
-                  address: {
-                    select: {
-                      id: true,
-                      number: true,
-                      postal_code: true,
-                      complement: true,
-                    },
-                  },
-                },
-              },
             },
           },
           campaign: {

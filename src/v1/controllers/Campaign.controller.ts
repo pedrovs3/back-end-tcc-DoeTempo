@@ -283,6 +283,26 @@ class CampaignController {
       return reply.status(400).send(new genericError('Não foi possivel concluir a requisição!'));
     }
   }
+
+  async getCampaignsByOng(request:FastifyRequest, reply: FastifyReply) {
+    try {
+      const decodedJwt = request.user;
+      const { id } = decodedJwt;
+
+      const campaigns = await campaignRepository.getAllByOng(id);
+
+      if (typeof campaigns === 'string') {
+        if (campaigns.includes('servidor')) {
+          reply.status(500).send(new genericError500(campaigns));
+        }
+        return reply.status(400).send(campaigns);
+      }
+      reply.status(200).send({ campaigns });
+    } catch (e) {
+      console.log(e);
+      reply.status(400).send(new genericError('Não foi possivel concluir a requisição, tente novamente mais tarde'));
+    }
+  }
 }
 
 export default new CampaignController();

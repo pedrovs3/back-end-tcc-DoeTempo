@@ -6,6 +6,7 @@ export async function campaignRoutes(fastify: FastifyInstance) {
   fastify.get('/', campaignController.index);
   // getOne
   fastify.get('/:id', campaignController.show);
+  fastify.get('/ong', { preValidation: fastify.authenticate }, campaignController.getCampaignsByOng);
   // getParticipantsByOng
   fastify.get('/participants/:idOng', { preValidation: fastify.authenticate }, campaignController.getParticipantsByOng);
   fastify.put('/:id/user/:idUser', { preValidation: fastify.authenticate }, campaignController.checkUser);
