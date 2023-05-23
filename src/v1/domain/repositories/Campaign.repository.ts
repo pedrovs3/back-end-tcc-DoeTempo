@@ -133,6 +133,11 @@ class CampaignRepository {
         select: {
           campaign_participants: {
             include: {
+              status: {
+                select: {
+                  name: true,
+                },
+              },
               user: {
                 include: {
                   supported_campaigns: true,
@@ -191,7 +196,13 @@ class CampaignRepository {
             id_ngo: idOng,
           },
         },
-        include: {
+        select: {
+          id: true,
+          status: {
+            select: {
+              name: true,
+            },
+          },
           user: {
             select: {
               id: true,
@@ -255,7 +266,13 @@ class CampaignRepository {
             },
           },
         },
-        include: {
+        select: {
+          id: true,
+          status: {
+            select: {
+              name: true,
+            },
+          },
           user: {
             include: {
               supported_campaigns: true,
@@ -315,7 +332,13 @@ class CampaignRepository {
             },
           },
         },
-        include: {
+        select: {
+          id: true,
+          status: {
+            select: {
+              name: true,
+            },
+          },
           user: {
             include: {
               supported_campaigns: true,
@@ -694,6 +717,15 @@ class CampaignRepository {
               name: status,
             },
           },
+        },
+        select: {
+          campaign: true,
+          status: {
+            select: {
+              name: true,
+            },
+          },
+          user: true,
         },
       });
 

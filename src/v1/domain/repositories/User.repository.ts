@@ -422,13 +422,24 @@ class UserRepository {
         },
         include: {
           attached_link: {
-            include: {
-              source: true,
+            select: {
+              attached_link: true,
+              source: {
+                select: {
+                  name: true,
+                },
+              },
             },
           },
           user_address: {
-            include: {
-              address: true,
+            select: {
+              address: {
+                select: {
+                  number: true,
+                  postal_code: true,
+                  complement: true,
+                },
+              },
             },
           },
           gender: {
@@ -449,6 +460,13 @@ class UserRepository {
           supported_campaigns: {
             where: {
               id_user: id,
+              AND: {
+                campaign: {
+                  end_date: {
+                    lte: new Date().toISOString(),
+                  },
+                },
+              },
             },
             select: {
               campaign: {
