@@ -403,9 +403,9 @@ class UserRepository {
       });
       await prisma.address.delete({
         // eslint-disable-next-line
-       	where: {
+				where: {
           // eslint-disable-next-line
-					 id: idAddress,
+					id: idAddress,
         },
       });
       return `Usuário '${user.name}' deletado com sucesso!`;
@@ -456,11 +456,20 @@ class UserRepository {
                   id: true,
                   title: true,
                   description: true,
+                  begin_date: true,
+                  end_date: true,
                   campaign_photos: {
                     select: {
                       photo_url: true,
                     },
                   },
+                  ngo: {
+                    select: {
+                      name: true,
+                      photo_url: true,
+                    },
+                  },
+                  created_at: true,
                   is_active: true,
                 },
               },
@@ -506,8 +515,8 @@ class UserRepository {
       const subscribedUser = await prisma.campaignParticipants.create({
         data: {
           user: {
-           	connect: {
-							 id: idUser,
+            connect: {
+              id: idUser,
             },
           },
           campaign: {
