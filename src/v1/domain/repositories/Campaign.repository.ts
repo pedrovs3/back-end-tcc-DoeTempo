@@ -493,10 +493,9 @@ class CampaignRepository {
     }
   }
 
-  async update(id: string, bodyToUpdate: any, status: number| null) {
+  async update(id: string, bodyToUpdate: any, status: number | null) {
     try {
       let updatedCampaign;
-      console.log(!!status);
       if (status) {
         updatedCampaign = await prisma.campaign.update({
           where: {
@@ -537,7 +536,7 @@ class CampaignRepository {
             },
             how_to_contribute: bodyToUpdate.how_to_contribute,
             prerequisites: bodyToUpdate.prerequisites,
-            is_active: !!status,
+            is_active: status.toString().includes('true'),
           },
         });
       } else {
