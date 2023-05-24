@@ -51,33 +51,75 @@ class NgoController {
       const { id }: string = request.params;
       const ngoSchema = createNgoBodyToUpdate.parse(request.body);
       const newPassword = await hashPassword(ngoSchema.password);
+      let ngoUpdate;
 
-      const ngoUpdate = await prisma.nGO.update({
-        where: {
-          id,
-        },
-        data: {
-          email: ngoSchema.email,
-          // @ts-ignore
-          attached_link: ngoSchema.attached_link || undefined,
-          banner_photo: ngoSchema.banner_photo || undefined,
-          foundation_date: ngoSchema.foundation_date,
-          description: ngoSchema.description || undefined,
-          ngo_address: {
-            update: {
-              address: {
-                update: {
-                  number: ngoSchema.address.number,
-                  complement: ngoSchema.address.complement || undefined,
-                  postal_code: ngoSchema.address.postal_code,
+      if (ngoSchema.attached_link) {
+        ngoUpdate = await prisma.nGO.update({
+          where: {
+            id,
+          },
+          data: {
+            email: ngoSchema.email,
+            // @ts-ignore
+            attached_link: {
+              deleteMany: {
+                id_ngo: id,
+              },
+              createMany: {
+                skipDuplicates: true,
+                // eslint-disable-next-line max-len
+                data: ngoSchema.attached_link
+                  .map((link) => ({
+                    attached_link: link.link,
+                    id_source: link.source,
+                  })) || undefined,
+              },
+            },
+            banner_photo: ngoSchema.banner_photo || undefined,
+            foundation_date: ngoSchema.foundation_date,
+            description: ngoSchema.description || undefined,
+            ngo_address: {
+              update: {
+                address: {
+                  update: {
+                    number: ngoSchema.address.number,
+                    complement: ngoSchema.address.complement || undefined,
+                    postal_code: ngoSchema.address.postal_code,
+                  },
                 },
               },
             },
+            password: newPassword,
+            photo_url: ngoSchema.photo_url || undefined,
           },
-          password: newPassword,
-          photo_url: ngoSchema.photo_url || undefined,
-        },
-      });
+        });
+      } else {
+        ngoUpdate = await prisma.nGO.update({
+          where: {
+            id,
+          },
+          data: {
+            email: ngoSchema.email,
+            // @ts-ignore
+            banner_photo: ngoSchema.banner_photo || undefined,
+            foundation_date: ngoSchema.foundation_date,
+            description: ngoSchema.description || undefined,
+            ngo_address: {
+              update: {
+                address: {
+                  update: {
+                    number: ngoSchema.address.number,
+                    complement: ngoSchema.address.complement || undefined,
+                    postal_code: ngoSchema.address.postal_code,
+                  },
+                },
+              },
+            },
+            password: newPassword,
+            photo_url: ngoSchema.photo_url || undefined,
+          },
+        });
+      }
 
       if (!ngoUpdate.id) {
         reply.status(400).send({
@@ -107,7 +149,18 @@ class NgoController {
           id: true,
           photo_url: true,
           created_at: true,
-          attached_link: true,
+          attached_link: {
+            select: {
+              id: true,
+              attached_link: true,
+              source: {
+                select: {
+                  id: true,
+                  name: true,
+                },
+              },
+            },
+          },
           banner_photo: true,
           post_ngo: {
             select: {

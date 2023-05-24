@@ -209,7 +209,6 @@ class UserRepository {
                 id,
               },
               data: {
-
                 attached_link: {
                   deleteMany: {
                     id_user: id,

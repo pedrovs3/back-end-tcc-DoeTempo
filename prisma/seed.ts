@@ -39,7 +39,7 @@ async function main() {
   //     { name: 'Facebook' },
   //   ],
   // });
-
+  //
   // await prisma.status.createMany({
   //   data: [
   //     { name: 'Aguardando' },
