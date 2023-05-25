@@ -3,6 +3,7 @@ import usersController from '../controllers/Users.controller';
 
 export async function userRoutes(fastify: FastifyInstance) {
   fastify.post('/', usersController.store);
+  fastify.post('/follow/', { preValidation: fastify.authenticate }, usersController.follow);
   fastify.post('/campaign/', { preValidation: fastify.authenticate }, usersController.loginInCampaign);
   fastify.get('/:id', { preValidation: fastify.authenticate }, usersController.show);
   fastify.put('/:id', { preValidation: fastify.authenticate }, usersController.update);

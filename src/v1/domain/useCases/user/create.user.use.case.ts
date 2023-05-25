@@ -10,10 +10,14 @@ export class CreateUserUseCase {
       const newPassword = await hashPassword(userSchema.password);
 
       const userCreated = await userRepository.createUser(<userSchemaTypes>userSchema, newPassword);
-
+      if (typeof userCreated === 'string') {
+        return userCreated;
+      }
+      // @ts-ignore
       return userCreated as User;
     } catch (error) {
-      return error;
+      console.log(error);
+      return 'Não foi possivel concluir a requisição! tente novamente.';
     }
   }
 }

@@ -2,6 +2,7 @@ import { User } from '@prisma/client';
 import { prisma } from '../../lib/prisma';
 import { Query } from '../models/Query';
 import { UpdateBodyUser } from '../models/UpdateBodyUser';
+import { ServerMessageError } from '../../errors/Server.message.error';
 
 class UserRepository {
   async createUser(userSchema: userSchemaTypes, newPassword: string) {
@@ -90,7 +91,7 @@ class UserRepository {
       return user;
     } catch (e) {
       console.log(e);
-      return e;
+      return ServerMessageError.MESSAGE;
     }
   }
 

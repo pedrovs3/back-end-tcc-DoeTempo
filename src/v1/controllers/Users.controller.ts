@@ -25,6 +25,14 @@ class UsersController {
         return;
       }
 
+      if (typeof user === 'string') {
+        if (user.includes('requisição')) {
+          return reply.status(400).send(new genericError(user));
+        } if (user.includes('servidor')) {
+          return reply.status(500).send(new genericError500(user));
+        }
+      }
+
       reply.status(201)
         .send({
           message: 'Usuário criado com sucesso!',
@@ -146,6 +154,22 @@ class UsersController {
       reply.status(200).send({ message: 'Parabens! Agora você está inscrito na campanha.', data: subscribedUser });
     } catch (e) {
       reply.send(e);
+    }
+  }
+
+  async follow(request: FastifyRequest, reply: FastifyReply) {
+    try {
+      const { idUser } = request.query;
+      const decodedJwt = request.user;
+      const { id } = decodedJwt;
+
+      if (!idUser && !id) {
+        return reply.status(400).send(new genericError('Não há dados necessarios.'));
+      }
+
+      const followUser = await new UserFollowUseCase().execute();
+    } catch (e) {
+      return reply.status(400).send(e);
     }
   }
 }

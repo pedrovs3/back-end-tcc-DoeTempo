@@ -59,6 +59,7 @@ class NgoController {
             id,
           },
           data: {
+            name: ngoSchema.name,
             email: ngoSchema.email,
             // @ts-ignore
             attached_link: {
@@ -99,6 +100,7 @@ class NgoController {
             id,
           },
           data: {
+            name: ngoSchema.name,
             email: ngoSchema.email,
             // @ts-ignore
             banner_photo: ngoSchema.banner_photo || undefined,
