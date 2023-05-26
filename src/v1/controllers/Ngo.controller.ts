@@ -210,6 +210,7 @@ class NgoController {
           foundation_date: true,
           type: {
             select: {
+              id: true,
               name: true,
             },
           },

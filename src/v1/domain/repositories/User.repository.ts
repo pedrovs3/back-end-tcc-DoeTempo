@@ -457,6 +457,12 @@ class UserRepository {
               },
             },
           },
+          type: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
           supported_campaigns: {
             where: {
               id_user: id,

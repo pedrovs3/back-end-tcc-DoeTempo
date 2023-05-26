@@ -54,6 +54,8 @@ class PublicationController {
           post_likes: {
             select: {
               id: true,
+              id_ngo: true,
+              id_user: true,
               ngo: true,
               user: true,
               id_post: true,
