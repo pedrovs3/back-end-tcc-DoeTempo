@@ -509,7 +509,41 @@ class UserRepository {
                   created_at: true,
                   post_photo: true,
                   _count: true,
-                  comment: true,
+                  comment: {
+                    select: {
+                      id: true,
+                      content: true,
+                      created_at: true,
+                      comment_likes: true,
+                      comment_user: {
+                        select: {
+                          user: {
+                            select: {
+                              id: true,
+                              name: true,
+                              email: true,
+                              type: true,
+                              photo_url: true,
+                            },
+                          },
+                        },
+                      },
+                      comment_ngo: {
+                        select: {
+                          ngo: {
+                            select: {
+                              id: true,
+                              name: true,
+                              email: true,
+                              type: true,
+                              photo_url: true,
+                            },
+                          },
+                        },
+                      },
+                      _count: true,
+                    },
+                  },
                 },
               },
             },
@@ -566,6 +600,19 @@ class UserRepository {
       return 'Houve um erro ao contatar os servidores.';
     }
   }
+
+	async follow(idToFollow: string, idUser: string) {
+		try {
+			const follow = await prisma.following.create({
+				data: {
+					id_user: idUser,
+
+				}
+			})
+		} catch (e) {
+
+		}
+	}
 }
 
 export default new UserRepository();
