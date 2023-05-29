@@ -14,6 +14,7 @@ export async function publicationRoutes(fastify: FastifyInstance) {
   fastify.get('/:id/comments', { preValidation: fastify.authenticate }, commentController.index);
   // fastify.put('/:id/comment/:idComment', { preValidation: fastify.authenticate }, commentController.update);
   fastify.post('/:id/comment', { preValidation: fastify.authenticate }, commentController.store);
+  fastify.delete('/comment/:commentId', { preValidation: fastify.authenticate }, commentController.deleteComment);
 
   // Like's Routes
   fastify.post('/:id/like', { preValidation: fastify.authenticate }, likeController.store);

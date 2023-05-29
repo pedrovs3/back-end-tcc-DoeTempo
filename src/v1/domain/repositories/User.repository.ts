@@ -466,15 +466,9 @@ class UserRepository {
           supported_campaigns: {
             where: {
               id_user: id,
-              AND: {
-                campaign: {
-                  end_date: {
-                    lte: new Date().toISOString(),
-                  },
-                },
-              },
             },
             select: {
+              status: true,
               campaign: {
                 select: {
                   id: true,
@@ -500,6 +494,11 @@ class UserRepository {
             },
           },
           post_user: {
+            orderBy: {
+              post: {
+                created_at: 'desc',
+              },
+            },
             select: {
               post: {
                 select: {
@@ -600,19 +599,6 @@ class UserRepository {
       return 'Houve um erro ao contatar os servidores.';
     }
   }
-
-	async follow(idToFollow: string, idUser: string) {
-		try {
-			const follow = await prisma.following.create({
-				data: {
-					id_user: idUser,
-
-				}
-			})
-		} catch (e) {
-
-		}
-	}
 }
 
 export default new UserRepository();

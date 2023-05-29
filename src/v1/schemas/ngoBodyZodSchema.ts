@@ -4,7 +4,7 @@ const createNgoBody = z.object({
   name: z.string(),
   email: z.string().email(),
   password: z.string(),
-  cnpj: z.string().min(10).max(15),
+  cnpj: z.string().min(10).max(20),
   foundation_date: z.coerce.date(),
   address: z.object({
     postal_code: z.string(),

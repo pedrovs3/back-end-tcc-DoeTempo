@@ -165,6 +165,11 @@ class NgoController {
           },
           banner_photo: true,
           post_ngo: {
+            orderBy: {
+              post: {
+                created_at: 'desc',
+              },
+            },
             select: {
               post: {
                 include: {
@@ -176,6 +181,13 @@ class NgoController {
                       comment_ngo: true,
                       comment_user: true,
                       _count: true,
+                    },
+                  },
+                  _count: {
+                    select: {
+                      post_likes: true,
+                      post_photo: true,
+                      comment: true,
                     },
                   },
                 },
@@ -221,6 +233,8 @@ class NgoController {
               id: true,
               description: true,
               is_active: true,
+              end_date: true,
+              begin_date: true,
               campaign_photos: {
                 select: {
                   photo_url: true,
