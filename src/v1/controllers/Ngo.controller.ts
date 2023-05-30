@@ -52,8 +52,77 @@ class NgoController {
       const ngoSchema = createNgoBodyToUpdate.parse(request.body);
       const newPassword = await hashPassword(ngoSchema.password);
       let ngoUpdate;
-
-      if (ngoSchema.attached_link) {
+      if (newPassword) {
+        if (ngoSchema.attached_link) {
+          ngoUpdate = await prisma.nGO.update({
+            where: {
+              id,
+            },
+            data: {
+              name: ngoSchema.name,
+              email: ngoSchema.email,
+              // @ts-ignore
+              attached_link: {
+                deleteMany: {
+                  id_ngo: id,
+                },
+                createMany: {
+                  skipDuplicates: true,
+                  // eslint-disable-next-line max-len
+                  data: ngoSchema.attached_link
+                    .map((link) => ({
+                      attached_link: link.link,
+                      id_source: link.source,
+                    })) || undefined,
+                },
+              },
+              banner_photo: ngoSchema.banner_photo || undefined,
+              foundation_date: ngoSchema.foundation_date,
+              description: ngoSchema.description || undefined,
+              ngo_address: {
+                update: {
+                  address: {
+                    update: {
+                      number: ngoSchema.address.number,
+                      complement: ngoSchema.address.complement || undefined,
+                      postal_code: ngoSchema.address.postal_code,
+                    },
+                  },
+                },
+              },
+              password: newPassword,
+              photo_url: ngoSchema.photo_url || undefined,
+            },
+          });
+        } else {
+          ngoUpdate = await prisma.nGO.update({
+            where: {
+              id,
+            },
+            data: {
+              name: ngoSchema.name,
+              email: ngoSchema.email,
+              // @ts-ignore
+              banner_photo: ngoSchema.banner_photo || undefined,
+              foundation_date: ngoSchema.foundation_date,
+              description: ngoSchema.description || undefined,
+              ngo_address: {
+                update: {
+                  address: {
+                    update: {
+                      number: ngoSchema.address.number,
+                      complement: ngoSchema.address.complement || undefined,
+                      postal_code: ngoSchema.address.postal_code,
+                    },
+                  },
+                },
+              },
+              password: newPassword,
+              photo_url: ngoSchema.photo_url || undefined,
+            },
+          });
+        }
+      } else if (ngoSchema.attached_link) {
         ngoUpdate = await prisma.nGO.update({
           where: {
             id,
@@ -90,7 +159,6 @@ class NgoController {
                 },
               },
             },
-            password: newPassword,
             photo_url: ngoSchema.photo_url || undefined,
           },
         });
@@ -117,7 +185,6 @@ class NgoController {
                 },
               },
             },
-            password: newPassword,
             photo_url: ngoSchema.photo_url || undefined,
           },
         });
@@ -176,10 +243,37 @@ class NgoController {
                   post_photo: true,
                   post_likes: true,
                   comment: {
-                    include: {
+                    select: {
+                      id: true,
+                      content: true,
+                      created_at: true,
                       comment_likes: true,
-                      comment_ngo: true,
-                      comment_user: true,
+                      comment_user: {
+                        select: {
+                          user: {
+                            select: {
+                              id: true,
+                              name: true,
+                              email: true,
+                              type: true,
+                              photo_url: true,
+                            },
+                          },
+                        },
+                      },
+                      comment_ngo: {
+                        select: {
+                          ngo: {
+                            select: {
+                              id: true,
+                              name: true,
+                              email: true,
+                              type: true,
+                              photo_url: true,
+                            },
+                          },
+                        },
+                      },
                       _count: true,
                     },
                   },

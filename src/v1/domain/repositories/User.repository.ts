@@ -483,6 +483,7 @@ class UserRepository {
                   },
                   ngo: {
                     select: {
+                      id: true,
                       name: true,
                       photo_url: true,
                     },
