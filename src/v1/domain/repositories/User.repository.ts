@@ -100,6 +100,7 @@ class UserRepository {
       let user: User;
 
       if (bodyToUpdate.attached_link) {
+        console.log(bodyToUpdate.attached_link);
         if (newPassword) {
           if (!bodyToUpdate.phone) {
             user = await prisma.user.update({
@@ -427,6 +428,7 @@ class UserRepository {
               source: {
                 select: {
                   name: true,
+                  id: true,
                 },
               },
             },

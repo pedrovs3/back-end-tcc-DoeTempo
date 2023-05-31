@@ -4,9 +4,9 @@ const createNgoBodyToUpdate = z.object({
   name: z.string(),
   email: z.string()
     .email(),
-  password: z.string(),
+  password: z.string().nullable().optional(),
   attached_link: z.object({
-    link: z.string().url(),
+    link: z.string(),
     source: z.string(),
   }).array().optional().nullable(),
   banner_photo: z.string().url().optional().nullable(),
