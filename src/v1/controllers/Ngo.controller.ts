@@ -50,7 +50,6 @@ class NgoController {
       // @ts-ignore
       const { id }: string = request.params;
       const ngoSchema = createNgoBodyToUpdate.parse(request.body);
-      console.log(ngoSchema);
 
       let ngoUpdate;
 

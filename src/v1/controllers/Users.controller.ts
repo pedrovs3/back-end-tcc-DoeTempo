@@ -9,6 +9,7 @@ import { genericError } from '../errors/GenericError';
 import { DeleteUserUseCase } from '../domain/useCases/user/delete.user.use.case';
 import { FindUserUseCase } from '../domain/useCases/user/find.user.use.case';
 import { NotFoundError } from '../errors/NotFoundError';
+import { UserFollowUseCase } from '../domain/useCases/user/user.follow.use.case';
 
 const emptyQuery = createError('401', 'Está faltando dados para esta requisição!');
 
@@ -167,7 +168,7 @@ class UsersController {
         return reply.status(400).send(new genericError('Não há dados necessarios.'));
       }
 
-      const followUser = await new UserFollowUseCase().execute();
+      const followUser = await new UserFollowUseCase().execute('', '');
     } catch (e) {
       return reply.status(400).send(e);
     }

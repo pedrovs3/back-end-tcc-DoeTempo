@@ -1,12 +1,11 @@
-import { prisma } from '../../../lib/prisma';
 import userRepository from '../../repositories/User.repository';
 
-class UserFollowUseCase {
+export class UserFollowUseCase {
   async execute(idUserToFollow: string, id: string) {
-		try {
-			const followUser = await userRepository.follow(idUserToFollow, id);
-		} catch (e) {
+    try {
+      const followUser = await userRepository.follow(idUserToFollow, id);
+    } catch (e) {
 
-		}
+    }
   }
 }
