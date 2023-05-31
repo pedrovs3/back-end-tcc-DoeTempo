@@ -48,8 +48,7 @@ class App {
 
     this.fastify.decorate('authenticate', async (request: FastifyRequest, reply: FastifyReply) => {
       try {
-        const decode = await request.jwtVerify();
-        request.user = decode;
+        request.user = await request.jwtVerify();
       } catch (err) {
         reply.send(err);
       }
@@ -87,6 +86,9 @@ class App {
     this.fastify.register(publicationRoutes, { prefix: '/post' });
     this.fastify.register(countRoutes, { prefix: '/count' });
     this.fastify.register(sourcesRoutes, { prefix: '/sources' });
+    this.fastify.get('/', (request, reply) => {
+      reply.status(200).send('Hello World');
+    });
   }
 }
 

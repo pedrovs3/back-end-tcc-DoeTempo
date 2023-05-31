@@ -251,10 +251,37 @@ class NgoController {
                   post_photo: true,
                   post_likes: true,
                   comment: {
-                    include: {
+                    select: {
+                      id: true,
+                      content: true,
+                      created_at: true,
                       comment_likes: true,
-                      comment_ngo: true,
-                      comment_user: true,
+                      comment_user: {
+                        select: {
+                          user: {
+                            select: {
+                              id: true,
+                              name: true,
+                              email: true,
+                              type: true,
+                              photo_url: true,
+                            },
+                          },
+                        },
+                      },
+                      comment_ngo: {
+                        select: {
+                          ngo: {
+                            select: {
+                              id: true,
+                              name: true,
+                              email: true,
+                              type: true,
+                              photo_url: true,
+                            },
+                          },
+                        },
+                      },
                       _count: true,
                     },
                   },
