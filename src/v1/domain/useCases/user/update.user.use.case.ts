@@ -8,9 +8,11 @@ export class UpdateUserUseCase {
     try {
       let updateUser;
       const bodyToUpdate: UpdateBodyUser = updateUserBody.parse(body);
+
       if (id !== idJwt) {
         return 'Você nao pode atualizar os dados de outro usuário!';
       }
+
       if (bodyToUpdate.password) {
         const newPassword = await hashPassword(bodyToUpdate.password);
         updateUser = await userRepository.update(id, bodyToUpdate, newPassword);

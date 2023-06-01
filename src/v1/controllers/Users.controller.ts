@@ -113,7 +113,6 @@ class UsersController {
         const missingIdError = createError('400', 'O id do usuário que deverá ser atualizado está faltando', 400);
         return reply.status(400).send(new missingIdError());
       }
-
       // @ts-ignore
       const updateUser = await new UpdateUserUseCase().execute(id, request.body, decodedJwt.id);
 
