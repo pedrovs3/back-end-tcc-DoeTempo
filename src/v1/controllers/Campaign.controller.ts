@@ -164,6 +164,8 @@ class CampaignController {
       }
       if (deletedUser.includes('erro')) {
         return reply.status(400).send(new genericError(deletedUser));
+      } if (deletedUser.includes("'Você não pode excluir uma campanha sem ser o seu criador!'")) {
+        return reply.status(401).send(deletedUser);
       }
 
       reply.status(200)
