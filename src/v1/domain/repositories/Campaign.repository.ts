@@ -245,7 +245,6 @@ class CampaignRepository {
         },
       });
 
-      console.log(participants);
       return participants;
     } catch (e) {
       console.log(e);
@@ -310,7 +309,6 @@ class CampaignRepository {
         },
       });
 
-      console.log(participants);
       return participants;
     } catch (e) {
       console.log(e);
@@ -376,7 +374,6 @@ class CampaignRepository {
         },
       });
 
-      console.log(participants);
       return participants;
     } catch (e) {
       console.log(e);

@@ -270,7 +270,8 @@ class CampaignController {
       } else if (status && !campaign) {
         participants = await campaignRepository.participantsByOngAndStatus(decodedJwt.id, status);
       } else if (!status && campaign) {
-        participants = await campaignRepository.participantsByCampaign(campaign).then((it) => it.campaign_participants);
+        participants = await campaignRepository
+          .participantsByCampaign(campaign).then((it) => it.campaign_participants);
       } else {
         // eslint-disable-next-line max-len
         participants = await campaignRepository.participantsByOngStatusAndCampaign(decodedJwt.id, status, campaign);

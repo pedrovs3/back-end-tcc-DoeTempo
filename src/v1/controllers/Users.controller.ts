@@ -9,7 +9,7 @@ import { genericError } from '../errors/GenericError';
 import { DeleteUserUseCase } from '../domain/useCases/user/delete.user.use.case';
 import { FindUserUseCase } from '../domain/useCases/user/find.user.use.case';
 import { NotFoundError } from '../errors/NotFoundError';
-import { UserFollowUseCase } from '../domain/useCases/user/user.follow.use.case';
+import { prisma } from '../lib/prisma';
 
 const emptyQuery = createError('401', 'Está faltando dados para esta requisição!');
 
@@ -157,19 +157,49 @@ class UsersController {
     }
   }
 
-  async follow(request: FastifyRequest, reply: FastifyReply) {
-    try {
-      const { idUser } = request.query;
-      const decodedJwt = request.user;
-      const { id } = decodedJwt;
+  // async follow(request: FastifyRequest, reply: FastifyReply) {
+  //   try {
+  //     const { idUser } = request.query;
+  //     const decodedJwt = request.user;
+  //     const { id } = decodedJwt;
+  //
+  //     if (!idUser && !id) {
+  //       return reply.status(400).send(new genericError('Não há dados necessarios.'));
+  //     }
+  //
+  //     const followUser = await new UserFollowUseCase().execute('', '');
+  //   } catch (e) {
+  //     return reply.status(400).send(e);
+  //   }
+  // }
 
-      if (!idUser && !id) {
-        return reply.status(400).send(new genericError('Não há dados necessarios.'));
+  async cancelSubscribeCampaign(request: FastifyRequest, reply: FastifyReply) {
+    try {
+      // @ts-ignore
+      const { idCampaign } = request.params;
+      // @ts-ignore
+      const idUser = request.user.id;
+
+      if (!idUser || !idCampaign) {
+        reply.status(400).send(new genericError('Algum id está faltando.'));
       }
 
-      const followUser = await new UserFollowUseCase().execute('', '');
+      const deleteSubscribe = await prisma.campaignParticipants.delete({
+        where: {
+          id_campaign_id_user: {
+            id_user: idUser,
+            id_campaign: idCampaign,
+          },
+        },
+      });
+
+      if (deleteSubscribe.id) {
+        return reply.status(200).send();
+      }
+
+      reply.status(400).send();
     } catch (e) {
-      return reply.status(400).send(e);
+      reply.status(400).send({ message: 'Não foi possivel concluir a requisiçao', error: e });
     }
   }
 }
