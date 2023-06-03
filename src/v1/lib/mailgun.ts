@@ -1,7 +1,12 @@
-import mailgun_js from 'mailgun-js';
-import { MAILGUN_KEY, MAILGUN_DOMAIN } from './env';
+import Mailgun from 'mailgun.js';
+import formData from 'form-data';
+import { IMailgunClient } from 'mailgun.js/Interfaces';
+import { MAILGUN_KEY } from './env';
 
-export const mailgun = mailgun_js({
-  apiKey: MAILGUN_KEY as string,
-  domain: MAILGUN_DOMAIN as string,
+// @ts-ignore
+const mg = new Mailgun(formData);
+
+export const mailgun: IMailgunClient = mg.client({
+  key: MAILGUN_KEY as string,
+  username: 'AMPI',
 });

@@ -3,6 +3,7 @@ import { genericError } from '../errors/GenericError';
 import { mongo, prisma } from '../lib/prisma';
 import { mailgun } from '../lib/mailgun';
 import hashPassword from '../utils/hashPassword';
+import { MAILGUN_DOMAIN } from '../lib/env';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 
@@ -31,7 +32,15 @@ export async function recoverRoutes(fastify: FastifyInstance) {
         subject: 'Recuperação de conta',
         text: `Seu código de verificação é: ${verificationCode}`,
       };
-      await mailgun.messages().send(emailToSend);
+
+      await mailgun.messages.create(MAILGUN_DOMAIN as string, emailToSend)
+        .then((response: any) => {
+          console.log('E-mail enviado com sucesso:', response);
+        })
+        .catch((error: any) => {
+          console.error('Erro ao enviar e-mail:', error);
+          throw new Error();
+        });
 
       reply.status(200).send({ message: 'Código de verificação enviado com sucesso' });
     } catch (e) {
