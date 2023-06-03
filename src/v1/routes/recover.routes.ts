@@ -27,7 +27,7 @@ export async function recoverRoutes(fastify: FastifyInstance) {
       });
 
       const emailToSend = {
-        from: 'nao-responder@ampi.org.br',
+        from: 'nao-responda@AMPI.org.br <nao-responda@AMPI.org.br>',
         to: email,
         subject: 'Recuperação de conta',
         text: `Seu código de verificação é: ${verificationCode}`,

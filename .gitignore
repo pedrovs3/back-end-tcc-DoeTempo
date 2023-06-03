@@ -5,3 +5,4 @@ bin/v1
 dist
 dist/test.txt
 dist/prisma
+prisma/generated
