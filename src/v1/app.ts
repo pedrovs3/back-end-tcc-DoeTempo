@@ -10,6 +10,7 @@ import {
   genderRoutes,
   ngoRoutes,
   publicationRoutes,
+  recoverRoutes,
   sourcesRoutes,
   testsRoutes,
   tokenRoutes,
@@ -86,6 +87,7 @@ class App {
     this.fastify.register(publicationRoutes, { prefix: '/post' });
     this.fastify.register(countRoutes, { prefix: '/count' });
     this.fastify.register(sourcesRoutes, { prefix: '/sources' });
+    this.fastify.register(recoverRoutes, { prefix: '/recover' });
     this.fastify.get('/', (request, reply) => {
       reply.status(200).send('Hello World');
     });
