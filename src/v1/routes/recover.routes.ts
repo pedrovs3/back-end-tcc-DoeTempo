@@ -30,7 +30,10 @@ export async function recoverRoutes(fastify: FastifyInstance) {
         from: 'nao-responda@AMPI.org.br <nao-responda@AMPI.org.br>',
         to: email,
         subject: 'Recuperação de conta',
-        text: `Seu código de verificação é: ${verificationCode}`,
+        text: `Seu código de verificação é:${verificationCode}`,
+        html: `<html lang="pt-br"><span>Seu código de verificação é: </span>
+							<h1 style="color: #32CD32">${verificationCode}</h1>
+						</html>`,
       };
 
       await mailgun.messages.create(MAILGUN_DOMAIN as string, emailToSend)
