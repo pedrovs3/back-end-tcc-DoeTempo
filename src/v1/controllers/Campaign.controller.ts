@@ -13,6 +13,8 @@ import { DeleteCampaignUseCase } from '../domain/useCases/campaign/delete.campai
 import { unauthorizedError } from '../errors/UnauthorizedError';
 import { DeactivateCampaigUseCase } from '../domain/useCases/campaign/deactivate.campaig.use.case';
 import campaignRepository from '../domain/repositories/Campaign.repository';
+import userRepository from '../domain/repositories/User.repository';
+import { sendEmail } from '../utils/sendEmail';
 
 class CampaignController {
   async index(request: FastifyRequest, reply: FastifyReply) {
@@ -238,6 +240,7 @@ class CampaignController {
           return reply.status(400).send(new genericError('Algum dado nao foi enviado!'));
         }
 
+        const user = await userRepository.findById(idUser);
         const setStateUser = await campaignRepository.changeStatusUser(id, idUser, status);
         if (typeof setStateUser === 'string') {
           if (setStateUser.includes('servidor')) {
@@ -248,6 +251,15 @@ class CampaignController {
             reply.status(200).send({ changed_status: true, new_status: status });
           }
         } else {
+          let statusContent: string;
+          if (status === 'Reprovado') {
+            statusContent = `Seu status na campanha "${setStateUser.campaign.title}" foi atualizado para: <h3 style="color: #d90000; text-transform: uppercase; font-weight: bold">${status}</h3>`;
+          } else if (status === 'Aprovado') {
+            statusContent = `Seu status na campanha "${setStateUser.campaign.title}" foi atualizado para: <h3 style="color: #32CD32; text-transform: uppercase; font-weight: bold">${status}</h3>`;
+          } else {
+            statusContent = `Seu status na campanha "${setStateUser.campaign.title}" foi atualizado para: <h3 style="color: #ffd700; text-transform: uppercase; font-weight: bold">${status}</h3>`;
+          }
+          await sendEmail(user.email, 'Status atualizado!', statusContent);
           reply.status(200).send({ changed_status: true, new_status: status });
         }
       } else {
