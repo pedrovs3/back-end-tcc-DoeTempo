@@ -158,22 +158,6 @@ class UsersController {
     }
   }
 
-  // async follow(request: FastifyRequest, reply: FastifyReply) {
-  //   try {
-  //     const { idUser } = request.query;
-  //     const decodedJwt = request.user;
-  //     const { id } = decodedJwt;
-  //
-  //     if (!idUser && !id) {
-  //       return reply.status(400).send(new genericError('Não há dados necessarios.'));
-  //     }
-  //
-  //     const followUser = await new UserFollowUseCase().execute('', '');
-  //   } catch (e) {
-  //     return reply.status(400).send(e);
-  //   }
-  // }
-
   async cancelSubscribeCampaign(request: FastifyRequest, reply: FastifyReply) {
     try {
       // @ts-ignore

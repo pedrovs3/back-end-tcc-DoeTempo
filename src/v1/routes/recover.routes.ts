@@ -19,7 +19,7 @@ export async function recoverRoutes(fastify: FastifyInstance) {
     const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
 
     try {
-      // Guarda o código no MongoDb
+      // Guardar o código no MongoDb
       await mongo.users.upsert({
         where: { email },
         update: { verificationCode },

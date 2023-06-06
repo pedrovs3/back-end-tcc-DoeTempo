@@ -23,7 +23,7 @@ class App {
   public fastify: FastifyInstance;
 
   // @ts-ignore
-  private app_port: number = process.env.PORT || 8080;
+  private app_port: number = process.env.PORT || 3333;
 
   constructor() {
     // Creating the Fastify Instance

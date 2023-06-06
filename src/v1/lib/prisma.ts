@@ -1,8 +1,7 @@
-// noinspection ES6UnusedImports
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const PrismaClientSQL = require('../../../prisma/generated/mysql').PrismaClient;
 // eslint-disable-next-line
-import { PrismaClient as PrismaClientSQL } from '../../../prisma/generated/mysql';
-// eslint-disable-next-line
-import { PrismaClient as PrismaClientMongo } from '../../../prisma/generated/mongodb';
+const PrismaClientMongo = require('../../../prisma/generated/mongodb').PrismaClient;
 
 export const prisma = new PrismaClientSQL({
   // log: ['query'],

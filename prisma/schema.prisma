@@ -194,7 +194,7 @@ model Following {
 model NGO {
   id              String    @id @default(dbgenerated("(uuid())"))
   name            String    @db.VarChar(100)
-  cnpj            String    @unique @db.VarChar(17)
+  cnpj            String    @unique @db.VarChar(25)
   foundation_date DateTime? @db.Date
   description     String?   @db.Text
   email           String    @unique @db.VarChar(256)
