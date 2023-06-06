@@ -10,6 +10,7 @@ import { DeleteUserUseCase } from '../domain/useCases/user/delete.user.use.case'
 import { FindUserUseCase } from '../domain/useCases/user/find.user.use.case';
 import { NotFoundError } from '../errors/NotFoundError';
 import { prisma } from '../lib/prisma';
+import CampaignRepository from '../domain/repositories/Campaign.repository';
 
 const emptyQuery = createError('401', 'Está faltando dados para esta requisição!');
 

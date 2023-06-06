@@ -170,6 +170,7 @@ class CampaignRepository {
                   campaign_causes: true,
                   home_office: true,
                   prerequisites: true,
+                  ngo: true,
                 },
               },
             },

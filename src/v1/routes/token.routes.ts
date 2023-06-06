@@ -1,6 +1,9 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
+import admin from 'firebase-admin';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { prisma } from '../lib/prisma';
 import checkPassword from '../utils/checkPassword';
+import { firebaseConfig } from '../config/firebase';
 
 export async function tokenRoutes(fastify :FastifyInstance) {
   fastify.post('/', async (request: FastifyRequest, reply: FastifyReply) => {
