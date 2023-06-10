@@ -32,11 +32,12 @@ export class LoginCampaignUseCase {
         from: 'nao-responda@AMPI.org.br <nao-responda@AMPI.org.br>',
         to: emailOng,
         subject: 'Novo voluntário!',
-        html: `
-<html lang="pt-br">
-	<h3>${user.name} gostaria de participar da sua campanha "${campaign.title}"</h3>
-		<p>Verique o perfil dele(a) em: https://doetempo.vercel.app/perfil/USER/${idUser}</p>
-</html>`,
+        template: 'notify_subscribed_user',
+        'h:X-Mailgun-Variables': JSON.stringify({
+          userName: user?.name,
+          campaignName: campaign?.title,
+          idUser,
+        }),
       };
 
       await mailgun.messages.create(MAILGUN_DOMAIN as string, emailToSend)

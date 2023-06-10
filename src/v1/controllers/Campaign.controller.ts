@@ -251,15 +251,16 @@ class CampaignController {
             reply.status(200).send({ changed_status: true, new_status: status });
           }
         } else {
-          let statusContent: string;
+          let colorStatus: string;
           if (status === 'Reprovado') {
-            statusContent = `Seu status na campanha "${setStateUser.campaign.title}" foi atualizado para: <h3 style="color: #d90000; text-transform: uppercase; font-weight: bold">${status}</h3>`;
+            colorStatus = '#d90000';
           } else if (status === 'Aprovado') {
-            statusContent = `Seu status na campanha "${setStateUser.campaign.title}" foi atualizado para: <h3 style="color: #32CD32; text-transform: uppercase; font-weight: bold">${status}</h3>`;
+            colorStatus = '#32CD32';
           } else {
-            statusContent = `Seu status na campanha "${setStateUser.campaign.title}" foi atualizado para: <h3 style="color: #ffd700; text-transform: uppercase; font-weight: bold">${status}</h3>`;
+            colorStatus = '#eab128';
           }
-          await sendEmail(user.email, 'Status atualizado!', statusContent);
+          console.log(idUser);
+          await sendEmail(user.email, 'Status de campanha atualizado!', colorStatus, setStateUser.campaign.title, status, idUser);
           reply.status(200).send({ changed_status: true, new_status: status });
         }
       } else {

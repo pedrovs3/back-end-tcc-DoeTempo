@@ -4,13 +4,22 @@ import { MAILGUN_DOMAIN } from '../lib/env';
 export const sendEmail = async (
   emailToSend: string,
   subtitle: string,
-  content: string,
+  colorStatus: string,
+  campaignName: string,
+  statusName: string,
+  idUser: string,
 ) => {
   const emailData = {
     from: 'nao-responda@AMPI.org.br <nao-responda@AMPI.org.br>',
     to: emailToSend,
     subject: subtitle,
-    html: `<html lang="pt-br">${content}</html>`,
+    template: 'notify_user_alter_status',
+    'h:X-Mailgun-Variables': JSON.stringify({
+      colorStatus,
+      campaignName,
+      statusName,
+      idUser,
+    }),
   };
 
   await mailgun.messages.create(MAILGUN_DOMAIN as string, emailData)
